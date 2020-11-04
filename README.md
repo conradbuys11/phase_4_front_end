@@ -1,3 +1,16 @@
+SEE BACKEND README FOR PROJECT DETAILS/THINGS TO WORK ON
+
+
+
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
