@@ -1,3 +1,60 @@
+.playable-area {
+  display: inline-flex;
+  background-color: rgb(160, 150, 150);
+  width: 940px;
+  height: 900px;
+  position: relative;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.player-sprite {
+  width: 40px;
+  height: 40px;
+  background-color: black;
+  align-self: center;
+  order: 5;
+  position: absolute;
+}
+
+.horizontal-boundary {
+  /* display: inline-block; */
+  background-color: black;
+  width: 900px;
+  height: 20px;
+}
+
+.vertical-boundary {
+  /* display: inline-block; */
+  background-color: black;
+  width: 20px;
+  height: 900px;
+}
+
+.left-boundary {
+  float: left;
+  order: 1;
+}
+
+.right-boundary {
+  float: right;
+  order: 3;
+}
+
+.top-boundary {
+  float: top;
+  order: 2;
+}
+
+.bottom-boundary {
+  background-color: red;
+  position: absolute;
+  bottom: 0;
+  /* margin-left: -900px; */
+  order: 4;
+}
+
 .App {
   text-align: center;
 }
