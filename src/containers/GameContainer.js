@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
 import Boundary from '../components/Boundary'
 import PlayerSprite from '../components/PlayerSprite'
+import down1 from "../assets/poke-girl-1/down1.png"
+import down2 from "../assets/poke-girl-1/down2.png"
+import down3 from "../assets/poke-girl-1/down3.png"
+import left1 from "../assets/poke-girl-1/left1.png"
+import left2 from "../assets/poke-girl-1/left2.png"
+import left3 from "../assets/poke-girl-1/left3.png"
+import right1 from "../assets/poke-girl-1/right1.png"
+import right2 from "../assets/poke-girl-1/right2.png"
+import right3 from "../assets/poke-girl-1/right3.png"
+import up1 from "../assets/poke-girl-1/up1.png"
+import up2 from "../assets/poke-girl-1/up2.png"
+import up3 from "../assets/poke-girl-1/up3.png"
 
-const MOVESPEED = 10
+const MOVESPEED = 2
 
 export default class GameContainer extends Component {
 
@@ -21,8 +33,9 @@ export default class GameContainer extends Component {
             s: false,
             d: false,
             lastInput: "",
-            lastInputheld: false,
-            currentSprite: ""
+            lastInputHeld: false,
+            currentSprite: down1,
+            isMoving: false,
         }
         this.loadedAt = new Date()
     }
@@ -37,41 +50,80 @@ export default class GameContainer extends Component {
     tick = () => {
         let newTop = this.state.top
         let newLeft = this.state.left
+        let newSprite = this.state.currentSprite
+        let newIsMoving = this.state.isMoving
 
-        if(this.state.lastInputheld) {
+        if(this.state.lastInputHeld) {
+            // movement starts or continues after direction change
+            // probably need to split these up
             if(this.state.w && !this.state.s && this.state.lastInput === "w") {
                 newTop -= MOVESPEED
+                newSprite = up2
             }
             else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
-                newTop += MOVESPEED 
+                newTop += MOVESPEED
+                newSprite = down2
             }
             else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
                 newLeft += MOVESPEED
+                newSprite = right2
             }
             else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
-                newLeft -= MOVESPEED 
+                newLeft -= MOVESPEED
+                newSprite = left2
             }
         }
         else {
+            // movement continues after direction change
             if(this.state.w && !this.state.s) {
                 newTop -= MOVESPEED
+                newSprite = this.animate("up")
+                newIsMoving = true
             }
             else if(this.state.s && !this.state.w) {
-                newTop += MOVESPEED 
+                newTop += MOVESPEED
+                newSprite = this.animate("down")
+                newIsMoving = true
             }
             else if(this.state.d && !this.state.a) {
                 newLeft += MOVESPEED
+                newSprite = this.animate("right")
+                newIsMoving = true
             }
             else if(this.state.a && !this.state.d) {
                 newLeft -= MOVESPEED 
+                newSprite = this.animate("left")
+                newIsMoving = true
+            }
+            // movement ends
+            else {
+                newSprite = down1
             }
         }
 
         this.setState({      
             timer: new Date(),
             top: newTop,
-            left: newLeft 
+            left: newLeft,
+            currentSprite: newSprite
         }); 
+    }
+
+    animate = (direction) => {
+        // use a timer to keep track of time elapsed since last step without changing direction
+        // change image and reset timer if past certain threshold
+        switch(direction) {
+            case "up":
+                return up2
+            case "down":
+                return down2
+            case "right":
+                return right2
+            case "left":
+                return left2
+            default:
+                break;
+        }
     }
 
     moveSprite = (event) => {
@@ -114,39 +166,39 @@ export default class GameContainer extends Component {
         let held = true
         switch(event.code) {
             case "KeyW":
-                if(this.state.lastInput === "w") {
+                if(this.state.lastInput === "w" || !this.state.lastInputHeld) {
                     held = false
                 }
                 this.setState({
                     w: false,
-                    lastInputheld: held
+                    lastInputHeld: held
                 })
                 break;
             case "KeyS":
-                if(this.state.lastInput === "s") {
+                if(this.state.lastInput === "s" || !this.state.lastInputHeld) {
                     held = false
                 }
                 this.setState({
                     s: false,
-                    lastInputheld: held
+                    lastInputHeld: held
                 })
                 break;
             case "KeyA":
-                if(this.state.lastInput === "a") {
+                if(this.state.lastInput === "a" || !this.state.lastInputHeld) {
                     held = false
                 }
                 this.setState({
                     a: false,
-                    lastInputheld: held
+                    lastInputHeld: held
                 })
                 break;
             case "KeyD":
-                if(this.state.lastInput === "d") {
+                if(this.state.lastInput === "d" || !this.state.lastInputHeld) {
                     held = false
                 }
                 this.setState({
                     d: false,
-                    lastInputheld: held
+                    lastInputHeld: held
                 })
                 break;
             default:
@@ -156,11 +208,13 @@ export default class GameContainer extends Component {
     }
 
     pause = (e) => {
+        // movement ends
         this.setState({
             w: false,
             a: false,
             s: false,
-            d: false
+            d: false,
+            lastInputHeld: false
         })
     }
 
@@ -179,6 +233,7 @@ export default class GameContainer extends Component {
                 <PlayerSprite 
                     top={this.state.top} 
                     left={this.state.left}
+                    sprite={this.state.currentSprite}
                 />
             </div>
         )
