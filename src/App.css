@@ -25,6 +25,7 @@
 .horizontal-boundary {
   /* display: inline-block; */
   background-color: black;
+  color: white;
   width: 900px;
   height: 20px;
 }

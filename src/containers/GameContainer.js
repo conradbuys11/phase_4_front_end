@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+
 import Boundary from '../components/Boundary'
 import PlayerSprite from '../components/PlayerSprite'
+
 import down1 from "../assets/poke-girl-1/down1.png"
 import down2 from "../assets/poke-girl-1/down2.png"
 import down3 from "../assets/poke-girl-1/down3.png"
@@ -15,6 +17,7 @@ import up2 from "../assets/poke-girl-1/up2.png"
 import up3 from "../assets/poke-girl-1/up3.png"
 
 const MOVESPEED = 2
+const STEPTIME = 200
 
 export default class GameContainer extends Component {
 
@@ -51,7 +54,8 @@ export default class GameContainer extends Component {
             lastInputHeld: false,
             currentSprite: down1,
             isMoving: false,
-            facing: "down"
+            facing: "down",
+            timeOfLastDirectionChange: new Date()
         }
         this.loadedAt = new Date()
     }
@@ -76,24 +80,25 @@ export default class GameContainer extends Component {
                 // continued movement needs to animate
             if(this.state.w && !this.state.s && this.state.lastInput === "w") {
                 newTop -= MOVESPEED
-                newSprite = up2
+                newSprite = this.animate("up")
                 newFacing = "up"
             }
             else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
                 newTop += MOVESPEED
-                newSprite = down2
+                newSprite = this.animate("down")
                 newFacing = "down"
             }
             else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
                 newLeft += MOVESPEED
-                newSprite = right2
+                newSprite = this.animate("right")
                 newFacing = "right"
             }
             else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
                 newLeft -= MOVESPEED
-                newSprite = left2
+                newSprite = this.animate("left")
                 newFacing = "left"
             }
+            newIsMoving = true
         }
         else {
             // movement direction changes
@@ -121,6 +126,7 @@ export default class GameContainer extends Component {
             // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
             else {
                 newSprite = this.images[this.state.facing + "1"]
+                newIsMoving = false
             }
         }
 
@@ -129,56 +135,88 @@ export default class GameContainer extends Component {
             top: newTop,
             left: newLeft,
             currentSprite: newSprite,
-            facing: newFacing
+            facing: newFacing,
+            isMoving: newIsMoving
         }); 
     }
 
     animate = (direction) => {
         // use a timer to keep track of time elapsed since last step without changing direction
         // change image and reset timer if past certain threshold
-        switch(direction) {
-            case "up":
-                return up2
-            case "down":
-                return down2
-            case "right":
-                return right2
-            case "left":
-                return left2
-            default:
-                break;
+        if(this.state.isMoving && Date.now() - this.state.timeOfLastDirectionChange > STEPTIME){
+            this.setState({
+                timeOfLastDirectionChange: new Date()
+            })
+            switch(direction) {
+                case "up":
+                    return this.state.currentSprite === up2 ? up3 : up2
+                case "down":
+                    return this.state.currentSprite === down2 ? down3 : down2
+                case "right":
+                    return this.state.currentSprite === right2 ? right3 : right2
+                case "left":
+                    return this.state.currentSprite === left2 ? left3 : left2
+                default:
+                    break;
+            }
+        }
+        else {
+            switch(direction) {
+                case "up":
+                    return this.state.currentSprite === up2 ? up2 : up3
+                case "down":
+                    return this.state.currentSprite === down3 ? down3 : down2
+                case "right":
+                    return this.state.currentSprite === right3 ? right3 : right2
+                case "left":
+                    return this.state.currentSprite === left2 ? left2 : left3
+                default:
+                    break;
+            }
         }
     }
 
     moveSprite = (event) => {
         switch(event.code) {
             case "KeyW":
-                this.setState({
-                    w: true,
-                    lastInput: "w",
-                    lastInputHeld: true
-                })
+                if(!this.state.lastInputHeld || this.state.lastInput !== "w"){
+                    this.setState({
+                        w: true,
+                        lastInput: "w",
+                        lastInputHeld: true,
+                        timeOfLastDirectionChange: new Date()
+                    })
+                }
                 break;
             case "KeyS":
-                this.setState({
-                    s: true,
-                    lastInput: "s",
-                    lastInputHeld: true
-                })
+                if(!this.state.lastInputHeld || this.state.lastInput !== "s"){
+                    this.setState({
+                        s: true,
+                        lastInput: "s",
+                        lastInputHeld: true,
+                        timeOfLastDirectionChange: new Date()
+                    })
+                }
                 break;
             case "KeyA":
-                this.setState({
-                    a: true,
-                    lastInput: "a",
-                    lastInputHeld: true
-                })
+                if(!this.state.lastInputHeld || this.state.lastInput !== "a"){
+                    this.setState({
+                        a: true,
+                        lastInput: "a",
+                        lastInputHeld: true,
+                        timeOfLastDirectionChange: new Date()
+                    })
+                }
                 break;
             case "KeyD":
-                this.setState({
-                    d: true,
-                    lastInput: "d",
-                    lastInputHeld: true
-                })
+                if(!this.state.lastInputHeld || this.state.lastInput !== "d"){
+                    this.setState({
+                        d: true,
+                        lastInput: "d",
+                        lastInputHeld: true,
+                        timeOfLastDirectionChange: new Date()
+                    })
+                }
                 break;
             default:
                 console.log(event.code)
@@ -250,10 +288,10 @@ export default class GameContainer extends Component {
                 tabIndex="0"
                 onBlur={this.pause}
             >
-                <Boundary orientation="horizontal" location="top"/>
-                <Boundary orientation="vertical" location="left"/>
-                <Boundary orientation="vertical" location="right"/>
-                <Boundary orientation="horizontal" location="bottom"/>
+                <Boundary orientation="horizontal" location="top" timer={Date.now() - this.state.timeOfLastDirectionChange}/>
+                <Boundary orientation="vertical" location="left" timer=""/>
+                <Boundary orientation="vertical" location="right" timer=""/>
+                <Boundary orientation="horizontal" location="bottom" timer=""/>
                 <PlayerSprite 
                     top={this.state.top} 
                     left={this.state.left}
