@@ -18,6 +18,8 @@ import up3 from "../assets/poke-girl-1/up3.png"
 
 const MOVESPEED = 3
 const STEPTIME = 200
+const MAPSIZE = 900
+const BOUNDARYTHICCNESS = 20
 
 export default class GameContainer extends Component {
 
@@ -82,23 +84,46 @@ export default class GameContainer extends Component {
                 newTop -= MOVESPEED
                 newSprite = this.animate("up")
                 newFacing = "up"
+                newIsMoving = true
             }
             else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
                 newTop += MOVESPEED
                 newSprite = this.animate("down")
                 newFacing = "down"
+                newIsMoving = true
             }
             else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
                 newLeft += MOVESPEED
                 newSprite = this.animate("right")
                 newFacing = "right"
+                newIsMoving = true
             }
             else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
                 newLeft -= MOVESPEED
                 newSprite = this.animate("left")
                 newFacing = "left"
+                newIsMoving = true
             }
-            newIsMoving = true
+            // holding contradictory inputs
+            else {
+                newIsMoving = false
+                switch(this.state.facing) {
+                    case "up":
+                        newSprite = up1
+                        break;
+                    case "down":
+                        newSprite = down1
+                        break;
+                    case "right":
+                        newSprite = right1
+                        break;
+                    case "left":
+                        newSprite = left1
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         else {
             // movement direction changes
@@ -106,21 +131,25 @@ export default class GameContainer extends Component {
                 newTop -= MOVESPEED
                 newSprite = this.animate("up")
                 newFacing = "up"
+                newIsMoving = true
             }
             else if(this.state.s && !this.state.w) {
                 newTop += MOVESPEED
                 newSprite = this.animate("down")
                 newFacing = "down"
+                newIsMoving = true
             }
             else if(this.state.d && !this.state.a) {
                 newLeft += MOVESPEED
                 newSprite = this.animate("right")
                 newFacing = "right"
+                newIsMoving = true
             }
             else if(this.state.a && !this.state.d) {
                 newLeft -= MOVESPEED 
                 newSprite = this.animate("left")
                 newFacing = "left"
+                newIsMoving = true
             }
             // movement ends or no movement
             // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
@@ -130,11 +159,11 @@ export default class GameContainer extends Component {
             }
         }
 
-        //OOB check
-        if(newTop > 820) { newTop = 820 }
-        else if(newTop < -880) { newTop = -880 }
-        if(newLeft > 890) { newLeft = 890 }
-        else if(newLeft < -890) { newLeft = -890 }
+        // OOB check
+        if(newTop > (MAPSIZE - BOUNDARYTHICCNESS * 4)) { newTop = (MAPSIZE - BOUNDARYTHICCNESS * 4) }
+        else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
+        if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
+        else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
 
         this.setState({      
             timer: new Date(),

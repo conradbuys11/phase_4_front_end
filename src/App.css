@@ -53,7 +53,7 @@
 }
 
 .bottom-boundary {
-  background-color: red;
+  /* background-color: red; */
   position: absolute;
   bottom: 0;
   /* margin-left: -900px; */
