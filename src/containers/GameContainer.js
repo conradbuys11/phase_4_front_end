@@ -16,7 +16,7 @@ import up1 from "../assets/poke-girl-1/up1.png"
 import up2 from "../assets/poke-girl-1/up2.png"
 import up3 from "../assets/poke-girl-1/up3.png"
 
-const MOVESPEED = 2
+const MOVESPEED = 3
 const STEPTIME = 200
 
 export default class GameContainer extends Component {
@@ -129,6 +129,12 @@ export default class GameContainer extends Component {
                 newIsMoving = false
             }
         }
+
+        //OOB check
+        if(newTop > 820) { newTop = 820 }
+        else if(newTop < -880) { newTop = -880 }
+        if(newLeft > 890) { newLeft = 890 }
+        else if(newLeft < -890) { newLeft = -890 }
 
         this.setState({      
             timer: new Date(),
