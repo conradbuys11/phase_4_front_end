@@ -20,6 +20,21 @@ export default class GameContainer extends Component {
 
     loadedAt
 
+    images = {
+        down1,
+        down2,
+        down3,
+        up1,
+        up2,
+        up3,
+        left1,
+        left2,
+        left3,
+        right1,
+        right2,
+        right3
+      };
+
     constructor() {
         super()
         this.state = {
@@ -36,6 +51,7 @@ export default class GameContainer extends Component {
             lastInputHeld: false,
             currentSprite: down1,
             isMoving: false,
+            facing: "down"
         }
         this.loadedAt = new Date()
     }
@@ -52,52 +68,59 @@ export default class GameContainer extends Component {
         let newLeft = this.state.left
         let newSprite = this.state.currentSprite
         let newIsMoving = this.state.isMoving
+        let newFacing = this.state.facing
 
         if(this.state.lastInputHeld) {
             // movement starts or continues after direction change
             // probably need to split these up
+                // continued movement needs to animate
             if(this.state.w && !this.state.s && this.state.lastInput === "w") {
                 newTop -= MOVESPEED
                 newSprite = up2
+                newFacing = "up"
             }
             else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
                 newTop += MOVESPEED
                 newSprite = down2
+                newFacing = "down"
             }
             else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
                 newLeft += MOVESPEED
                 newSprite = right2
+                newFacing = "right"
             }
             else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
                 newLeft -= MOVESPEED
                 newSprite = left2
+                newFacing = "left"
             }
         }
         else {
-            // movement continues after direction change
+            // movement direction changes
             if(this.state.w && !this.state.s) {
                 newTop -= MOVESPEED
                 newSprite = this.animate("up")
-                newIsMoving = true
+                newFacing = "up"
             }
             else if(this.state.s && !this.state.w) {
                 newTop += MOVESPEED
                 newSprite = this.animate("down")
-                newIsMoving = true
+                newFacing = "down"
             }
             else if(this.state.d && !this.state.a) {
                 newLeft += MOVESPEED
                 newSprite = this.animate("right")
-                newIsMoving = true
+                newFacing = "right"
             }
             else if(this.state.a && !this.state.d) {
                 newLeft -= MOVESPEED 
                 newSprite = this.animate("left")
-                newIsMoving = true
+                newFacing = "left"
             }
-            // movement ends
+            // movement ends or no movement
+            // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
             else {
-                newSprite = down1
+                newSprite = this.images[this.state.facing + "1"]
             }
         }
 
@@ -105,7 +128,8 @@ export default class GameContainer extends Component {
             timer: new Date(),
             top: newTop,
             left: newLeft,
-            currentSprite: newSprite
+            currentSprite: newSprite,
+            facing: newFacing
         }); 
     }
 
