@@ -15,6 +15,7 @@ import right3 from "../assets/poke-girl-1/right3.png"
 import up1 from "../assets/poke-girl-1/up1.png"
 import up2 from "../assets/poke-girl-1/up2.png"
 import up3 from "../assets/poke-girl-1/up3.png"
+import Obstacle from '../components/Obstacle';
 
 const MOVESPEED = 3
 const STEPTIME = 200
@@ -332,6 +333,7 @@ export default class GameContainer extends Component {
                     left={this.state.left}
                     sprite={this.state.currentSprite}
                 />
+                <Obstacle />
             </div>
         )
     }
