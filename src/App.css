@@ -34,6 +34,12 @@
   order: 5;
 }
 
+.trainer-sprite {
+  position: absolute;
+  align-self: center;
+  order: 5;
+}
+
 .left-boundary {
   float: left;
   order: 1;

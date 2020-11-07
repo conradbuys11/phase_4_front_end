@@ -3,21 +3,24 @@ import React, { Component } from 'react';
 import Boundary from '../components/Boundary'
 import PlayerSprite from '../components/PlayerSprite'
 import Obstacle from '../components/Obstacle';
+import Trainer from '../components/Trainer'
 
-import down1 from "../assets/poke-girl-1/down1.png"
-import down2 from "../assets/poke-girl-1/down2.png"
-import down3 from "../assets/poke-girl-1/down3.png"
-import left1 from "../assets/poke-girl-1/left1.png"
-import left2 from "../assets/poke-girl-1/left2.png"
-import left3 from "../assets/poke-girl-1/left3.png"
-import right1 from "../assets/poke-girl-1/right1.png"
-import right2 from "../assets/poke-girl-1/right2.png"
-import right3 from "../assets/poke-girl-1/right3.png"
-import up1 from "../assets/poke-girl-1/up1.png"
-import up2 from "../assets/poke-girl-1/up2.png"
-import up3 from "../assets/poke-girl-1/up3.png"
+import pokeGirlDown1 from "../assets/poke-girl-1/down1.png"
+import pokeGirlDown2 from "../assets/poke-girl-1/down2.png"
+import pokeGirlDown3 from "../assets/poke-girl-1/down3.png"
+import pokeGirlLeft1 from "../assets/poke-girl-1/left1.png"
+import pokeGirlLeft2 from "../assets/poke-girl-1/left2.png"
+import pokeGirlLeft3 from "../assets/poke-girl-1/left3.png"
+import pokeGirlRight1 from "../assets/poke-girl-1/right1.png"
+import pokeGirlRight2 from "../assets/poke-girl-1/right2.png"
+import pokeGirlRight3 from "../assets/poke-girl-1/right3.png"
+import pokeGirlUp1 from "../assets/poke-girl-1/up1.png"
+import pokeGirlUp2 from "../assets/poke-girl-1/up2.png"
+import pokeGirlUp3 from "../assets/poke-girl-1/up3.png"
 
-const MAPSIZE = 1100
+import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
+
+const MAPSIZE = 1000
 
 const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
 const MOVESPEED = 1 * MAPSIZE / 300
@@ -29,18 +32,18 @@ export default class GameContainer extends Component {
     loadedAt
 
     images = {
-        down1,
-        down2,
-        down3,
-        up1,
-        up2,
-        up3,
-        left1,
-        left2,
-        left3,
-        right1,
-        right2,
-        right3
+        pokeGirlDown1,
+        pokeGirlDown2,
+        pokeGirlDown3,
+        pokeGirlUp1,
+        pokeGirlUp2,
+        pokeGirlUp3,
+        pokeGirlLeft1,
+        pokeGirlLeft2,
+        pokeGirlLeft3,
+        pokeGirlRight1,
+        pokeGirlRight2,
+        pokeGirlRight3
     };
 
     // if game included more than 1 area this would be imported from area database
@@ -107,9 +110,9 @@ export default class GameContainer extends Component {
             d: false,
             lastInput: "",
             lastInputHeld: false,
-            currentSprite: down1,
+            currentSprite: pokeGirlDown1,
             isMoving: false,
-            facing: "down",
+            facing: "Down",
             timeOfLastDirectionChange: new Date()
         }
         this.loadedAt = new Date()
@@ -136,42 +139,42 @@ export default class GameContainer extends Component {
             if(this.state.w && !this.state.s && this.state.lastInput === "w") {
                 newTop -= MOVESPEED
                 newSprite = this.animate("up")
-                newFacing = "up"
+                newFacing = "Up"
                 newIsMoving = true
             }
             else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
                 newTop += MOVESPEED
                 newSprite = this.animate("down")
-                newFacing = "down"
+                newFacing = "Down"
                 newIsMoving = true
             }
             else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
                 newLeft += MOVESPEED
                 newSprite = this.animate("right")
-                newFacing = "right"
+                newFacing = "Right"
                 newIsMoving = true
             }
             else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
                 newLeft -= MOVESPEED
                 newSprite = this.animate("left")
-                newFacing = "left"
+                newFacing = "Left"
                 newIsMoving = true
             }
             // holding contradictory inputs
             else {
                 newIsMoving = false
                 switch(this.state.facing) {
-                    case "up":
-                        newSprite = up1
+                    case "Up":
+                        newSprite = pokeGirlUp1
                         break;
-                    case "down":
-                        newSprite = down1
+                    case "Down":
+                        newSprite = pokeGirlDown1
                         break;
-                    case "right":
-                        newSprite = right1
+                    case "Right":
+                        newSprite = pokeGirlRight1
                         break;
-                    case "left":
-                        newSprite = left1
+                    case "Left":
+                        newSprite = pokeGirlLeft1
                         break;
                     default:
                         break;
@@ -183,31 +186,31 @@ export default class GameContainer extends Component {
             if(this.state.w && !this.state.s) {
                 newTop -= MOVESPEED
                 newSprite = this.animate("up")
-                newFacing = "up"
+                newFacing = "Up"
                 newIsMoving = true
             }
             else if(this.state.s && !this.state.w) {
                 newTop += MOVESPEED
                 newSprite = this.animate("down")
-                newFacing = "down"
+                newFacing = "Down"
                 newIsMoving = true
             }
             else if(this.state.d && !this.state.a) {
                 newLeft += MOVESPEED
                 newSprite = this.animate("right")
-                newFacing = "right"
+                newFacing = "Right"
                 newIsMoving = true
             }
             else if(this.state.a && !this.state.d) {
                 newLeft -= MOVESPEED 
                 newSprite = this.animate("left")
-                newFacing = "left"
+                newFacing = "Left"
                 newIsMoving = true
             }
             // movement ends or no movement
             // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
             else {
-                newSprite = this.images[this.state.facing + "1"]
+                newSprite = this.images["pokeGirl" + this.state.facing + "1"]
                 newIsMoving = false
             }
         }
@@ -226,16 +229,16 @@ export default class GameContainer extends Component {
             )    
             if(collisionDetected.length > 0) {
                 switch(newFacing) {
-                    case "up":
+                    case "Up":
                         newTop = collisionDetected[0].maxTop
                         break;
-                    case "down":
+                    case "Down":
                         newTop = collisionDetected[0].minTop
                         break;
-                    case "right":
+                    case "Right":
                         newLeft = collisionDetected[0].minLeft
                         break;
-                    case "left":
+                    case "Left":
                         newLeft = collisionDetected[0].maxLeft
                         break;
                     default:
@@ -263,13 +266,13 @@ export default class GameContainer extends Component {
             })
             switch(direction) {
                 case "up":
-                    return this.state.currentSprite === up2 ? up3 : up2
+                    return this.state.currentSprite === pokeGirlUp2 ? pokeGirlUp3 : pokeGirlUp2
                 case "down":
-                    return this.state.currentSprite === down2 ? down3 : down2
+                    return this.state.currentSprite === pokeGirlDown2 ? pokeGirlDown3 : pokeGirlDown2
                 case "right":
-                    return this.state.currentSprite === right2 ? right3 : right2
+                    return this.state.currentSprite === pokeGirlRight2 ? pokeGirlRight3 : pokeGirlRight2
                 case "left":
-                    return this.state.currentSprite === left2 ? left3 : left2
+                    return this.state.currentSprite === pokeGirlLeft2 ? pokeGirlLeft3 : pokeGirlLeft2
                 default:
                     break;
             }
@@ -277,13 +280,13 @@ export default class GameContainer extends Component {
         else {
             switch(direction) {
                 case "up":
-                    return this.state.currentSprite === up2 ? up2 : up3
+                    return this.state.currentSprite === pokeGirlUp2 ? pokeGirlUp2 : pokeGirlUp3
                 case "down":
-                    return this.state.currentSprite === down3 ? down3 : down2
+                    return this.state.currentSprite === pokeGirlDown3 ? pokeGirlDown3 : pokeGirlDown2
                 case "right":
-                    return this.state.currentSprite === right3 ? right3 : right2
+                    return this.state.currentSprite === pokeGirlRight3 ? pokeGirlRight3 : pokeGirlRight2
                 case "left":
-                    return this.state.currentSprite === left2 ? left2 : left3
+                    return this.state.currentSprite === pokeGirlLeft2 ? pokeGirlLeft2 : pokeGirlLeft3
                 default:
                     break;
             }
@@ -446,6 +449,16 @@ export default class GameContainer extends Component {
                         y={obstacle.y + "px"}
                     />
                 )}
+
+                {/* Trainers */}
+                <Trainer
+                    sprite={rocketGruntMaleUp1}
+                    size={SPRITESIZE}
+                    x={400}
+                    y={-80}
+                    top={0}
+                    left={0}
+                />
 
                 {/* Player */}
                 <PlayerSprite 
