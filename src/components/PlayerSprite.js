@@ -8,7 +8,12 @@ export default class PlayerSprite extends Component {
                 //src={require(`../assets/poke-girl-1/down1.png`)}
                 src={this.props.sprite}
                 className="player-sprite"
-                style={{marginTop: this.props.top, marginLeft: this.props.left}}
+                style={{
+                    marginTop: this.props.top,
+                    marginLeft: this.props.left,
+                    height: this.props.size,
+                    width: this.props.size
+                }}
             />
         )
     }

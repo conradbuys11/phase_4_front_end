@@ -17,11 +17,12 @@ import up1 from "../assets/poke-girl-1/up1.png"
 import up2 from "../assets/poke-girl-1/up2.png"
 import up3 from "../assets/poke-girl-1/up3.png"
 
-const MOVESPEED = 3
+const MAPSIZE = 1100
+
+const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
+const MOVESPEED = 1 * MAPSIZE / 300
 const STEPTIME = 200
-const MAPSIZE = 900
-const BOUNDARYTHICCNESS = 20
-const SPRITESIZE = 40
+const SPRITESIZE = MAPSIZE / 20
 
 export default class GameContainer extends Component {
 
@@ -42,27 +43,53 @@ export default class GameContainer extends Component {
         right3
     };
 
+    // if game included more than 1 area this would be imported from area database
     obstacles = [
         {
-            width: 20,
-            height: 200,
+            width: MAPSIZE / 45,
+            height: MAPSIZE / 4.5,
             x: MAPSIZE / 3,
             y: 0
         },
         {
-            width: 200,
-            height: 20,
+            width: MAPSIZE / 4.5,
+            height: MAPSIZE / 45,
             x: 0,
             y: MAPSIZE / 3,
-        }
+        },
+        {
+            width: MAPSIZE / 4.5,
+            height: MAPSIZE / 45,
+            x: MAPSIZE / 3,
+            y: 0
+        },
+        {
+            width: MAPSIZE / 4.5,
+            height: MAPSIZE / 45,
+            x: 0,
+            y: -MAPSIZE / 3,
+        },
+        {
+            width: MAPSIZE / 45,
+            height: MAPSIZE / 4.5,
+            x: -MAPSIZE / 3,
+            y: 0
+        },
+        {
+            width: MAPSIZE / 4.5,
+            height: MAPSIZE / 45,
+            x: -MAPSIZE / 3,
+            y: 0
+        },
     ]
 
+    // I think it makes sense to do this map 1 time here rather than every 10ms in tick()
     collisionMap = this.obstacles.map(obstacle => {
         return {
-            minLeft: obstacle.x - obstacle.width,
-            maxLeft: obstacle.x + obstacle.width,
+            minLeft: obstacle.x - obstacle.width - SPRITESIZE / 2,
+            maxLeft: obstacle.x + obstacle.width + SPRITESIZE / 2,
             minTop: obstacle.y - obstacle.height - SPRITESIZE,
-            maxTop: obstacle.y + obstacle.height - SPRITESIZE
+            maxTop: obstacle.y + obstacle.height
         }
     })
 
@@ -185,9 +212,10 @@ export default class GameContainer extends Component {
             }
         }
 
+        // only do OOB/collision checks while moving - lowers idle load
         if(newIsMoving) {
             // OOB check
-            if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 2))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 2)) }
+            if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5)) }
             else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
             if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
             else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
@@ -195,8 +223,7 @@ export default class GameContainer extends Component {
             // collision check
             let collisionDetected = this.collisionMap.filter(obstacle => 
                 newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
-            )
-            
+            )    
             if(collisionDetected.length > 0) {
                 switch(newFacing) {
                     case "up":
@@ -215,14 +242,7 @@ export default class GameContainer extends Component {
                         break;
                 }
             }
-
-            // hardcoded approach -- works
-            /* if(newLeft > 280 && newLeft < 320 && newTop > -230 && newTop < 170) {
-                if(newFacing === "right") { newLeft = 280 }
-                else if (newFacing === "left") { newLeft = 320 }     
-            } */
         }
-
 
         this.setState({      
             timer: new Date(),
@@ -432,6 +452,7 @@ export default class GameContainer extends Component {
                     top={this.state.top} 
                     left={this.state.left}
                     sprite={this.state.currentSprite}
+                    size={SPRITESIZE}
                 />
             </div>
         )
