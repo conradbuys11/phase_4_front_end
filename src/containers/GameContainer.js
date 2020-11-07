@@ -21,6 +21,7 @@ const MOVESPEED = 3
 const STEPTIME = 200
 const MAPSIZE = 900
 const BOUNDARYTHICCNESS = 20
+const SPRITESIZE = 40
 
 export default class GameContainer extends Component {
 
@@ -39,22 +40,31 @@ export default class GameContainer extends Component {
         right1,
         right2,
         right3
-      };
+    };
 
-    collisionMap = [
+    obstacles = [
         {
-            minLeft: 280,
-            maxLeft: 320,
-            minTop: -230,
-            maxTop: 170
+            width: 20,
+            height: 200,
+            x: MAPSIZE / 3,
+            y: 0
         },
         {
-            minLeft: -200,
-            maxLeft: 200,
-            minTop: 240,
-            maxTop: 280
+            width: 200,
+            height: 20,
+            x: 0,
+            y: MAPSIZE / 3,
         }
     ]
+
+    collisionMap = this.obstacles.map(obstacle => {
+        return {
+            minLeft: obstacle.x - obstacle.width,
+            maxLeft: obstacle.x + obstacle.width,
+            minTop: obstacle.y - obstacle.height - SPRITESIZE,
+            maxTop: obstacle.y + obstacle.height - SPRITESIZE
+        }
+    })
 
     constructor() {
         super()
@@ -177,7 +187,7 @@ export default class GameContainer extends Component {
 
         if(newIsMoving) {
             // OOB check
-            if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - 60)) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - 60) }
+            if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 2))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 2)) }
             else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
             if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
             else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
@@ -408,18 +418,14 @@ export default class GameContainer extends Component {
                 />
 
                 {/* Obstacles */}
-                <Obstacle 
-                    width="200px" 
-                    height="20px"
-                    x="0px"
-                    y={MAPSIZE / 3 + "px"}
-                />
-                <Obstacle 
-                    width="20px" 
-                    height="200px"
-                    x={MAPSIZE / 3 + "px"}
-                    y="0px"
-                />
+                {this.obstacles.map(obstacle => 
+                    <Obstacle
+                        width={obstacle.width + "px"}
+                        height={obstacle.height + "px"}
+                        x={obstacle.x + "px"}
+                        y={obstacle.y + "px"}
+                    />
+                )}
 
                 {/* Player */}
                 <PlayerSprite 
