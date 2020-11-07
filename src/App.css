@@ -1,8 +1,6 @@
 .playable-area {
   display: inline-flex;
   background-color: rgb(160, 150, 150);
-  width: 940px;
-  height: 900px;
   position: relative;
   flex-wrap: wrap;
   flex-direction: row;
@@ -22,28 +20,16 @@
   position: absolute;
 }
 
-.horizontal-boundary {
+.boundary {
   /* display: inline-block; */
   background-color: black;
   color: white;
-  width: 900px;
-  height: 20px;
-}
-
-.vertical-boundary {
-  /* display: inline-block; */
-  background-color: black;
-  width: 20px;
-  height: 900px;
 }
 
 .obstacle {
   /* display: inline-block; */
   background-color: black;
-  width: 200px;
-  height: 20px;
   position: absolute;
-  margin-top: 100px;
   align-self: center;
   order: 5;
 }

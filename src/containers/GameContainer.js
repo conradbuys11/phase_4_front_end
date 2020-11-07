@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Boundary from '../components/Boundary'
 import PlayerSprite from '../components/PlayerSprite'
+import Obstacle from '../components/Obstacle';
 
 import down1 from "../assets/poke-girl-1/down1.png"
 import down2 from "../assets/poke-girl-1/down2.png"
@@ -15,7 +16,6 @@ import right3 from "../assets/poke-girl-1/right3.png"
 import up1 from "../assets/poke-girl-1/up1.png"
 import up2 from "../assets/poke-girl-1/up2.png"
 import up3 from "../assets/poke-girl-1/up3.png"
-import Obstacle from '../components/Obstacle';
 
 const MOVESPEED = 3
 const STEPTIME = 200
@@ -40,6 +40,21 @@ export default class GameContainer extends Component {
         right2,
         right3
       };
+
+    collisionMap = [
+        {
+            minLeft: 280,
+            maxLeft: 320,
+            minTop: -230,
+            maxTop: 170
+        },
+        {
+            minLeft: -200,
+            maxLeft: 200,
+            minTop: 240,
+            maxTop: 280
+        }
+    ]
 
     constructor() {
         super()
@@ -160,11 +175,44 @@ export default class GameContainer extends Component {
             }
         }
 
-        // OOB check
-        if(newTop > (MAPSIZE - BOUNDARYTHICCNESS * 4)) { newTop = (MAPSIZE - BOUNDARYTHICCNESS * 4) }
-        else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
-        if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
-        else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
+        if(newIsMoving) {
+            // OOB check
+            if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - 60)) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - 60) }
+            else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
+            if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
+            else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
+
+            // collision check
+            let collisionDetected = this.collisionMap.filter(obstacle => 
+                newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+            )
+            
+            if(collisionDetected.length > 0) {
+                switch(newFacing) {
+                    case "up":
+                        newTop = collisionDetected[0].maxTop
+                        break;
+                    case "down":
+                        newTop = collisionDetected[0].minTop
+                        break;
+                    case "right":
+                        newLeft = collisionDetected[0].minLeft
+                        break;
+                    case "left":
+                        newLeft = collisionDetected[0].maxLeft
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // hardcoded approach -- works
+            /* if(newLeft > 280 && newLeft < 320 && newTop > -230 && newTop < 170) {
+                if(newFacing === "right") { newLeft = 280 }
+                else if (newFacing === "left") { newLeft = 320 }     
+            } */
+        }
+
 
         this.setState({      
             timer: new Date(),
@@ -300,7 +348,7 @@ export default class GameContainer extends Component {
                 })
                 break;
             default:
-                console.log(event.timeStamp)
+                // console.log(event.timeStamp)
                 break;
         }
     }
@@ -323,17 +371,62 @@ export default class GameContainer extends Component {
                 onKeyUp={this.stopSprite}
                 tabIndex="0"
                 onBlur={this.pause}
+                style={{
+                    width: (MAPSIZE + BOUNDARYTHICCNESS * 2) + "px",
+                    height: MAPSIZE + "px"
+                }}
             >
-                <Boundary orientation="horizontal" location="top" timer={Date.now() - this.state.timeOfLastDirectionChange}/>
-                <Boundary orientation="vertical" location="left" timer=""/>
-                <Boundary orientation="vertical" location="right" timer=""/>
-                <Boundary orientation="horizontal" location="bottom" timer=""/>
+                
+                {/* Boundaries */}
+                <Boundary
+                    orientation="horizontal" 
+                    location="top" 
+                    timer={Date.now() - this.state.timeOfLastDirectionChange}
+                    width={MAPSIZE}
+                    height={BOUNDARYTHICCNESS}
+                />
+                <Boundary 
+                    orientation="vertical" 
+                    location="left" 
+                    timer=""
+                    width={BOUNDARYTHICCNESS + "px"} 
+                    height={MAPSIZE + "px"} 
+                />
+                <Boundary 
+                    orientation="vertical" 
+                    location="right" 
+                    timer=""
+                    width={BOUNDARYTHICCNESS + "px"} 
+                    height={MAPSIZE + "px"} 
+                />
+                <Boundary 
+                    orientation="horizontal" 
+                    location="bottom" 
+                    timer=""
+                    width={MAPSIZE + "px"} 
+                    height={BOUNDARYTHICCNESS + "px"} 
+                />
+
+                {/* Obstacles */}
+                <Obstacle 
+                    width="200px" 
+                    height="20px"
+                    x="0px"
+                    y={MAPSIZE / 3 + "px"}
+                />
+                <Obstacle 
+                    width="20px" 
+                    height="200px"
+                    x={MAPSIZE / 3 + "px"}
+                    y="0px"
+                />
+
+                {/* Player */}
                 <PlayerSprite 
                     top={this.state.top} 
                     left={this.state.left}
                     sprite={this.state.currentSprite}
                 />
-                <Obstacle />
             </div>
         )
     }
