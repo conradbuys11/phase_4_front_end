@@ -229,7 +229,8 @@ export default class GameContainer extends Component {
             currentSprite: pokeGirlDown1,
             isMoving: false,
             facing: "Down",
-            timeOfLastDirectionChange: new Date()
+            timeOfLastDirectionChange: new Date(),
+            currentlyAggrodTrainer: null
         }
         this.loadedAt = new Date()
     }
@@ -247,6 +248,7 @@ export default class GameContainer extends Component {
         let newSprite = this.state.currentSprite
         let newIsMoving = this.state.isMoving
         let newFacing = this.state.facing
+        let newCurrentlyAggrodTrainer = null
 
         if(this.state.lastInputHeld) {
             // movement starts or continues after direction change
@@ -339,7 +341,7 @@ export default class GameContainer extends Component {
             )
             if(lineOfSightCollisionDetected.length > 0) {
                 // aggro appropriate trainer
-                console.log(lineOfSightCollisionDetected[0].trainerId)
+                newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
             }
 
             // OOB check
@@ -382,7 +384,8 @@ export default class GameContainer extends Component {
             left: newLeft,
             currentSprite: newSprite,
             facing: newFacing,
-            isMoving: newIsMoving
+            isMoving: newIsMoving,
+            currentlyAggrodTrainer: newCurrentlyAggrodTrainer
         }); 
     }
 
@@ -584,6 +587,7 @@ export default class GameContainer extends Component {
                 {this.trainers.map(trainer => 
                     <Trainer
                         key={trainer.id}
+                        id={trainer.id}
                         orientation={trainer.orientation}
                         sprite={trainer.sprite}
                         size={trainer.size}
@@ -593,6 +597,7 @@ export default class GameContainer extends Component {
                         left={trainer.left}
                         sightWidth={trainer.sightWidth}
                         sightHeight={trainer.sightHeight}
+                        aggro={this.state.currentlyAggrodTrainer}
                     />
                 )}
 

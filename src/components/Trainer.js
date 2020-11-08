@@ -3,6 +3,13 @@ import LineOfSight from './LineOfSight'
 
 export default class Trainer extends Component {
 
+    aggroCheck = () => {
+        if(this.props.aggro === this.props.id) {
+            return true
+        }
+        return false
+    }
+
     render() {
         return (
             <div
@@ -14,6 +21,12 @@ export default class Trainer extends Component {
                     width: this.props.size,
                 }}
             >
+                {this.aggroCheck()
+                    ?
+                        "HEY KID"
+                    :
+                        null
+                }
                 <img
                     src={this.props.sprite}
                     // className="trainer-sprite"
