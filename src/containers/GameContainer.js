@@ -30,6 +30,7 @@ const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
 const MOVESPEED = 1 * MAPSIZE / 300
 const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
+const AGGROWIDTH = SPRITESIZE / 4
 
 export default class GameContainer extends Component {
 
@@ -114,7 +115,7 @@ export default class GameContainer extends Component {
             y: -MAPSIZE / 12.5,
             top: 0,
             left: 0,
-            sightWidth: SPRITESIZE / 2,
+            sightWidth: AGGROWIDTH,
             sightHeight: 200,
         },
         {
@@ -127,7 +128,7 @@ export default class GameContainer extends Component {
             top: 0,
             left: 0,
             sightWidth: 200,
-            sightHeight: SPRITESIZE / 2,
+            sightHeight: AGGROWIDTH,
         },
         {
             id: 3,
@@ -139,7 +140,7 @@ export default class GameContainer extends Component {
             top: 0,
             left: 0,
             sightWidth: 200,
-            sightHeight: SPRITESIZE / 2,
+            sightHeight: AGGROWIDTH,
         },
         {
             id: 4,
@@ -150,7 +151,7 @@ export default class GameContainer extends Component {
             y: -MAPSIZE / -12.5,
             top: 0,
             left: 0,
-            sightWidth: SPRITESIZE / 2,
+            sightWidth: AGGROWIDTH,
             sightHeight: 200,
         },
     ]
@@ -180,8 +181,8 @@ export default class GameContainer extends Component {
             case "up":
                 return {
                     trainerId: trainer.id,
-                    minLeft: trainer.x - trainer.size,
-                    maxLeft: trainer.x + trainer.size,
+                    minLeft: trainer.x - AGGROWIDTH,
+                    maxLeft: trainer.x + AGGROWIDTH,
                     minTop: trainer.y - trainer.sightHeight * 2 - trainer.size * 2,
                     maxTop: trainer.y - trainer.size
                 }
@@ -190,22 +191,22 @@ export default class GameContainer extends Component {
                     trainerId: trainer.id,
                     minLeft: trainer.x - trainer.sightWidth * 2 - trainer.size * 2 + SPRITESIZE / 3,
                     maxLeft: trainer.x - trainer.size,
-                    minTop: trainer.y - trainer.size - SPRITESIZE / 2,
-                    maxTop: trainer.y + trainer.size - SPRITESIZE / 2,
+                    minTop: trainer.y - AGGROWIDTH,
+                    maxTop: trainer.y + AGGROWIDTH,
                 }
             case "right":
                 return {
                     trainerId: trainer.id,
                     minLeft: trainer.x + trainer.size,
                     maxLeft: trainer.x + trainer.sightWidth * 2 + trainer.size * 2 - SPRITESIZE / 3,
-                    minTop: trainer.y - trainer.size - SPRITESIZE / 2,
-                    maxTop: trainer.y + trainer.size - SPRITESIZE / 2,
+                    minTop: trainer.y - AGGROWIDTH,
+                    maxTop: trainer.y + AGGROWIDTH
                 }
             default:
                 return {
                     trainerId: trainer.id,
-                    minLeft: trainer.x - trainer.size,
-                    maxLeft: trainer.x + trainer.size,
+                    minLeft: trainer.x - AGGROWIDTH,
+                    maxLeft: trainer.x + AGGROWIDTH,
                     minTop: trainer.y + trainer.size,
                     maxTop: trainer.y + trainer.sightHeight * 2 + trainer.size * 2
                 }
@@ -217,7 +218,6 @@ export default class GameContainer extends Component {
         this.state = {
             top: 0,
             left: 0,
-            timer: new Date(),
             vertInertia: 0,
             horizInertia: 0,
             w: false,
@@ -230,7 +230,8 @@ export default class GameContainer extends Component {
             isMoving: false,
             facing: "Down",
             timeOfLastDirectionChange: new Date(),
-            currentlyAggrodTrainer: null
+            currentlyAggrodTrainer: null,
+            battleCutsceneActive: false
         }
         this.loadedAt = new Date()
     }
@@ -249,146 +250,166 @@ export default class GameContainer extends Component {
         let newIsMoving = this.state.isMoving
         let newFacing = this.state.facing
         let newCurrentlyAggrodTrainer = this.state.currentlyAggrodTrainer
+        let newBattleCutsceneActive = false
 
-        if(this.state.lastInputHeld) {
-            // movement starts or continues after direction change
-            // probably need to split these up
-                // continued movement needs to animate
-            if(this.state.w && !this.state.s && this.state.lastInput === "w") {
-                newTop -= MOVESPEED
-                newSprite = this.animate("up")
-                newFacing = "Up"
-                newIsMoving = true
+        if(this.state.currentlyAggrodTrainer) {
+            // move currentlyAggrodTrainer to player
+
+            // change player to correct standing sprite
+            switch(this.state.facing) {
+                case "up":
+                    break;
+                case "left":
+                    break;
+                case "right":
+                    break;
+                default:
+                    break;
             }
-            else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
-                newTop += MOVESPEED
-                newSprite = this.animate("down")
-                newFacing = "Down"
-                newIsMoving = true
-            }
-            else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
-                newLeft += MOVESPEED
-                newSprite = this.animate("right")
-                newFacing = "Right"
-                newIsMoving = true
-            }
-            else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
-                newLeft -= MOVESPEED
-                newSprite = this.animate("left")
-                newFacing = "Left"
-                newIsMoving = true
-            }
-            // holding contradictory inputs
-            else {
-                newIsMoving = false
-                switch(this.state.facing) {
-                    case "Up":
-                        newSprite = pokeGirlUp1
-                        break;
-                    case "Down":
-                        newSprite = pokeGirlDown1
-                        break;
-                    case "Right":
-                        newSprite = pokeGirlRight1
-                        break;
-                    case "Left":
-                        newSprite = pokeGirlLeft1
-                        break;
-                    default:
-                        break;
-                }
-            }
+            // initiate battle animation
         }
         else {
-            // movement direction changes
-            if(this.state.w && !this.state.s) {
-                newTop -= MOVESPEED
-                newSprite = this.animate("up")
-                newFacing = "Up"
-                newIsMoving = true
+            if(this.state.lastInputHeld) {
+                // movement starts or continues after direction change
+                // probably need to split these up
+                    // continued movement needs to animate
+                if(this.state.w && !this.state.s && this.state.lastInput === "w") {
+                    newTop -= MOVESPEED
+                    newSprite = this.animate("up")
+                    newFacing = "Up"
+                    newIsMoving = true
+                }
+                else if(this.state.s && !this.state.w && this.state.lastInput === "s") {
+                    newTop += MOVESPEED
+                    newSprite = this.animate("down")
+                    newFacing = "Down"
+                    newIsMoving = true
+                }
+                else if(this.state.d && !this.state.a && this.state.lastInput === "d") {
+                    newLeft += MOVESPEED
+                    newSprite = this.animate("right")
+                    newFacing = "Right"
+                    newIsMoving = true
+                }
+                else if(this.state.a && !this.state.d && this.state.lastInput === "a") {
+                    newLeft -= MOVESPEED
+                    newSprite = this.animate("left")
+                    newFacing = "Left"
+                    newIsMoving = true
+                }
+                // holding contradictory inputs
+                else {
+                    newIsMoving = false
+                    switch(this.state.facing) {
+                        case "Up":
+                            newSprite = pokeGirlUp1
+                            break;
+                        case "Down":
+                            newSprite = pokeGirlDown1
+                            break;
+                        case "Right":
+                            newSprite = pokeGirlRight1
+                            break;
+                        case "Left":
+                            newSprite = pokeGirlLeft1
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
-            else if(this.state.s && !this.state.w) {
-                newTop += MOVESPEED
-                newSprite = this.animate("down")
-                newFacing = "Down"
-                newIsMoving = true
-            }
-            else if(this.state.d && !this.state.a) {
-                newLeft += MOVESPEED
-                newSprite = this.animate("right")
-                newFacing = "Right"
-                newIsMoving = true
-            }
-            else if(this.state.a && !this.state.d) {
-                newLeft -= MOVESPEED 
-                newSprite = this.animate("left")
-                newFacing = "Left"
-                newIsMoving = true
-            }
-            // movement ends or no movement
-            // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
             else {
-                newSprite = this.playerImages[PLAYERSPRITE + this.state.facing + "1"]
-                newIsMoving = false
+                // movement direction changes
+                if(this.state.w && !this.state.s) {
+                    newTop -= MOVESPEED
+                    newSprite = this.animate("up")
+                    newFacing = "Up"
+                    newIsMoving = true
+                }
+                else if(this.state.s && !this.state.w) {
+                    newTop += MOVESPEED
+                    newSprite = this.animate("down")
+                    newFacing = "Down"
+                    newIsMoving = true
+                }
+                else if(this.state.d && !this.state.a) {
+                    newLeft += MOVESPEED
+                    newSprite = this.animate("right")
+                    newFacing = "Right"
+                    newIsMoving = true
+                }
+                else if(this.state.a && !this.state.d) {
+                    newLeft -= MOVESPEED 
+                    newSprite = this.animate("left")
+                    newFacing = "Left"
+                    newIsMoving = true
+                }
+                // movement ends or no movement
+                // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
+                else {
+                    newSprite = this.playerImages[PLAYERSPRITE + this.state.facing + "1"]
+                    newIsMoving = false
+                }
             }
-        }
 
-        // only do OOB/collision checks while moving - lowers idle load
-        if(newIsMoving) {
-            // aggro check
-            let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => 
-                newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
-            )
-            if(lineOfSightCollisionDetected.length > 0) {
-                // aggro appropriate trainer
-                newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
-            }
-            else {
-                newCurrentlyAggrodTrainer = null
-            }
+            // only do OOB/collision checks while moving - lowers idle load
+            if(newIsMoving) {
+                // aggro check
+                let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => 
+                    newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+                )
+                if(lineOfSightCollisionDetected.length > 0) {
+                    // aggro appropriate trainer and freeze controls
+                    newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
+                    newBattleCutsceneActive = true
+                }
+                else {
+                    newCurrentlyAggrodTrainer = null
+                }
 
-            // OOB check
-            if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5)) }
-            else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
-            if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
-            else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
+                // OOB check
+                if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5)) }
+                else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
+                if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
+                else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
 
-            // collision check
-            let obstacleCollisionDetected = this.obstacleCollisionMap.filter(obstacle => 
-                newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
-            )    
-            let trainerCollisionDetected  = this.trainerCollisionMap.filter(obstacle => 
-                newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
-            )
-            let collisionDetected = obstacleCollisionDetected.concat(trainerCollisionDetected)
-            if(collisionDetected.length > 0) {
-                switch(newFacing) {
-                    case "Up":
-                        newTop = collisionDetected[0].maxTop
-                        break;
-                    case "Down":
-                        newTop = collisionDetected[0].minTop
-                        break;
-                    case "Right":
-                        newLeft = collisionDetected[0].minLeft
-                        break;
-                    case "Left":
-                        newLeft = collisionDetected[0].maxLeft
-                        break;
-                    default:
-                        break;
+                // collision check
+                let obstacleCollisionDetected = this.obstacleCollisionMap.filter(obstacle => 
+                    newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+                )    
+                let trainerCollisionDetected  = this.trainerCollisionMap.filter(obstacle => 
+                    newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+                )
+                let collisionDetected = obstacleCollisionDetected.concat(trainerCollisionDetected)
+                if(collisionDetected.length > 0) {
+                    switch(newFacing) {
+                        case "Up":
+                            newTop = collisionDetected[0].maxTop
+                            break;
+                        case "Down":
+                            newTop = collisionDetected[0].minTop
+                            break;
+                        case "Right":
+                            newLeft = collisionDetected[0].minLeft
+                            break;
+                        case "Left":
+                            newLeft = collisionDetected[0].maxLeft
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
 
         this.setState({      
-            timer: new Date(),
             top: newTop,
             left: newLeft,
             currentSprite: newSprite,
             facing: newFacing,
             isMoving: newIsMoving,
-            currentlyAggrodTrainer: newCurrentlyAggrodTrainer
+            currentlyAggrodTrainer: newCurrentlyAggrodTrainer,
+            battleCutsceneActive: newBattleCutsceneActive
         }); 
     }
 
@@ -521,14 +542,14 @@ export default class GameContainer extends Component {
         }
     }
 
-    pause = (e) => {
+    freeze = (e) => {
         // movement ends
         this.setState({
             w: false,
             a: false,
             s: false,
             d: false,
-            lastInputHeld: false
+            lastInputHeld: false,
         })
     }
 
@@ -538,7 +559,7 @@ export default class GameContainer extends Component {
                 onKeyDown={this.moveSprite}
                 onKeyUp={this.stopSprite}
                 tabIndex="0"
-                onBlur={this.pause}
+                onBlur={this.freeze}
                 style={{
                     width: (MAPSIZE + BOUNDARYTHICCNESS * 2) + "px",
                     height: MAPSIZE + "px"
@@ -601,6 +622,7 @@ export default class GameContainer extends Component {
                         sightWidth={trainer.sightWidth}
                         sightHeight={trainer.sightHeight}
                         aggro={this.state.currentlyAggrodTrainer}
+                        cutscene={this.state.battleCutsceneActive}
                     />
                 )}
 
