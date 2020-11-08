@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import LineOfSight from './LineOfSight'
 
+import aggro from "../assets/aggro.png"
+
 export default class Trainer extends Component {
 
     aggroCheck = () => {
@@ -23,7 +25,15 @@ export default class Trainer extends Component {
             >
                 {this.aggroCheck()
                     ?
-                        "HEY KID"
+                        <img
+                            src={aggro}
+                            className="aggro"
+                            style={{
+                                height: this.props.size,
+                                width: this.props.size,
+                                marginTop: -this.props.size * 2,
+                            }}
+                        />
                     :
                         null
                 }

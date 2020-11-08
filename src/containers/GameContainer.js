@@ -248,7 +248,7 @@ export default class GameContainer extends Component {
         let newSprite = this.state.currentSprite
         let newIsMoving = this.state.isMoving
         let newFacing = this.state.facing
-        let newCurrentlyAggrodTrainer = null
+        let newCurrentlyAggrodTrainer = this.state.currentlyAggrodTrainer
 
         if(this.state.lastInputHeld) {
             // movement starts or continues after direction change
@@ -342,6 +342,9 @@ export default class GameContainer extends Component {
             if(lineOfSightCollisionDetected.length > 0) {
                 // aggro appropriate trainer
                 newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
+            }
+            else {
+                newCurrentlyAggrodTrainer = null
             }
 
             // OOB check

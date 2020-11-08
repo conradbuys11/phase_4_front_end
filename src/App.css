@@ -52,6 +52,10 @@
   /* align-self: center; */
 }
 
+.aggro {
+  position: absolute;
+}
+
 .left-boundary {
   float: left;
   order: 1;
