@@ -10,8 +10,10 @@ const LineOfSight = (props) => {
                 return [0, -props.height - props.size]
             case "right":
                 return [props.width + props.size, 0]
+            case "left":
+                return [-props.width - props.size, 0]
             default:
-                return [0, 0]
+                return [0, props.height + props.size]
         }
     }
 

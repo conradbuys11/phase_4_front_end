@@ -18,8 +18,10 @@ import pokeGirlUp1 from "../assets/poke-girl-1/up1.png"
 import pokeGirlUp2 from "../assets/poke-girl-1/up2.png"
 import pokeGirlUp3 from "../assets/poke-girl-1/up3.png"
 
-import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
+import rocketGruntMaleDown1 from "../assets/rocket-grunt-male/down1.png"
+import rocketGruntMaleLeft1 from "../assets/rocket-grunt-male/left1.png"
 import rocketGruntMaleRight1 from "../assets/rocket-grunt-male/right1.png"
+import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
 
 const MAPSIZE = 1000
 const PLAYERSPRITE = "pokeGirl"
@@ -480,6 +482,28 @@ export default class GameContainer extends Component {
                     left={0}
                     sightWidth={200}
                     sightHeight={SPRITESIZE / 2}
+                />
+                <Trainer
+                    orientation="left"
+                    sprite={rocketGruntMaleLeft1}
+                    size={SPRITESIZE}
+                    x={MAPSIZE / -2.5}
+                    y={-MAPSIZE / -12.5}
+                    top={0}
+                    left={0}
+                    sightWidth={200}
+                    sightHeight={SPRITESIZE / 2}
+                />
+                <Trainer
+                    orientation="down"
+                    sprite={rocketGruntMaleDown1}
+                    size={SPRITESIZE}
+                    x={MAPSIZE / -3.75}
+                    y={-MAPSIZE / -12.5}
+                    top={0}
+                    left={0}
+                    sightWidth={SPRITESIZE / 2}
+                    sightHeight={200}
                 />
 
                 {/* Player */}
