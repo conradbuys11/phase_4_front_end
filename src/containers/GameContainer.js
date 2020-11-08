@@ -21,6 +21,7 @@ import pokeGirlUp3 from "../assets/poke-girl-1/up3.png"
 import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
 
 const MAPSIZE = 1000
+const PLAYERSPRITE = "pokeGirl"
 
 const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
 const MOVESPEED = 1 * MAPSIZE / 300
@@ -84,13 +85,19 @@ export default class GameContainer extends Component {
             x: -MAPSIZE / 3,
             y: 0
         },
+        {
+            width: MAPSIZE / 45,
+            height: MAPSIZE / 45,
+            x: -MAPSIZE / 5,
+            y: -MAPSIZE / 5
+        },
     ]
 
     // I think it makes sense to do this map 1 time here rather than every 10ms in tick()
     collisionMap = this.obstacles.map(obstacle => {
         return {
-            minLeft: obstacle.x - obstacle.width - SPRITESIZE / 2,
-            maxLeft: obstacle.x + obstacle.width + SPRITESIZE / 2,
+            minLeft: obstacle.x - obstacle.width - SPRITESIZE / 3,
+            maxLeft: obstacle.x + obstacle.width + SPRITESIZE / 3,
             minTop: obstacle.y - obstacle.height - SPRITESIZE,
             maxTop: obstacle.y + obstacle.height
         }
@@ -210,7 +217,7 @@ export default class GameContainer extends Component {
             // movement ends or no movement
             // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
             else {
-                newSprite = this.images["pokeGirl" + this.state.facing + "1"]
+                newSprite = this.images[PLAYERSPRITE + this.state.facing + "1"]
                 newIsMoving = false
             }
         }
@@ -452,12 +459,15 @@ export default class GameContainer extends Component {
 
                 {/* Trainers */}
                 <Trainer
+                    orientation="up"
                     sprite={rocketGruntMaleUp1}
                     size={SPRITESIZE}
-                    x={400}
-                    y={-80}
+                    x={MAPSIZE / 2.5}
+                    y={-MAPSIZE / 12.5}
                     top={0}
                     left={0}
+                    sightWidth={SPRITESIZE / 2}
+                    sightHeight={200}
                 />
 
                 {/* Player */}

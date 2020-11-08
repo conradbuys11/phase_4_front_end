@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const Boundary = (props) => {
     let className = "boundary " + props.orientation + "-boundary " + props.location + "-boundary" 
