@@ -96,13 +96,71 @@ export default class GameContainer extends Component {
         },
     ]
 
+    // if game included more than 1 area this would be imported from area database
+    trainers = [
+        {
+            orientation: "up",
+            sprite: rocketGruntMaleUp1,
+            size: SPRITESIZE,
+            x: MAPSIZE / 2.5,
+            y: -MAPSIZE / 12.5,
+            top: 0,
+            left: 0,
+            sightWidth: SPRITESIZE / 2,
+            sightHeight: 200,
+        },
+        {
+            orientation: "right",
+            sprite: rocketGruntMaleRight1,
+            size: SPRITESIZE,
+            x: MAPSIZE / 2.5,
+            y: -MAPSIZE / -12.5,
+            top: 0,
+            left: 0,
+            sightWidth: 200,
+            sightHeight: SPRITESIZE / 2,
+        },
+        {
+            orientation: "left",
+            sprite: rocketGruntMaleLeft1,
+            size: SPRITESIZE,
+            x: MAPSIZE / -2.5,
+            y: -MAPSIZE / -12.5,
+            top: 0,
+            left: 0,
+            sightWidth: 200,
+            sightHeight: SPRITESIZE / 2,
+        },
+        {
+            orientation: "down",
+            sprite: rocketGruntMaleDown1,
+            size: SPRITESIZE,
+            x: MAPSIZE / -3.75,
+            y: -MAPSIZE / -12.5,
+            top: 0,
+            left: 0,
+            sightWidth: SPRITESIZE / 2,
+            sightHeight: 200,
+        },
+    ]
+
     // I think it makes sense to do this map 1 time here rather than every 10ms in tick()
-    collisionMap = this.obstacles.map(obstacle => {
+    obstacleCollisionMap = this.obstacles.map(obstacle => {
         return {
             minLeft: obstacle.x - obstacle.width - SPRITESIZE / 3,
             maxLeft: obstacle.x + obstacle.width + SPRITESIZE / 3,
             minTop: obstacle.y - obstacle.height - SPRITESIZE,
             maxTop: obstacle.y + obstacle.height
+        }
+    })
+
+    // will need to account for "top" and "left" when trainers move
+    trainerCollisionMap = this.trainers.map(trainer => {
+        return {
+            minLeft: trainer.x - trainer.size - SPRITESIZE / 3,
+            maxLeft: trainer.x + trainer.size + SPRITESIZE / 3,
+            minTop: trainer.y - trainer.size - SPRITESIZE,
+            maxTop: trainer.y + trainer.size
         }
     })
 
@@ -234,9 +292,13 @@ export default class GameContainer extends Component {
             else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
 
             // collision check
-            let collisionDetected = this.collisionMap.filter(obstacle => 
+            let obstacleCollisionDetected = this.obstacleCollisionMap.filter(obstacle => 
                 newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
             )    
+            let trainerCollisionDetected  = this.trainerCollisionMap.filter(obstacle => 
+                newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+            )
+            let collisionDetected = obstacleCollisionDetected.concat(trainerCollisionDetected)
             if(collisionDetected.length > 0) {
                 switch(newFacing) {
                     case "Up":
@@ -461,50 +523,19 @@ export default class GameContainer extends Component {
                 )}
 
                 {/* Trainers */}
-                <Trainer
-                    orientation="up"
-                    sprite={rocketGruntMaleUp1}
-                    size={SPRITESIZE}
-                    x={MAPSIZE / 2.5}
-                    y={-MAPSIZE / 12.5}
-                    top={0}
-                    left={0}
-                    sightWidth={SPRITESIZE / 2}
-                    sightHeight={200}
-                />
-                <Trainer
-                    orientation="right"
-                    sprite={rocketGruntMaleRight1}
-                    size={SPRITESIZE}
-                    x={MAPSIZE / 2.5}
-                    y={-MAPSIZE / -12.5}
-                    top={0}
-                    left={0}
-                    sightWidth={200}
-                    sightHeight={SPRITESIZE / 2}
-                />
-                <Trainer
-                    orientation="left"
-                    sprite={rocketGruntMaleLeft1}
-                    size={SPRITESIZE}
-                    x={MAPSIZE / -2.5}
-                    y={-MAPSIZE / -12.5}
-                    top={0}
-                    left={0}
-                    sightWidth={200}
-                    sightHeight={SPRITESIZE / 2}
-                />
-                <Trainer
-                    orientation="down"
-                    sprite={rocketGruntMaleDown1}
-                    size={SPRITESIZE}
-                    x={MAPSIZE / -3.75}
-                    y={-MAPSIZE / -12.5}
-                    top={0}
-                    left={0}
-                    sightWidth={SPRITESIZE / 2}
-                    sightHeight={200}
-                />
+                {this.trainers.map(trainer => 
+                    <Trainer
+                        orientation={trainer.orientation}
+                        sprite={trainer.sprite}
+                        size={trainer.size}
+                        x={trainer.x}
+                        y={trainer.y}
+                        top={trainer.top}
+                        left={trainer.left}
+                        sightWidth={trainer.sightWidth}
+                        sightHeight={trainer.sightHeight}
+                    />
+                )}
 
                 {/* Player */}
                 <PlayerSprite 
