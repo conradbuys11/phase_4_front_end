@@ -6,7 +6,7 @@ import aggro from "../assets/aggro.png"
 export default class Trainer extends Component {
 
     aggroCheck = () => {
-        if(this.props.aggro === this.props.id) {
+        if(this.props.aggro === this.props.id && this.props.nani > 0) {
             return true
         }
         return false

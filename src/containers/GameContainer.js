@@ -24,6 +24,7 @@ import rocketGruntMaleRight1 from "../assets/rocket-grunt-male/right1.png"
 import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
 
 const MAPSIZE = 1000
+const TICKTIMER = 10
 const PLAYERSPRITE = "pokeGirl"
 
 const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
@@ -31,6 +32,7 @@ const MOVESPEED = 1 * MAPSIZE / 300
 const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
 const AGGROWIDTH = SPRITESIZE / 4
+const NANITIME = 750
 
 export default class GameContainer extends Component {
 
@@ -231,6 +233,7 @@ export default class GameContainer extends Component {
             facing: "Down",
             timeOfLastDirectionChange: new Date(),
             currentlyAggrodTrainer: null,
+            nani: 0,
             battleCutsceneActive: false
         }
         this.loadedAt = new Date()
@@ -239,7 +242,7 @@ export default class GameContainer extends Component {
     componentDidMount() {
         this.timerID = setInterval(      
             () => this.tick(),
-            10   
+            TICKTIMER   
         );
     }
 
@@ -250,24 +253,42 @@ export default class GameContainer extends Component {
         let newIsMoving = this.state.isMoving
         let newFacing = this.state.facing
         let newCurrentlyAggrodTrainer = this.state.currentlyAggrodTrainer
-        let newBattleCutsceneActive = false
+        let newNani = this.state.nani
+        let newBattleCutsceneActive = this.state.battleCutsceneActive
 
+        // battle cutscene
         if(this.state.currentlyAggrodTrainer) {
-            // move currentlyAggrodTrainer to player
-
-            // change player to correct standing sprite
-            switch(this.state.facing) {
-                case "up":
-                    break;
-                case "left":
-                    break;
-                case "right":
-                    break;
-                default:
-                    break;
+            // wait some amount of time for nani animation
+            if(newNani > 0) {
+                newNani -= TICKTIMER
+                if(newNani <= 0) {
+                    newNani = 0
+                    newBattleCutsceneActive = true
+                }
             }
-            // initiate battle animation
+            else {
+                // change player to correct standing sprite
+                switch(this.state.facing) {
+                    case "Up":
+                        newSprite = pokeGirlUp1
+                        break;
+                    case "Down":
+                        newSprite = pokeGirlDown1
+                        break;
+                    case "Right":
+                        newSprite = pokeGirlRight1
+                        break;
+                    case "Left":
+                        newSprite = pokeGirlLeft1
+                        break;
+                    default:
+                        break;
+                }
+                // move currentlyAggrodTrainer to player
+                    // then initiate battle animation
+            }                
         }
+        // normal movement
         else {
             if(this.state.lastInputHeld) {
                 // movement starts or continues after direction change
@@ -361,7 +382,7 @@ export default class GameContainer extends Component {
                 if(lineOfSightCollisionDetected.length > 0) {
                     // aggro appropriate trainer and freeze controls
                     newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
-                    newBattleCutsceneActive = true
+                    newNani = NANITIME
                 }
                 else {
                     newCurrentlyAggrodTrainer = null
@@ -409,6 +430,7 @@ export default class GameContainer extends Component {
             facing: newFacing,
             isMoving: newIsMoving,
             currentlyAggrodTrainer: newCurrentlyAggrodTrainer,
+            nani: newNani,
             battleCutsceneActive: newBattleCutsceneActive
         }); 
     }
@@ -622,7 +644,7 @@ export default class GameContainer extends Component {
                         sightWidth={trainer.sightWidth}
                         sightHeight={trainer.sightHeight}
                         aggro={this.state.currentlyAggrodTrainer}
-                        cutscene={this.state.battleCutsceneActive}
+                        nani={this.state.nani}
                     />
                 )}
 
