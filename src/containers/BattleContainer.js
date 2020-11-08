@@ -10,8 +10,14 @@ function BattleContainer(props){
 
     const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon']
 
+
+
     //this is componentDidMount
     useEffect(() => {
+        
+        fetch('http://localhost:3000/pokemons/')
+        .then(rsp => rsp.json())
+        .then(pkms => console.log(pkms[0].species.name))
         if(props.player != null){
             //setPlayer(props.player)
             //for each pokemon the player has,
@@ -22,7 +28,7 @@ function BattleContainer(props){
             //setOpponent(props.opponent)
             //setOpponentPokemon(props.opponent's first pokemon)
         }
-        setBattleState[battleStates[0]] //chooseMove state
+        setBattleState(battleStates[0]) //chooseMove state
     }, [])
     //the empty array thing here basically tells this to only run once
     //otherwise it'd also run useEffect on componentDidUpdate
@@ -93,10 +99,10 @@ function BattleContainer(props){
         </div>)
     }
 
-    
+
 
     return(  
-        useMoveRender()
+        <div>lol</div>
     )
 }
 
