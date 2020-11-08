@@ -35,7 +35,7 @@ export default class GameContainer extends Component {
 
     loadedAt
 
-    images = {
+    playerImages = {
         pokeGirlDown1,
         pokeGirlDown2,
         pokeGirlDown3,
@@ -164,6 +164,39 @@ export default class GameContainer extends Component {
         }
     })
 
+    lineOfSightCollisionMap = this.trainers.map(trainer => {
+        switch(trainer.orientation) {
+            case "up":
+                return {
+                    minLeft: trainer.x - trainer.size,
+                    maxLeft: trainer.x + trainer.size,
+                    minTop: trainer.y - trainer.sightHeight * 2 - trainer.size * 2,
+                    maxTop: trainer.y - trainer.size
+                }
+            case "left":
+                return {
+                    minLeft: trainer.x - trainer.sightWidth * 2 - trainer.size * 2 + SPRITESIZE / 3,
+                    maxLeft: trainer.x - trainer.size,
+                    minTop: trainer.y - trainer.size - SPRITESIZE / 2,
+                    maxTop: trainer.y + trainer.size - SPRITESIZE / 2,
+                }
+            case "right":
+                return {
+                    minLeft: trainer.x + trainer.size,
+                    maxLeft: trainer.x + trainer.sightWidth * 2 + trainer.size * 2 - SPRITESIZE / 3,
+                    minTop: trainer.y - trainer.size - SPRITESIZE / 2,
+                    maxTop: trainer.y + trainer.size - SPRITESIZE / 2,
+                }
+            default:
+                return {
+                    minLeft: trainer.x - trainer.size,
+                    maxLeft: trainer.x + trainer.size,
+                    minTop: trainer.y + trainer.size,
+                    maxTop: trainer.y + trainer.sightHeight * 2 + trainer.size * 2
+                }
+        }
+    })
+
     constructor() {
         super()
         this.state = {
@@ -278,13 +311,22 @@ export default class GameContainer extends Component {
             // movement ends or no movement
             // probably need to split these up -- currently doing the "stop movement" action every 10ms even while not moving
             else {
-                newSprite = this.images[PLAYERSPRITE + this.state.facing + "1"]
+                newSprite = this.playerImages[PLAYERSPRITE + this.state.facing + "1"]
                 newIsMoving = false
             }
         }
 
         // only do OOB/collision checks while moving - lowers idle load
         if(newIsMoving) {
+            // aggro check
+            let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => 
+                newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+            )
+            if(lineOfSightCollisionDetected.length > 0) {
+                // aggro appropriate trainer
+                console.log("aggro")
+            }
+
             // OOB check
             if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5)) }
             else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
