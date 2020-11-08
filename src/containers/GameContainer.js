@@ -53,42 +53,49 @@ export default class GameContainer extends Component {
     // if game included more than 1 area this would be imported from area database
     obstacles = [
         {
+            id: 1,
             width: MAPSIZE / 45,
             height: MAPSIZE / 4.5,
             x: MAPSIZE / 3,
             y: 0
         },
         {
+            id: 2,
             width: MAPSIZE / 4.5,
             height: MAPSIZE / 45,
             x: 0,
             y: MAPSIZE / 3,
         },
         {
+            id: 3,
             width: MAPSIZE / 4.5,
             height: MAPSIZE / 45,
             x: MAPSIZE / 3,
             y: 0
         },
         {
+            id: 4,
             width: MAPSIZE / 4.5,
             height: MAPSIZE / 45,
             x: 0,
             y: -MAPSIZE / 3,
         },
         {
+            id: 5,
             width: MAPSIZE / 45,
             height: MAPSIZE / 4.5,
             x: -MAPSIZE / 3,
             y: 0
         },
         {
+            id: 6,
             width: MAPSIZE / 4.5,
             height: MAPSIZE / 45,
             x: -MAPSIZE / 3,
             y: 0
         },
         {
+            id: 7,
             width: MAPSIZE / 45,
             height: MAPSIZE / 45,
             x: -MAPSIZE / 5,
@@ -96,9 +103,10 @@ export default class GameContainer extends Component {
         },
     ]
 
-    // if game included more than 1 area this would be imported from area database
+    // these should load from database
     trainers = [
         {
+            id: 1,
             orientation: "up",
             sprite: rocketGruntMaleUp1,
             size: SPRITESIZE,
@@ -110,6 +118,7 @@ export default class GameContainer extends Component {
             sightHeight: 200,
         },
         {
+            id: 2,
             orientation: "right",
             sprite: rocketGruntMaleRight1,
             size: SPRITESIZE,
@@ -121,6 +130,7 @@ export default class GameContainer extends Component {
             sightHeight: SPRITESIZE / 2,
         },
         {
+            id: 3,
             orientation: "left",
             sprite: rocketGruntMaleLeft1,
             size: SPRITESIZE,
@@ -132,6 +142,7 @@ export default class GameContainer extends Component {
             sightHeight: SPRITESIZE / 2,
         },
         {
+            id: 4,
             orientation: "down",
             sprite: rocketGruntMaleDown1,
             size: SPRITESIZE,
@@ -168,6 +179,7 @@ export default class GameContainer extends Component {
         switch(trainer.orientation) {
             case "up":
                 return {
+                    trainerId: trainer.id,
                     minLeft: trainer.x - trainer.size,
                     maxLeft: trainer.x + trainer.size,
                     minTop: trainer.y - trainer.sightHeight * 2 - trainer.size * 2,
@@ -175,6 +187,7 @@ export default class GameContainer extends Component {
                 }
             case "left":
                 return {
+                    trainerId: trainer.id,
                     minLeft: trainer.x - trainer.sightWidth * 2 - trainer.size * 2 + SPRITESIZE / 3,
                     maxLeft: trainer.x - trainer.size,
                     minTop: trainer.y - trainer.size - SPRITESIZE / 2,
@@ -182,6 +195,7 @@ export default class GameContainer extends Component {
                 }
             case "right":
                 return {
+                    trainerId: trainer.id,
                     minLeft: trainer.x + trainer.size,
                     maxLeft: trainer.x + trainer.sightWidth * 2 + trainer.size * 2 - SPRITESIZE / 3,
                     minTop: trainer.y - trainer.size - SPRITESIZE / 2,
@@ -189,6 +203,7 @@ export default class GameContainer extends Component {
                 }
             default:
                 return {
+                    trainerId: trainer.id,
                     minLeft: trainer.x - trainer.size,
                     maxLeft: trainer.x + trainer.size,
                     minTop: trainer.y + trainer.size,
@@ -324,7 +339,7 @@ export default class GameContainer extends Component {
             )
             if(lineOfSightCollisionDetected.length > 0) {
                 // aggro appropriate trainer
-                console.log("aggro")
+                console.log(lineOfSightCollisionDetected[0].trainerId)
             }
 
             // OOB check
@@ -557,6 +572,7 @@ export default class GameContainer extends Component {
                 {/* Obstacles */}
                 {this.obstacles.map(obstacle => 
                     <Obstacle
+                        key={obstacle.id}
                         width={obstacle.width + "px"}
                         height={obstacle.height + "px"}
                         x={obstacle.x + "px"}
@@ -567,6 +583,7 @@ export default class GameContainer extends Component {
                 {/* Trainers */}
                 {this.trainers.map(trainer => 
                     <Trainer
+                        key={trainer.id}
                         orientation={trainer.orientation}
                         sprite={trainer.sprite}
                         size={trainer.size}
