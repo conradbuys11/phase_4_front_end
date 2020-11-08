@@ -32,7 +32,7 @@ const MOVESPEED = 1 * MAPSIZE / 300
 const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
 const AGGROWIDTH = SPRITESIZE / 4
-const NANITIME = 750
+const NANITIME = 800
 
 export default class GameContainer extends Component {
 
@@ -115,8 +115,6 @@ export default class GameContainer extends Component {
             size: SPRITESIZE,
             x: MAPSIZE / 2.5,
             y: -MAPSIZE / 12.5,
-            top: 0,
-            left: 0,
             sightWidth: AGGROWIDTH,
             sightHeight: 200,
         },
@@ -127,8 +125,6 @@ export default class GameContainer extends Component {
             size: SPRITESIZE,
             x: MAPSIZE / 2.5,
             y: -MAPSIZE / -12.5,
-            top: 0,
-            left: 0,
             sightWidth: 200,
             sightHeight: AGGROWIDTH,
         },
@@ -139,8 +135,6 @@ export default class GameContainer extends Component {
             size: SPRITESIZE,
             x: MAPSIZE / -2.5,
             y: -MAPSIZE / -12.5,
-            top: 0,
-            left: 0,
             sightWidth: 200,
             sightHeight: AGGROWIDTH,
         },
@@ -151,8 +145,6 @@ export default class GameContainer extends Component {
             size: SPRITESIZE,
             x: MAPSIZE / -3.75,
             y: -MAPSIZE / -12.5,
-            top: 0,
-            left: 0,
             sightWidth: AGGROWIDTH,
             sightHeight: 200,
         },
@@ -234,7 +226,9 @@ export default class GameContainer extends Component {
             timeOfLastDirectionChange: new Date(),
             currentlyAggrodTrainer: null,
             nani: 0,
-            battleCutsceneActive: false
+            battleCutsceneActive: false,
+            trainerTop: 0,
+            trainerLeft: 0
         }
         this.loadedAt = new Date()
     }
@@ -255,6 +249,8 @@ export default class GameContainer extends Component {
         let newCurrentlyAggrodTrainer = this.state.currentlyAggrodTrainer
         let newNani = this.state.nani
         let newBattleCutsceneActive = this.state.battleCutsceneActive
+        let newTrainerTop = this.state.trainerTop
+        let newTrainerLeft = this.state.trainerLeft
 
         // battle cutscene
         if(this.state.currentlyAggrodTrainer) {
@@ -268,24 +264,30 @@ export default class GameContainer extends Component {
             }
             else {
                 // change player to correct standing sprite
+                // and move currentlyAggrodTrainer toward player
                 switch(this.state.facing) {
                     case "Up":
                         newSprite = pokeGirlUp1
+                        newTrainerLeft += MOVESPEED / 2
                         break;
                     case "Down":
                         newSprite = pokeGirlDown1
+                        newTrainerLeft += MOVESPEED / 2
                         break;
                     case "Right":
                         newSprite = pokeGirlRight1
+                        newTrainerTop -= MOVESPEED / 2
                         break;
                     case "Left":
                         newSprite = pokeGirlLeft1
+                        newTrainerTop -= MOVESPEED / 2
                         break;
                     default:
                         break;
                 }
-                // move currentlyAggrodTrainer to player
-                    // then initiate battle animation
+                // if currentlyAggrodTrainer collides with player,
+
+                // end cutscene and initiate battle animation
             }                
         }
         // normal movement
@@ -380,9 +382,12 @@ export default class GameContainer extends Component {
                     newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
                 )
                 if(lineOfSightCollisionDetected.length > 0) {
-                    // aggro appropriate trainer and freeze controls
+                    // aggro appropriate trainer
                     newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
+                    // freeze controls
                     newNani = NANITIME
+                    // measure distance ????
+
                 }
                 else {
                     newCurrentlyAggrodTrainer = null
@@ -431,7 +436,9 @@ export default class GameContainer extends Component {
             isMoving: newIsMoving,
             currentlyAggrodTrainer: newCurrentlyAggrodTrainer,
             nani: newNani,
-            battleCutsceneActive: newBattleCutsceneActive
+            battleCutsceneActive: newBattleCutsceneActive,
+            trainerLeft: newTrainerLeft,
+            trainerTop: newTrainerTop
         }); 
     }
 
@@ -639,12 +646,14 @@ export default class GameContainer extends Component {
                         size={trainer.size}
                         x={trainer.x}
                         y={trainer.y}
-                        top={trainer.top}
-                        left={trainer.left}
                         sightWidth={trainer.sightWidth}
                         sightHeight={trainer.sightHeight}
                         aggro={this.state.currentlyAggrodTrainer}
                         nani={this.state.nani}
+                        top={this.state.trainerTop}
+                        left={this.state.trainerLeft}
+                        playerTop={this.state.top}
+                        playerLeft={this.state.left}
                     />
                 )}
 

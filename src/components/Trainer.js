@@ -12,13 +12,34 @@ export default class Trainer extends Component {
         return false
     }
 
+    move = () => {
+        if(this.props.aggro === this.props.id && this.props.nani === 0) {
+            let top = this.props.top
+            let left = this.props.left
+            if(this.props.orientation === "down" || this.props.orientation === "left") {
+                top = top * -1
+                left = left * -1
+            }
+            return {
+                top: top,
+                left: left
+            }
+        }
+        else {
+            return {
+                top: 0,
+                left: 0
+            }
+        }
+    }
+
     render() {
         return (
             <div
                 className="trainer-sprite"
                 style={{
-                    marginTop: this.props.y + this.props.top,
-                    marginLeft: this.props.x + this.props.left,
+                    marginTop: this.props.y + this.move().top,
+                    marginLeft: this.props.x + this.move().left,
                     height: this.props.size,
                     width: this.props.size,
                 }}
