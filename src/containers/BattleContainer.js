@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import MoveButton from '../components/MoveButton'
 import PokemonText from '../components/PokemonText'
+
 import { Divider } from 'semantic-ui-react'
+
+import pokeballIcon from "../assets/pokeball.png"
 
 function BattleContainer(props){
     const [player, setPlayer] = useState(undefined)
@@ -232,7 +235,16 @@ function BattleContainer(props){
                                 <PokemonText pokemon={opponentPokemon} sprite={opponentPokemon.species.sprite_front}/>
                             </div>
                         </div>
-                        <Divider horizontal>a</Divider>
+                        <Divider horizontal>
+                            <img
+                                src={pokeballIcon}
+                                height="15px" 
+                                width="15px"
+                                style={{
+                                    marginBottom: "-3px"
+                                }}
+                            />
+                        </Divider>
                         <div id="ui-area">
                             <div className={'move-buttons'}>
                                 <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/>
