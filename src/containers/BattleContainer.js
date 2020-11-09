@@ -23,7 +23,7 @@ function BattleContainer(props){
         fetch('http://localhost:3000/trainers/')
         .then(rsp => rsp.json())
         .then(trainers => {
-            setPlayer(trainers[0])
+            setPlayer(trainers[1])
             setOpponent(trainers[1])
         })
         if(props.player != null){
@@ -262,7 +262,7 @@ function BattleContainer(props){
             }
             else if(player !== undefined && opponent !== undefined){
                 setPlayerPokemon(player.pokemons[0])
-                setOpponentPokemon(opponent.pokemons[2])
+                setOpponentPokemon(opponent.pokemons[0])
             }
             return <div>loLOADING...ading...</div>
         }
@@ -301,10 +301,10 @@ function BattleContainer(props){
                         </Divider>
                         <div id="ui-area">
                             <div className={'move-buttons'}>
-                                <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/>
-                                <MoveButton move={playerPokemon.moves[1]} useMove={useMove}/>
-                                <MoveButton move={playerPokemon.moves[2]} useMove={useMove}/>
-                                <MoveButton move={playerPokemon.moves[3]} useMove={useMove}/>
+                                {playerPokemon.moves[0] != null ? <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/> : null}
+                                {playerPokemon.moves[1] != null ? <MoveButton move={playerPokemon.moves[1]} useMove={useMove}/> : null}
+                                {playerPokemon.moves[2] != null ? <MoveButton move={playerPokemon.moves[2]} useMove={useMove}/> : null}
+                                {playerPokemon.moves[3] != null ? <MoveButton move={playerPokemon.moves[3]} useMove={useMove}/> : null}
                             </div>
                         </div>
                     </div>
