@@ -32,6 +32,7 @@ const MOVESPEED = 1 * MAPSIZE / 300
 const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
 const AGGROWIDTH = SPRITESIZE / 4
+const AGGRODISTANCE = MAPSIZE / 5
 const NANITIME = 800
 
 export default class GameContainer extends Component {
@@ -116,7 +117,7 @@ export default class GameContainer extends Component {
             x: MAPSIZE / 2.5,
             y: -MAPSIZE / 12.5,
             sightWidth: AGGROWIDTH,
-            sightHeight: 200,
+            sightHeight: AGGRODISTANCE,
         },
         {
             id: 2,
@@ -125,7 +126,7 @@ export default class GameContainer extends Component {
             size: SPRITESIZE,
             x: MAPSIZE / 2.5,
             y: -MAPSIZE / -12.5,
-            sightWidth: 200,
+            sightWidth: AGGRODISTANCE,
             sightHeight: AGGROWIDTH,
         },
         {
@@ -135,7 +136,7 @@ export default class GameContainer extends Component {
             size: SPRITESIZE,
             x: MAPSIZE / -2.5,
             y: -MAPSIZE / -12.5,
-            sightWidth: 200,
+            sightWidth: AGGRODISTANCE,
             sightHeight: AGGROWIDTH,
         },
         {
@@ -146,7 +147,7 @@ export default class GameContainer extends Component {
             x: MAPSIZE / -3.75,
             y: -MAPSIZE / -12.5,
             sightWidth: AGGROWIDTH,
-            sightHeight: 200,
+            sightHeight: AGGRODISTANCE,
         },
     ]
 
@@ -314,6 +315,15 @@ export default class GameContainer extends Component {
                                 newEnterBattleAnimation = true
                             }
                         }
+                        else if (this.state.cutsceneDirection === "down") {
+                            newTrainerTop += MOVESPEED / 2
+                            newCutsceneDistanceY -= MOVESPEED / 2
+                            if(newCutsceneDistanceY <= 0) {
+                                newCutsceneDistanceY = 0
+                                newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
+                            }
+                        }
                         break;
                     case "Down":
                         if(this.state.cutsceneDirection === "right") {
@@ -330,6 +340,15 @@ export default class GameContainer extends Component {
                             newCutsceneDistanceX += MOVESPEED / 2
                             if(newCutsceneDistanceX >= 0) {
                                 newCutsceneDistanceX = 0
+                                newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
+                            }
+                        }
+                        else if (this.state.cutsceneDirection === "up") {
+                            newTrainerTop -= MOVESPEED / 2
+                            newCutsceneDistanceY += MOVESPEED / 2
+                            if(newCutsceneDistanceY >= 0) {
+                                newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
                                 newEnterBattleAnimation = true
                             }
@@ -354,6 +373,15 @@ export default class GameContainer extends Component {
                                 newEnterBattleAnimation = true
                             }
                         }
+                        else if (this.state.cutsceneDirection === "left") {
+                            newTrainerLeft -= MOVESPEED / 2
+                            newCutsceneDistanceX += MOVESPEED / 2
+                            if(newCutsceneDistanceX >= 0) {
+                                newCutsceneDistanceX = 0
+                                newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
+                            }
+                        }
                         break;
                     case "Left":
                         if(this.state.cutsceneDirection === "up") {
@@ -370,6 +398,15 @@ export default class GameContainer extends Component {
                             newCutsceneDistanceY -= MOVESPEED / 2
                             if(newCutsceneDistanceY <= 0) {
                                 newCutsceneDistanceY = 0
+                                newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
+                            }
+                        }
+                        else if (this.state.cutsceneDirection === "right") {
+                            newTrainerLeft += MOVESPEED / 2
+                            newCutsceneDistanceX -= MOVESPEED / 2
+                            if(newCutsceneDistanceX <= 0) {
+                                newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
                                 newEnterBattleAnimation = true
                             }
@@ -485,6 +522,7 @@ export default class GameContainer extends Component {
             if(newIsMoving) {
                 // aggro check
                 let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => 
+                    // subtract SPRITESIZE from the mins to have less myopic enemies
                     newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
                 )
                 // aggro detected
