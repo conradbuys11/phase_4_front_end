@@ -9,7 +9,7 @@ function BattleContainer(props){
     const [opponentPokemon, setOpponentPokemon] = useState(undefined)
     const [battleState, setBattleState] = useState('')
 
-    const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon']
+    const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon', 'victory']
 
 
 
@@ -193,6 +193,20 @@ function BattleContainer(props){
         battleLogicHolder(playerPokemon, opponentPokemon, move) //go to damage calculation
     }
 
+    const sendOutNextMon = opponent => {
+        opponent.pokemons.forEach(pokemon => {
+            if(pokemon.current_hp > 0){
+                setOpponentPokemon(pokemon)
+                setBattleState(battleStates[1])
+                return
+            }
+        }
+        )
+        //if we run through this whole loop & get nothing, that means all pokemon fainted
+        //set state to defeat!
+        setBattleState(battleStates[2])
+    }
+
     const renderController = () => {
         if(battleState === ''){
             if(playerPokemon !== undefined && opponentPokemon !== undefined){
@@ -200,7 +214,7 @@ function BattleContainer(props){
             }
             else if(player !== undefined && opponent !== undefined){
                 setPlayerPokemon(player.pokemons[0])
-                setOpponentPokemon(opponent.pokemons[0])
+                setOpponentPokemon(opponent.pokemons[2])
             }
             return <div>loLOADING...ading...</div>
         }
@@ -209,10 +223,10 @@ function BattleContainer(props){
             return(
                 <div>
                     <div className={'player-pokemon-text'}>
-                        <PokemonText pokemon={playerPokemon}/>
+                        <PokemonText pokemon={playerPokemon} sprite={playerPokemon.species.sprite_back}/>
                     </div>
                     <div className={'opponent-pokemon-text'}>
-                        <PokemonText pokemon={opponentPokemon} />
+                        <PokemonText pokemon={opponentPokemon} sprite={opponentPokemon.species.sprite_front}/>
                     </div>
                     <div className={'move-buttons'}>
                         <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/>
