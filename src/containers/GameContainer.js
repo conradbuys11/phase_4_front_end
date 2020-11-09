@@ -231,7 +231,8 @@ export default class GameContainer extends Component {
             trainerLeft: 0,
             cutsceneDistanceX: 0,
             cutsceneDistanceY: 0,
-            cutsceneDirection: null
+            cutsceneDirection: null,
+            enterBattleAnimation: false
         }
         this.loadedAt = new Date()
     }
@@ -251,35 +252,57 @@ export default class GameContainer extends Component {
         let newFacing = this.state.facing
         let newCurrentlyAggrodTrainer = this.state.currentlyAggrodTrainer
         let newNani = this.state.nani
-        let newBattleCutsceneActive = this.state.battleCutsceneActive
-        let newTrainerTop = this.state.trainerTop
-        let newTrainerLeft = this.state.trainerLeft
         let newCutsceneDistanceX = this.state.cutsceneDistanceX
         let newCutsceneDistanceY = this.state.cutsceneDistanceY
         let newCutsceneDirection = this.state.cutsceneDirection
 
+        // battle animation
+        if(this.state.enterBattleAnimation) {
+
+        }
         // battle cutscene
-        if(this.state.currentlyAggrodTrainer) {
+        else if(this.state.currentlyAggrodTrainer) {
+            let newBattleCutsceneActive = this.state.battleCutsceneActive
+            let newTrainerTop = this.state.trainerTop
+            let newTrainerLeft = this.state.trainerLeft
+            
+            let newEnterBattleAnimation = this.state.enterBattleAnimation
             // wait some amount of time for nani animation
             if(newNani > 0) {
                 newNani -= TICKTIMER
                 if(newNani <= 0) {
                     newNani = 0
                     newBattleCutsceneActive = true
+                    // change player to correct standing sprite -- 1 time
+                    switch(this.state.facing) {
+                        case "Up":
+                            newSprite = pokeGirlUp1
+                            break;
+                        case "Down":
+                            newSprite = pokeGirlDown1
+                            break;
+                        case "Right":
+                            newSprite = pokeGirlRight1
+                            break;
+                        case "Left":
+                            newSprite = pokeGirlLeft1
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             else if (this.state.battleCutsceneActive) {
-                // change player to correct standing sprite
-                // and move currentlyAggrodTrainer toward player
+                // move currentlyAggrodTrainer toward player
                 switch(this.state.facing) {
                     case "Up":
-                        newSprite = pokeGirlUp1
                         if(this.state.cutsceneDirection === "right") {
                             newTrainerLeft += MOVESPEED / 2
                             newCutsceneDistanceX -= MOVESPEED / 2
                             if(newCutsceneDistanceX <= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         else if (this.state.cutsceneDirection === "left") {
@@ -288,17 +311,18 @@ export default class GameContainer extends Component {
                             if(newCutsceneDistanceX >= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         break;
                     case "Down":
-                        newSprite = pokeGirlDown1
                         if(this.state.cutsceneDirection === "right") {
                             newTrainerLeft += MOVESPEED / 2
                             newCutsceneDistanceX -= MOVESPEED / 2
                             if(newCutsceneDistanceX <= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         else if (this.state.cutsceneDirection === "left") {
@@ -307,17 +331,18 @@ export default class GameContainer extends Component {
                             if(newCutsceneDistanceX >= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         break;
                     case "Right":
-                        newSprite = pokeGirlRight1
                         if(this.state.cutsceneDirection === "up") {
                             newTrainerTop -= MOVESPEED / 2
                             newCutsceneDistanceY += MOVESPEED / 2
                             if(newCutsceneDistanceY >= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         else if (this.state.cutsceneDirection === "down") {
@@ -326,17 +351,18 @@ export default class GameContainer extends Component {
                             if(newCutsceneDistanceY <= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         break;
                     case "Left":
-                        newSprite = pokeGirlLeft1
                         if(this.state.cutsceneDirection === "up") {
                             newTrainerTop -= MOVESPEED / 2
                             newCutsceneDistanceY += MOVESPEED / 2
                             if(newCutsceneDistanceY >= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         else if(this.state.cutsceneDirection === "down") {
@@ -345,16 +371,30 @@ export default class GameContainer extends Component {
                             if(newCutsceneDistanceY <= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
+                                newEnterBattleAnimation = true
                             }
                         }
                         break;
                     default:
                         break;
                 }
-                // if currentlyAggrodTrainer collides with player,
-
-                // end cutscene and initiate battle animation
-            }                
+            } 
+            this.setState({      
+                top: newTop,
+                left: newLeft,
+                currentSprite: newSprite,
+                facing: newFacing,
+                isMoving: newIsMoving,
+                currentlyAggrodTrainer: newCurrentlyAggrodTrainer,
+                nani: newNani,
+                battleCutsceneActive: newBattleCutsceneActive,
+                trainerLeft: newTrainerLeft,
+                trainerTop: newTrainerTop,
+                cutsceneDistanceX: newCutsceneDistanceX,
+                cutsceneDistanceY: newCutsceneDistanceY,
+                cutsceneDirection: newCutsceneDirection,
+                enterBattleAnimation: newEnterBattleAnimation
+            });                
         }
         // normal movement
         else {
@@ -511,23 +551,19 @@ export default class GameContainer extends Component {
                     }
                 }
             }
+            this.setState({      
+                top: newTop,
+                left: newLeft,
+                currentSprite: newSprite,
+                facing: newFacing,
+                isMoving: newIsMoving,
+                currentlyAggrodTrainer: newCurrentlyAggrodTrainer,
+                nani: newNani,
+                cutsceneDistanceX: newCutsceneDistanceX,
+                cutsceneDistanceY: newCutsceneDistanceY,
+                cutsceneDirection: newCutsceneDirection
+            }); 
         }
-
-        this.setState({      
-            top: newTop,
-            left: newLeft,
-            currentSprite: newSprite,
-            facing: newFacing,
-            isMoving: newIsMoving,
-            currentlyAggrodTrainer: newCurrentlyAggrodTrainer,
-            nani: newNani,
-            battleCutsceneActive: newBattleCutsceneActive,
-            trainerLeft: newTrainerLeft,
-            trainerTop: newTrainerTop,
-            cutsceneDistanceX: newCutsceneDistanceX,
-            cutsceneDistanceY: newCutsceneDistanceY,
-            cutsceneDirection: newCutsceneDirection
-        }); 
     }
 
     animate = (direction) => {
