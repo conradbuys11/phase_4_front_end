@@ -1,5 +1,4 @@
 import React from 'react'
-import BattleContainer from '../containers/BattleContainer'
 
 const MoveButton = props => {
 

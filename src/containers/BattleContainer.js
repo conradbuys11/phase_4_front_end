@@ -43,20 +43,22 @@ function BattleContainer(props){
         let opponentMove = opponentPokemon.moves[Math.floor(Math.random() * 4)]
         let firstMove;
         let secondMove;
+        console.log(`Player mon speed: ${playerPokemon.species.spe_base}`)
+        console.log(`Opponent mon speed: ${opponentPokemon.species.spe_base}`)
 
-        if(playerPokemon.species.base_spe > opponentPokemon.species.base_spe){
+        if(playerPokemon.species.spe_base > opponentPokemon.species.spe_base){
             firstMon = playerPokemon
             secondMon = opponentPokemon
             firstMove = playerMove
             secondMove = opponentMove
         }
-        else if(playerPokemon.species.base_spe < opponentPokemon.species.base_spe){
+        else if(playerPokemon.species.spe_base < opponentPokemon.species.spe_base){
             firstMon = opponentPokemon
             secondMon = playerPokemon
             firstMove = opponentMove
             secondMove = playerMove
         }
-        else if(playerPokemon.species.base_spe === opponentPokemon.species.base_spe){
+        else if(playerPokemon.species.spe_base === opponentPokemon.species.spe_base){
             if(Math.random() <= 0.49){
                 firstMon = playerPokemon
                 secondMon = opponentPokemon
@@ -80,6 +82,8 @@ function BattleContainer(props){
         if(secondMon.current_hp > 0){
             calculateDamage(secondMon, firstMon, secondMove)
         }
+        setPlayerPokemon(playerPokemon)
+        setOpponentPokemon(opponentPokemon)
         setBattleState(battleStates[0])
     }
 
@@ -105,9 +109,48 @@ function BattleContainer(props){
                 }
 
                 let modifier = 1
+                //debugger
+
+                //bitwise operations on type advantage
+                if((move.type.double_against & defendingMon.species.types[0].value) > 0){
+                    modifier *= 2
+                }
+                else if((move.type.half_against & defendingMon.species.types[0].value) > 0){
+                    modifier *= 0.5
+                }
+                else if((move.type.immune_against & defendingMon.species.types[0].value) > 0){
+                    modifier *= 0
+                }
+
+                if(defendingMon.species.types.length > 1){
+                    if((move.type.double_against & defendingMon.species.types[1].value) > 0){
+                        modifier *= 2
+                    }
+                    else if((move.type.half_against & defendingMon.species.types[1].value) > 0){
+                        modifier *= 0.5
+                    }
+                    else if((move.type.immune_against & defendingMon.species.types[1].value) > 0){
+                        modifier *= 0
+                    }
+                }
+
+                if(modifier >= 2){
+                    console.log("It's super effective!")
+                }
+                else if(modifier <= 0.5){
+                    console.log("It's not very effective...")
+                }
+
+                //STAB
+                if(move.type.id === attackingMon.species.types[0].id){
+                    modifier *= 1.5
+                }
+                else if(attackingMon.species.types.length > 1 && move.type.id === attackingMon.species.types[1].id){
+                    modifier *= 1.5
+                }
                 //***TODO:*** MODIFIER CALCULATIONS. PRIORITY IS TYPE ADVANTAGE > STAB > EVERYTHING ELSE
 
-                Math.floor(damage *= modifier)
+                damage = Math.floor(damage * modifier)
                 console.log(`${attackingMon.species.name} did ${damage} damage to ${defendingMon.species.name}`)
 
                 //if this attack doesn't kill
@@ -117,7 +160,7 @@ function BattleContainer(props){
                 //0 is the lowest we want hp to go, no negatives
                 else{
                     defendingMon.current_hp = 0
-                    console.log(`${defendingMon} fainted!`)
+                    console.log(`${defendingMon.species.name} fainted!`)
                 }
             }
             //after we've done damage, we check to see if defender is still alive, & doesn't have a status condition.
@@ -131,7 +174,13 @@ function BattleContainer(props){
                     }
                 })
             }
-
+            console.log(``)
+            if(defendingMon.id === playerPokemon.id){
+                setPlayerPokemon(defendingMon)
+            }
+            else if(defendingMon.id === opponentPokemon.id){
+                setOpponentPokemon(defendingMon)
+            }
             //***TODO:*** LOGIC ON NEXT POKEMON OUT
         }
         else{
