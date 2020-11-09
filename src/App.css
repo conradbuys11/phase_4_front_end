@@ -32,6 +32,7 @@
 .opponent-pokemon-text {
   order: 1;
   align-self: flex-end;
+  margin-bottom: -100px;
 }
 
 .player-pokemon-text {
@@ -47,9 +48,9 @@
   background-image: url("./assets/pokebackground1.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  padding-left: 80px;
+  padding-left: 40px;
   padding-right: 80px;
-  padding-top: 60px;
+  padding-top: 100px;
 }
 
 #battle-screen {
@@ -92,7 +93,7 @@
   /* padding: 2px; */
   height: 10px;
   width: 200px;
-  background-color: grey;
+  background-color: rgb(201, 201, 201);
   /* justify-content: center; */
   align-items: center;
 }

@@ -19,7 +19,7 @@ const PokemonText = props => {
             <p className={'hp'}>
                 {props.pokemon.current_hp} / {props.pokemon.species.hp_base} HP
             </p>
-            <img src={props.sprite} alt={'oops'} height="250px"></img>
+            <img src={props.sprite} alt={'oops'} height={props.imgHeight}></img>
         </div>
     )
 }

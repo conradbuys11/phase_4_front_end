@@ -275,10 +275,18 @@ function BattleContainer(props){
                     <div id="battle-contents">
                         <div id="battle-area">
                             <div className={'player-pokemon-text'}>
-                                <PokemonText pokemon={playerPokemon} sprite={playerPokemon.species.sprite_back}/>
+                                <PokemonText
+                                    pokemon={playerPokemon} 
+                                    sprite={playerPokemon.species.sprite_back}
+                                    imgHeight="400px"
+                                />
                             </div>
                             <div className={'opponent-pokemon-text'}>
-                                <PokemonText pokemon={opponentPokemon} sprite={opponentPokemon.species.sprite_front}/>
+                                <PokemonText 
+                                    pokemon={opponentPokemon} 
+                                    sprite={opponentPokemon.species.sprite_front}
+                                    imgHeight="250px"
+                                />
                             </div>
                         </div>
                         <Divider horizontal>
