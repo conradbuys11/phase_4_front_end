@@ -133,7 +133,7 @@ function BattleContainer(props){
 
     const calculateDamage = (attackingMon, defendingMon, move) => {
        
-
+        console.log(`${attackingMon.species.name} used ${move.name}!`)
         //check to see if move hits first. 101 accuracy is our way of programming a move w 100% chance to hit
         //Math.random is from 0.00 to 0.99 & our move accuracy is currently an int from 0 to 100
         if(move.accuracy === 101 || Math.random() * 100 < move.accuracy){
@@ -194,7 +194,7 @@ function BattleContainer(props){
 
                 //burn on physical attack
                 if(move.category === 'physical' && attackingMon.status_effect.name === 'burn'){
-
+                    modifier *= 0.5
                 }
 
                 damage = Math.floor(damage * modifier)
@@ -253,6 +253,10 @@ function BattleContainer(props){
         //if we run through this whole loop & get nothing, that means all pokemon fainted
         //set state to defeat!
         setBattleState(battleStates[2])
+    }
+
+    const endOfBattleCleanup = () => {
+        
     }
 
     const renderController = () => {
