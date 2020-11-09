@@ -1,4 +1,5 @@
 import React from 'react'
+import BattleContainer from '../containers/BattleContainer'
 
 const MoveButton = props => {
 
@@ -8,7 +9,7 @@ const MoveButton = props => {
     //but battlecontainer will handle that
 
     return(
-    <button move={props.move} useMove={props.useMove}>{props.move.name} key={props.move.id}</button>
+        <button move={props.move} onClick={() => props.useMove(props.move)} key={props.move.id}>{props.move.name}</button>
     )
 }
 
