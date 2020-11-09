@@ -5,7 +5,7 @@ import aggro from "../assets/aggro.png"
 
 export default class Trainer extends Component {
 
-    aggroCheck = () => {
+    naniCheck = () => {
         if(this.props.aggro === this.props.id && this.props.nani > 0) {
             return true
         }
@@ -16,10 +16,10 @@ export default class Trainer extends Component {
         if(this.props.aggro === this.props.id && this.props.nani === 0) {
             let top = this.props.top
             let left = this.props.left
-            if(this.props.orientation === "down" || this.props.orientation === "left") {
-                top = top * -1
-                left = left * -1
-            }
+            // if(this.props.orientation === "down" || this.props.orientation === "left") {
+            //     top = top * -1
+            //     left = left * -1
+            // }
             return {
                 top: top,
                 left: left
@@ -37,6 +37,7 @@ export default class Trainer extends Component {
         return (
             <div
                 className="trainer-sprite"
+                id={"trainer-" + this.props.id}
                 style={{
                     marginTop: this.props.y + this.move().top,
                     marginLeft: this.props.x + this.move().left,
@@ -44,7 +45,7 @@ export default class Trainer extends Component {
                     width: this.props.size,
                 }}
             >
-                {this.aggroCheck()
+                {this.naniCheck()
                     ?
                         <img
                             src={aggro}
