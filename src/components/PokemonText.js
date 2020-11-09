@@ -3,8 +3,8 @@ import React from 'react'
 const PokemonText = props => {
     return(
         <div className={'pokemon-text'}>
-            <h3>{props.pokemon.species.name}</h3>
-            <img src={props.sprite} alt={'oops'}></img>
+            <div className="pokemon-name-text">{props.pokemon.species.name}</div>
+            <img src={props.sprite} alt={'oops'} height="250px"></img>
             <p className={'hp'}>
                 {props.pokemon.current_hp} / {props.pokemon.species.hp_base} HP
             </p>
