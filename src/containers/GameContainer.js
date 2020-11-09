@@ -176,6 +176,7 @@ export default class GameContainer extends Component {
             case "up":
                 return {
                     trainerId: trainer.id,
+                    orientation: trainer.orientation,
                     minLeft: trainer.x - AGGROWIDTH,
                     maxLeft: trainer.x + AGGROWIDTH,
                     minTop: trainer.y - trainer.sightHeight * 2 - trainer.size * 2,
@@ -184,6 +185,7 @@ export default class GameContainer extends Component {
             case "left":
                 return {
                     trainerId: trainer.id,
+                    orientation: trainer.orientation,
                     minLeft: trainer.x - trainer.sightWidth * 2 - trainer.size * 2 + SPRITESIZE / 3,
                     maxLeft: trainer.x - trainer.size,
                     minTop: trainer.y - AGGROWIDTH,
@@ -192,6 +194,7 @@ export default class GameContainer extends Component {
             case "right":
                 return {
                     trainerId: trainer.id,
+                    orientation: trainer.orientation,
                     minLeft: trainer.x + trainer.size,
                     maxLeft: trainer.x + trainer.sightWidth * 2 + trainer.size * 2 - SPRITESIZE / 3,
                     minTop: trainer.y - AGGROWIDTH,
@@ -200,6 +203,7 @@ export default class GameContainer extends Component {
             default:
                 return {
                     trainerId: trainer.id,
+                    orientation: trainer.orientation,
                     minLeft: trainer.x - AGGROWIDTH,
                     maxLeft: trainer.x + AGGROWIDTH,
                     minTop: trainer.y + trainer.size,
@@ -521,10 +525,20 @@ export default class GameContainer extends Component {
             // only do OOB/collision checks while moving - lowers idle load
             if(newIsMoving) {
                 // aggro check
-                let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => 
-                    // subtract SPRITESIZE from the mins to have less myopic enemies
-                    newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
-                )
+                let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => {
+                    // head-on vertical collision -- wider vision
+                    if((obstacle.orientation === "up" || obstacle.orientation === "down") && (newFacing === "Up" || newFacing === "Down")) {
+                        return newLeft > obstacle.minLeft - SPRITESIZE && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+                    }
+                    // head-on horizontal collision -- wider vision
+                    else if((obstacle.orientation === "left" || obstacle.orientation === "right") && (newFacing === "Left" || newFacing === "Right")) {
+                        return newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop - SPRITESIZE && newTop < obstacle.maxTop
+                    }
+                    // perpendicular collision -- narrower vision
+                    else {
+                        return newLeft > obstacle.minLeft && newLeft < obstacle.maxLeft && newTop > obstacle.minTop && newTop < obstacle.maxTop
+                    }
+                })
                 // aggro detected
                 if(lineOfSightCollisionDetected.length > 0) {
                     // freeze controls
@@ -534,8 +548,7 @@ export default class GameContainer extends Component {
                         // trainer with matching id will run nani animation
                     newCurrentlyAggrodTrainer = lineOfSightCollisionDetected[0].trainerId
                     // determine walk direction
-                    let trainer = this.trainers.filter(trainer => trainer.id === lineOfSightCollisionDetected[0].trainerId)[0]
-                    newCutsceneDirection = trainer.orientation
+                    newCutsceneDirection = lineOfSightCollisionDetected[0].orientation
                     // calculate walk distance
                     let trainerDiv = document.querySelector("#trainer-" + lineOfSightCollisionDetected[0].trainerId)
                     if(newCutsceneDirection === "up") {
