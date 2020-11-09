@@ -775,88 +775,90 @@ export default class OverworldContainer extends Component {
 
     render() {
         return (
-            <div className="playable-area"
-                onKeyDown={this.moveSprite}
-                onKeyUp={this.stopSprite}
-                tabIndex="0"
-                onBlur={this.freeze}
-                style={{
-                    width: (MAPSIZE + BOUNDARYTHICCNESS * 2) + "px",
-                    height: MAPSIZE + "px"
-                }}
-            >
-                
-                {/* Boundaries */}
-                <Boundary
-                    orientation="horizontal" 
-                    location="top" 
-                    timer={Date.now() - this.state.timeOfLastDirectionChange}
-                    width={MAPSIZE}
-                    height={BOUNDARYTHICCNESS}
-                />
-                <Boundary 
-                    orientation="vertical" 
-                    location="left" 
-                    timer=""
-                    width={BOUNDARYTHICCNESS + "px"} 
-                    height={MAPSIZE + "px"} 
-                />
-                <Boundary 
-                    orientation="vertical" 
-                    location="right" 
-                    timer=""
-                    width={BOUNDARYTHICCNESS + "px"} 
-                    height={MAPSIZE + "px"} 
-                />
-                <Boundary 
-                    orientation="horizontal" 
-                    location="bottom" 
-                    timer=""
-                    width={MAPSIZE + "px"} 
-                    height={BOUNDARYTHICCNESS + "px"} 
-                />
-
-                {/* Obstacles */}
-                {this.obstacles.map(obstacle => 
-                    <Obstacle
-                        key={obstacle.id}
-                        width={obstacle.width + "px"}
-                        height={obstacle.height + "px"}
-                        x={obstacle.x + "px"}
-                        y={obstacle.y + "px"}
+            <div id="overworld-container">
+                <div className="playable-area"
+                    onKeyDown={this.moveSprite}
+                    onKeyUp={this.stopSprite}
+                    tabIndex="0"
+                    onBlur={this.freeze}
+                    style={{
+                        width: (MAPSIZE + BOUNDARYTHICCNESS * 2) + "px",
+                        height: MAPSIZE + "px"
+                    }}
+                >
+                    
+                    {/* Boundaries */}
+                    <Boundary
+                        orientation="horizontal" 
+                        location="top" 
+                        timer={Date.now() - this.state.timeOfLastDirectionChange}
+                        width={MAPSIZE}
+                        height={BOUNDARYTHICCNESS}
                     />
-                )}
-
-                {/* Trainers */}
-                {this.trainers.map(trainer => 
-                    <Trainer
-                        key={trainer.id}
-                        id={trainer.id}
-                        orientation={trainer.orientation}
-                        sprite={trainer.sprite}
-                        size={trainer.size}
-                        x={trainer.x}
-                        y={trainer.y}
-                        sightWidth={trainer.sightWidth}
-                        sightHeight={trainer.sightHeight}
-                        aggro={this.state.currentlyAggrodTrainer}
-                        nani={this.state.nani}
-                        top={this.state.trainerTop}
-                        left={this.state.trainerLeft}
-                        volunteer={this.iVolunteerAsTribute}
-                        battleCutsceneActive={this.state.battleCutsceneActive}
-                        playerTop={this.state.top}
-                        playerLeft={this.state.left}
+                    <Boundary 
+                        orientation="vertical" 
+                        location="left" 
+                        timer=""
+                        width={BOUNDARYTHICCNESS + "px"} 
+                        height={MAPSIZE + "px"} 
                     />
-                )}
+                    <Boundary 
+                        orientation="vertical" 
+                        location="right" 
+                        timer=""
+                        width={BOUNDARYTHICCNESS + "px"} 
+                        height={MAPSIZE + "px"} 
+                    />
+                    <Boundary 
+                        orientation="horizontal" 
+                        location="bottom" 
+                        timer=""
+                        width={MAPSIZE + "px"} 
+                        height={BOUNDARYTHICCNESS + "px"} 
+                    />
 
-                {/* Player */}
-                <PlayerSprite 
-                    top={this.state.top} 
-                    left={this.state.left}
-                    sprite={this.state.currentSprite}
-                    size={SPRITESIZE}
-                />
+                    {/* Obstacles */}
+                    {this.obstacles.map(obstacle => 
+                        <Obstacle
+                            key={obstacle.id}
+                            width={obstacle.width + "px"}
+                            height={obstacle.height + "px"}
+                            x={obstacle.x + "px"}
+                            y={obstacle.y + "px"}
+                        />
+                    )}
+
+                    {/* Trainers */}
+                    {this.trainers.map(trainer => 
+                        <Trainer
+                            key={trainer.id}
+                            id={trainer.id}
+                            orientation={trainer.orientation}
+                            sprite={trainer.sprite}
+                            size={trainer.size}
+                            x={trainer.x}
+                            y={trainer.y}
+                            sightWidth={trainer.sightWidth}
+                            sightHeight={trainer.sightHeight}
+                            aggro={this.state.currentlyAggrodTrainer}
+                            nani={this.state.nani}
+                            top={this.state.trainerTop}
+                            left={this.state.trainerLeft}
+                            volunteer={this.iVolunteerAsTribute}
+                            battleCutsceneActive={this.state.battleCutsceneActive}
+                            playerTop={this.state.top}
+                            playerLeft={this.state.left}
+                        />
+                    )}
+
+                    {/* Player */}
+                    <PlayerSprite 
+                        top={this.state.top} 
+                        left={this.state.left}
+                        sprite={this.state.currentSprite}
+                        size={SPRITESIZE}
+                    />
+                </div>
             </div>
         )
     }

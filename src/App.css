@@ -108,10 +108,18 @@
 
 /* ######## O V E R W O R L D ######## */
 
+#overworld-container {
+  display: flex;
+  /* position: relative; */
+  /* flex-wrap: wrap; */
+  flex-direction: column;
+  align-items: center;
+}
+
 .playable-area {
   display: inline-flex;
   background-color: rgb(160, 150, 150);
-  position: relative;
+  /* position: relative; */
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
@@ -134,6 +142,7 @@
   /* display: inline-block; */
   background-color: black;
   color: white;
+  text-align: center;
 }
 
 .obstacle {
