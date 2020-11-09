@@ -44,11 +44,11 @@ function BattleContainer(props){
     const battleLogicHolder = (playerPokemon, opponentPokemon, playerMove) => {
         let firstMon;
         let secondMon;                       //JS doesn't have array sample, so instead we have to write out this garbage
-        let opponentMove = opponentPokemon.moves[Math.floor(Math.random() * 4)]
+        let opponentMove = opponentPokemon.moves[Math.floor(Math.random() * opponentPokemon.moves.length)]
         let firstMove;
         let secondMove;
-        console.log(`Player mon speed: ${playerPokemon.species.spe_base}`)
-        console.log(`Opponent mon speed: ${opponentPokemon.species.spe_base}`)
+        // console.log(`Player mon speed: ${playerPokemon.species.spe_base}`)
+        // console.log(`Opponent mon speed: ${opponentPokemon.species.spe_base}`)
 
         if(playerPokemon.species.spe_base > opponentPokemon.species.spe_base){
             firstMon = playerPokemon
@@ -82,18 +82,57 @@ function BattleContainer(props){
             return
         }
         //debugger
-        calculateDamage(firstMon, secondMon, firstMove)
+        checkBeforeDamage(firstMon, secondMon, firstMove)
         if(secondMon.current_hp > 0){
-            calculateDamage(secondMon, firstMon, secondMove)
+            checkBeforeDamage(secondMon, firstMon, secondMove)
         }
         setPlayerPokemon(playerPokemon)
         setOpponentPokemon(opponentPokemon)
         setBattleState(battleStates[0])
     }
 
+    const checkBeforeDamage = (attackingMon, defendingMon, move) => {
+         //don't run the function if we don't have
+         if(!attackingMon || !defendingMon || !move) return 
+
+
+         //confusion, paralysis, and sleep check (and freeze later)
+         if(attackingMon.status_effect.name === 'confusion' || attackingMon.status_effect.name === 'sleep' || attackingMon.status_effect.name === 'paralysis'){
+             if(attackingMon.status_effect.name === 'confusion'){
+                 console.log(`${attackingMon.species.name} is confused!`)
+                 if(Math.random() * 100 < attackingMon.status_effect.accuracy){
+                     console.log(`It hurt itself in its confusion!`)
+                     if(attackingMon.current_hp - attackingMon.current_hp * (1 / attackingMon.status_effect.power) > 0){
+                         attackingMon.current_hp -= attackingMon.current_hp * (1 / attackingMon.status_effect.power)
+                     }
+                     else{
+                         attackingMon.current_hp = 0
+                     }
+                 }
+                 else{
+                    calculateDamage(attackingMon, defendingMon, move)
+                 }
+             }
+             else if(attackingMon.status_effect.name === 'paralysis'){
+                 if(Math.random() * 100 < attackingMon.status_effect.accuracy){
+                     console.log(`${attackingMon.species.name} is fully paralyzed! It can't move!`)
+                 }
+                 else{
+                    calculateDamage(attackingMon, defendingMon, move)
+                 }
+             }
+             else{
+                 //implement sleep logic here
+                 //consider switching to an accuracy system for waking up
+             }
+         }
+         else{
+             calculateDamage(attackingMon, defendingMon, move)
+         }
+    }
+
     const calculateDamage = (attackingMon, defendingMon, move) => {
-        //don't run the function if we don't have
-        if(!attackingMon || !defendingMon || !move) return 
+       
 
         //check to see if move hits first. 101 accuracy is our way of programming a move w 100% chance to hit
         //Math.random is from 0.00 to 0.99 & our move accuracy is currently an int from 0 to 100
@@ -152,7 +191,11 @@ function BattleContainer(props){
                 else if(attackingMon.species.types.length > 1 && move.type.id === attackingMon.species.types[1].id){
                     modifier *= 1.5
                 }
-                //***TODO:*** MODIFIER CALCULATIONS. PRIORITY IS TYPE ADVANTAGE > STAB > EVERYTHING ELSE
+
+                //burn on physical attack
+                if(move.category === 'physical' && attackingMon.status_effect.name === 'burn'){
+
+                }
 
                 damage = Math.floor(damage * modifier)
                 console.log(`${attackingMon.species.name} did ${damage} damage to ${defendingMon.species.name}`)
@@ -201,6 +244,7 @@ function BattleContainer(props){
         opponent.pokemons.forEach(pokemon => {
             if(pokemon.current_hp > 0){
                 setOpponentPokemon(pokemon)
+                console.log(`${opponent.name} sent out ${pokemon.species.name}!`)
                 setBattleState(battleStates[1])
                 return
             }
@@ -223,7 +267,9 @@ function BattleContainer(props){
             return <div>loLOADING...ading...</div>
         }
         else if(battleState === battleStates[0]){
-            //i might want to put this in a separate function, huh?
+            if(opponentPokemon.current_hp <= 0){
+                sendOutNextMon(opponent)
+            }
             return(
                 <div id="battle-screen">
                     <div id="battle-contents">
@@ -258,10 +304,13 @@ function BattleContainer(props){
             )
         }
         else if(battleState === battleStates[1]){
-            return <div>cool</div>
+            return <div>damage in progress! stand by!</div>
+        }
+        else if(battleState === battleStates[2]){
+            return <div>you beat the guy! well done!</div>
         }
         else{
-            return <div>cool</div>
+            return <div>oop</div>
         }
     }
 
