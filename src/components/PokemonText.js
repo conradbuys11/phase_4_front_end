@@ -4,7 +4,6 @@ const PokemonText = props => {
     return(
         <div className={'pokemon-text'}>
             <div className="pokemon-name-text">{props.pokemon.species.name.toUpperCase()}</div>
-            <img src={props.sprite} alt={'oops'} height="250px"></img>
             <div 
                 className="max-hp-bar"
             >
@@ -20,6 +19,7 @@ const PokemonText = props => {
             <p className={'hp'}>
                 {props.pokemon.current_hp} / {props.pokemon.species.hp_base} HP
             </p>
+            <img src={props.sprite} alt={'oops'} height="250px"></img>
         </div>
     )
 }

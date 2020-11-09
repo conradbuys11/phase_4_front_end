@@ -44,6 +44,12 @@
   flex-direction: column;
   align-items: center;
   /* margin-top: 20px; */
+  background-image: url("./assets/pokebackground1.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 60px;
 }
 
 #battle-screen {
@@ -53,7 +59,7 @@
 }
 
 #battle-contents {
-  width: 70%;
+  width: 865px;
   height: 100%;
   border-style: double;
   border-color: black;
@@ -62,7 +68,7 @@
 
 .pokemon-name-text {
   font-size: 2rem;
-  margin-bottom: -10px;
+  margin-bottom: 10px;
   font-family: 'Lucida Console';
   /* font-family: 'Lucida Console', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif */
 }
@@ -75,7 +81,7 @@
 
 .hp {
   /* font-size: 3rem; */
-  /* margin-top: -10px; */
+  margin-bottom: -30px;
 }
 
 .max-hp-bar {
