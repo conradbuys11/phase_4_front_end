@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import MoveButton from '../components/MoveButton'
 import PokemonText from '../components/PokemonText'
+import { Divider } from 'semantic-ui-react'
 
 function BattleContainer(props){
     const [player, setPlayer] = useState(undefined)
@@ -267,18 +268,25 @@ function BattleContainer(props){
                 sendOutNextMon(opponent)
             }
             return(
-                <div>
-                    <div className={'player-pokemon-text'}>
-                        <PokemonText pokemon={playerPokemon} sprite={playerPokemon.species.sprite_back}/>
-                    </div>
-                    <div className={'opponent-pokemon-text'}>
-                        <PokemonText pokemon={opponentPokemon} sprite={opponentPokemon.species.sprite_front}/>
-                    </div>
-                    <div className={'move-buttons'}>
-                        <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/>
-                        <MoveButton move={playerPokemon.moves[1]} useMove={useMove}/>
-                        <MoveButton move={playerPokemon.moves[2]} useMove={useMove}/>
-                        <MoveButton move={playerPokemon.moves[3]} useMove={useMove}/>
+                <div id="battle-screen">
+                    <div id="battle-contents">
+                        <div id="battle-area">
+                            <div className={'player-pokemon-text'}>
+                                <PokemonText pokemon={playerPokemon} sprite={playerPokemon.species.sprite_back}/>
+                            </div>
+                            <div className={'opponent-pokemon-text'}>
+                                <PokemonText pokemon={opponentPokemon} sprite={opponentPokemon.species.sprite_front}/>
+                            </div>
+                        </div>
+                        <Divider horizontal>a</Divider>
+                        <div id="ui-area">
+                            <div className={'move-buttons'}>
+                                <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/>
+                                <MoveButton move={playerPokemon.moves[1]} useMove={useMove}/>
+                                <MoveButton move={playerPokemon.moves[2]} useMove={useMove}/>
+                                <MoveButton move={playerPokemon.moves[3]} useMove={useMove}/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )

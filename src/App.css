@@ -1,3 +1,81 @@
+/* ########### B A T T L E ########### */
+
+.ui.lightbrown.button {
+  background-color: #aa683c;
+  color: #fff;
+}
+
+.ui.deepblue.button {
+  background-color: rgb(51, 20, 230);
+  color: #fff;
+}
+
+.ui.lavender.button {
+  background-color: rgb(126, 64, 241);
+  color: #fff;
+}
+
+.ui.color4.button {
+  background-color: #DE627F;
+  color: #fff;
+}
+
+.ui.salmon.button {
+  background-color: #F9A0A0;
+  color: #fff;
+}
+
+.pokemon-text {
+  text-align: center;
+}
+
+.opponent-pokemon-text {
+  order: 1;
+  align-self: flex-end;
+}
+
+.player-pokemon-text {
+  order: 2;
+  align-self: flex-start;
+}
+
+#battle-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin-top: 20px; */
+}
+
+#battle-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#battle-contents {
+  width: 70%;
+  height: 100%;
+  border-style: double;
+  border-color: black;
+  padding: 2%;
+}
+
+.pokemon-name-text {
+  font-size: 3rem;
+  margin-bottom: -10px;
+}
+
+.hp {
+  /* font-size: 3rem; */
+  margin-top: -10px;
+}
+
+#ui-area {
+  margin-top: 40px;
+}
+
+/* ######## O V E R W O R L D ######## */
+
 .playable-area {
   display: inline-flex;
   background-color: rgb(160, 150, 150);
@@ -78,43 +156,4 @@
   bottom: 0;
   /* margin-left: -900px; */
   order: 4;
-}
-
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
