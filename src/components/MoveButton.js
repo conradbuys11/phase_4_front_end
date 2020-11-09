@@ -21,7 +21,7 @@ const MoveButton = props => {
     const psychic = "salmon"
     const bug = "olive"
     const rock = "brown"
-    const ghost = ""
+    const ghost = "lavender"
     const dragon = "violet"
     const dark = "black"
     const steel = "grey"
