@@ -17,7 +17,7 @@ export default class GameContainer extends Component {
     render() {
         return (
             <>
-                {this.state.gameState === "overworld" ? <OverworldContainer gameState={this.props.gameState} swap={this.swap}/> : <BattleContainer gameState={this.props.gameState}/>}
+                {this.state.gameState === "overworld" ? <OverworldContainer swap={this.swap}/> : <BattleContainer swap={this.swap}/>}
             </>
         )
     }

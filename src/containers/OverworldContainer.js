@@ -26,6 +26,8 @@ import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
 const MAPSIZE = 1000
 const TICKTIMER = 10
 const PLAYERSPRITE = "pokeGirl"
+const NANITIME = 800
+const BATTLEANIMATIONDURATION = 100
 
 const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
 const MOVESPEED = 1 * MAPSIZE / 300
@@ -33,7 +35,6 @@ const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
 const AGGROWIDTH = SPRITESIZE / 4
 const AGGRODISTANCE = MAPSIZE / 5
-const NANITIME = 800
 
 export default class OverworldContainer extends Component {
 
@@ -322,7 +323,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceX <= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "left") {
@@ -331,7 +332,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceX >= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "down") {
@@ -340,7 +341,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceY <= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         break;
@@ -351,7 +352,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceX <= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "left") {
@@ -360,7 +361,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceX >= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "up") {
@@ -369,7 +370,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceY >= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         break;
@@ -380,7 +381,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceY >= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "down") {
@@ -389,7 +390,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceY <= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "left") {
@@ -398,7 +399,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceX >= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         break;
@@ -409,7 +410,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceY >= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if(this.state.cutsceneDirection === "down") {
@@ -418,7 +419,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceY <= 0) {
                                 newCutsceneDistanceY = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         else if (this.state.cutsceneDirection === "right") {
@@ -427,7 +428,7 @@ export default class OverworldContainer extends Component {
                             if(newCutsceneDistanceX <= 0) {
                                 newCutsceneDistanceX = 0
                                 newBattleCutsceneActive = false
-                                newEnterBattleAnimation = 5000
+                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
                             }
                         }
                         break;
