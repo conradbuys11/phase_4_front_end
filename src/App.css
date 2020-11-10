@@ -115,11 +115,6 @@
 
 /* ######## O V E R W O R L D ######## */
 
-#obstacle-7 {
-  background-size: 100% 100%;
-  background-image: url("./assets/bush1.png");
-}
-
 #overworld-container {
   display: flex;
   flex-direction: column;
@@ -129,7 +124,7 @@
 .playable-area {
   display: inline-flex;
   /* background-color: rgb(160, 150, 150); */
-  background-image: url("./assets/grass1.png");
+  background-image: url("./assets/grass2.png");
   /* position: relative; */
   flex-wrap: wrap;
   flex-direction: row;
@@ -206,4 +201,34 @@
 .bottom-boundary {
   position: relative;
   order: 4;
+}
+
+#obstacle-7 {
+  background-size: 100% 100%;
+  background-image: url("./assets/bush1.png");
+}
+
+#obstacle-9 {
+  background-size: 100% 100%;
+  background-image: url("./assets/bigtree1.png");
+}
+
+#obstacle-4 {
+  /* background-size: 100% 100%; */
+  /* background-size: auto 100%; */
+  background-repeat: round;
+  background-image: url("./assets/firtree2.png");
+}
+
+#obstacle-2 {
+  /* background-size: 100% 100%; */
+  /* background-size: auto 100%; */
+  background-repeat: space;
+  background-image: url("./assets/firtree2.png");
+}
+
+#obstacle-8 {
+  background-repeat: round;
+  background-size: auto 100%;
+  background-image: url("./assets/bush1.png");
 }
