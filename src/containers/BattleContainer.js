@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import MoveButton from '../components/MoveButton'
 import PokemonText from '../components/PokemonText'
+import BattleTextBox from '../components/BattleTextBox'
 
 import { Divider } from 'semantic-ui-react'
 
@@ -26,8 +27,8 @@ function BattleContainer(props){
         fetch('http://localhost:3000/trainers/')
         .then(rsp => rsp.json())
         .then(trainers => {
-            setPlayer(trainers[1])
-            setOpponent(trainers[props.enemyTrainer - 1])
+            setPlayer(trainers[0])
+            setOpponent(trainers[props.enemyTrainer])
         })
         if(props.player != null){
             //setPlayer(props.player)
@@ -53,19 +54,22 @@ function BattleContainer(props){
         // console.log(`Player mon speed: ${playerPokemon.species.spe_base}`)
         // console.log(`Opponent mon speed: ${opponentPokemon.species.spe_base}`)
 
-        if(playerPokemon.species.spe_base > opponentPokemon.species.spe_base){
+        let playerSpe = playerPokemon.status_effect.name === 'paralysis' ? Math.floor(playerPokemon.species.spe_base / 2) : playerPokemon.species.spe_base
+        let opponentSpe = opponentPokemon.status_effect.name === 'paralysis' ? Math.floor(opponentPokemon.species.spe_base / 2) : opponentPokemon.species.spe_base
+
+        if(playerSpe > opponentSpe){
             firstMon = playerPokemon
             secondMon = opponentPokemon
             firstMove = playerMove
             secondMove = opponentMove
         }
-        else if(playerPokemon.species.spe_base < opponentPokemon.species.spe_base){
+        else if(playerSpe < opponentSpe){
             firstMon = opponentPokemon
             secondMon = playerPokemon
             firstMove = opponentMove
             secondMove = playerMove
         }
-        else if(playerPokemon.species.spe_base === opponentPokemon.species.spe_base){
+        else if(playerSpe === opponentSpe){
             if(Math.random() <= 0.49){
                 firstMon = playerPokemon
                 secondMon = opponentPokemon
@@ -377,13 +381,18 @@ function BattleContainer(props){
         setBattleState(battleStates[0])
     }
 
-    const createTextBox = (text, callbackFunction) => {
-        //something like <BattleTextBox text={text}/>
-        //while that text box's currentText != text, do nothing
-        //basically, we want to stop JS from doing anything else for the time being
-        //then after, call the callbackFunction
-        // setTextBox(<BattleTextBox text={text} callbackFunction={callbackFunction} />)
-    }
+    // const createTextBox = (text, callbackFunction) => {
+    //     //something like <BattleTextBox text={text}/>
+    //     //while that text box's currentText != text, do nothing
+    //     //basically, we want to stop JS from doing anything else for the time being
+    //     //then after, call the callbackFunction
+    //     let readyToContinue = false
+    //     setTextBox(<BattleTextBox text={text} callbackFunction={callbackFunction} />)
+    //     while(!readyToContinue){
+    //         //this is basically gonna halt any future functionality in battlecontainer till we've clicked the button
+    //     }
+    //     return
+    // }
 
     const renderController = () => {
         if(battleState === ''){
