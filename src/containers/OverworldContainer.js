@@ -229,8 +229,8 @@ export default class OverworldContainer extends Component {
     constructor() {
         super()
         this.state = {
-            top: 0,
-            left: 0,
+            top: MAPSIZE * 0.773,
+            left: MAPSIZE * 0.784,
             vertInertia: 0,
             horizInertia: 0,
             w: false,
@@ -239,9 +239,9 @@ export default class OverworldContainer extends Component {
             d: false,
             lastInput: "",
             lastInputHeld: false,
-            currentSprite: pokeGirlDown1,
+            currentSprite: pokeGirlUp1,
             isMoving: false,
-            facing: "Down",
+            facing: "Up",
             timeOfLastDirectionChange: new Date(), // may be more efficient for this to follow tick() instead
             currentlyAggrodTrainer: null,
             nani: 0,
@@ -262,15 +262,18 @@ export default class OverworldContainer extends Component {
             () => this.tick(),
             TICKTIMER   
         );
-        // delete line of sight collision maps of defeated trainers
-        this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
-        // load state from game container if returning from battle
-        this.setState({
-            top: this.props.top,
-            left: this.props.left,
-            facing: this.props.facing,
-            defeatedTrainers: this.props.defeatedTrainers
-        })
+        // skip this if we are not coming from battle
+        if(this.props.defeatedTrainers.length > 0) {
+            // delete line of sight collision maps of defeated trainers
+            this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
+            // load state from game container if returning from battle
+            this.setState({
+                top: this.props.top,
+                left: this.props.left,
+                facing: this.props.facing,
+                defeatedTrainers: this.props.defeatedTrainers
+            })
+        }
     }
 
     componentWillUnmount() {

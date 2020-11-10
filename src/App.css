@@ -146,7 +146,8 @@
 
 .boundary {
   /* display: inline-block; */
-  background-color: black;
+  background-image: url("./assets/firtree1.png");
+  background-color: rgba(0, 0, 0, 0);
   color: white;
   text-align: center;
 }
@@ -186,21 +187,29 @@
 .left-boundary {
   float: left;
   order: 1;
+  background-repeat: round;
+  background-size: 100% auto;
 }
 
 .right-boundary {
   float: right;
   order: 3;
+  background-repeat: round;
+  background-size: 100% auto;
 }
 
 .top-boundary {
   float: top;
   order: 2;
+  background-repeat: round;
+  background-size: auto 100%;
 }
 
 .bottom-boundary {
   position: relative;
   order: 4;
+  background-repeat: round;
+  background-size: auto 100%;
 }
 
 #obstacle-7 {
