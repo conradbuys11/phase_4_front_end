@@ -12,13 +12,15 @@ function BattleContainer(props){
     const [playerPokemon, setPlayerPokemon] = useState(undefined)
     const [opponentPokemon, setOpponentPokemon] = useState(undefined)
     const [battleState, setBattleState] = useState('')
+    const [noStatusEffect, setNoStatusEffect] = useState(undefined)
 
     const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon', 'victory']
 
-
-
     //this is componentDidMount
     useEffect(() => {
+        fetch('http://localhost:3000/status_effects/1')
+        .then(rsp => rsp.json())
+        .then(se => setNoStatusEffect(se))
         
         fetch('http://localhost:3000/trainers/')
         .then(rsp => rsp.json())
@@ -88,7 +90,7 @@ function BattleContainer(props){
         }
         setPlayerPokemon(playerPokemon)
         setOpponentPokemon(opponentPokemon)
-        setBattleState(battleStates[0])
+        endOfTurnCleanup()
     }
 
     const checkBeforeDamage = (attackingMon, defendingMon, move) => {
@@ -141,7 +143,7 @@ function BattleContainer(props){
 
         //check to see if move hits first. 101 accuracy is our way of programming a move w 100% chance to hit
         //Math.random is from 0.00 to 0.99 & our move accuracy is currently an int from 0 to 100
-        if(move.accuracy === 101 || Math.random() * 100 < move.accuracy){
+        if(move.accuracy === null || Math.random() * 100 < move.accuracy){
             //now check to see if we're using a damaging move
             if(move.category === 'physical' || move.category === 'special'){
                 let damage;
@@ -212,6 +214,7 @@ function BattleContainer(props){
                 //0 is the lowest we want hp to go, no negatives
                 else{
                     defendingMon.current_hp = 0
+                    defendingMon.status_effect = noStatusEffect
                     console.log(`${defendingMon.species.name} fainted!`)
                 }
             }
@@ -249,28 +252,61 @@ function BattleContainer(props){
         if(nextMon){
             setOpponentPokemon(nextMon)
             console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
+<<<<<<< HEAD
             setBattleState(battleStates[0])
+=======
+            return true
+
+>>>>>>> 27e60f275d0aa90ec29b61753566147feb351082
         }
         else{
             //this means all pokemon fainted
             //set state to defeat!
-            setBattleState(battleStates[2])
+            return false
         }
     }
 
     const endOfTurnCleanup = () => {
         //first, we do burn/poison dmg
         if(playerPokemon.status_effect.name == 'poison' || playerPokemon.status_effect.name == 'burn'){
-            if(playerPokemon.current_hp - (playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100) <= 0){
-                
+            console.log(`${playerPokemon.species.name} is hurt by ${playerPokemon.status_effect.name}!`)
+            if(playerPokemon.current_hp - Math.floor((playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100)) > 0){
+                playerPokemon.current_hp -= Math.floor((playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100))
+            }
+            else{
+                playerPokemon.current_hp = 0
+                playerPokemon.status_effect = noStatusEffect
+                setPlayerPokemon(playerPokemon)
+                console.log(`${playerPokemon.species.name} fainted!`)
+            }
+        }
+        //debugger
+        if(opponentPokemon.status_effect.name == 'poison' || opponentPokemon.status_effect.name == 'burn'){
+            console.log(`${opponentPokemon.species.name} is hurt by ${opponentPokemon.status_effect.name}!`)
+            if(opponentPokemon.current_hp - Math.floor((opponentPokemon.status_effect.power * opponentPokemon.species.hp_base / 100)) > 0){
+                opponentPokemon.current_hp -= Math.floor((opponentPokemon.status_effect.power * opponentPokemon.species.hp_base / 100))
+            }
+            else{
+                opponentPokemon.current_hp = 0
+                opponentPokemon.status_effect = noStatusEffect
+                setOpponentPokemon(opponentPokemon)
+                console.log(`${opponentPokemon.species.name} fainted!`)
             }
         }
         if(playerPokemon.current_hp <= 0){
             //allow player to change pokemon
         }
         if(opponentPokemon.current_hp <= 0){
-            sendOutNextMon()
+            if(sendOutNextMon()){
+                setBattleState(battleStates[0])
+            }
+            else{
+                setBattleState(battleStates[2])
+                return
+            }
         }
+        
+        setBattleState(battleStates[0])
     }
 
     const createTextBox = (text, callbackFunction) => {
