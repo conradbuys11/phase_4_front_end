@@ -249,6 +249,10 @@ export default class OverworldContainer extends Component {
         );
     }
 
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }       
+
     tick = () => {
         let newTop = this.state.top
         let newLeft = this.state.left
@@ -276,10 +280,21 @@ export default class OverworldContainer extends Component {
                 // save overworld state? post request to store player location, which trainers have been fought etc?
                     // all overworld state will be cleared after battle with current configuration
 
-                // clear overworld state
-                
+                // // clear overworld state
+                // this.setState({
+                //     currentlyAggrodTrainer: null,
+                //     nani: 0,
+                //     battleCutsceneActive: false,
+                //     trainerTop: 0,
+                //     trainerLeft: 0,
+                //     cutsceneDistanceX: 0,
+                //     cutsceneDistanceY: 0,
+                //     cutsceneDirection: null,
+                //     enterBattleAnimation: 0
+                // })
+
                 // swap to battle screen
-                this.props.enterBattle(this.state.currentlyAggrodTrainer)
+                this.props.enterBattle(newCurrentlyAggrodTrainer)
             }
         }
         // battle cutscene
