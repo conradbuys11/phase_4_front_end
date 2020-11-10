@@ -241,18 +241,28 @@ function BattleContainer(props){
     }
 
     const sendOutNextMon = opponent => {
-        opponent.pokemons.forEach(pokemon => {
-            if(pokemon.current_hp > 0){
-                setOpponentPokemon(pokemon)
-                console.log(`${opponent.name} sent out ${pokemon.species.name}!`)
-                setBattleState(battleStates[1])
-                return
-            }
+        let nextMon = opponent.pokemons.find(pokemon => pokemon.current_hp > 0)
+        if(nextMon){
+            setOpponentPokemon(nextMon)
+            console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
+            setBattleState(battleStates[1])
         }
-        )
-        //if we run through this whole loop & get nothing, that means all pokemon fainted
-        //set state to defeat!
-        setBattleState(battleStates[2])
+        else{
+            //this means all pokemon fainted
+            //set state to defeat!
+            setBattleState(battleStates[2])
+        }
+    }
+
+    const endOfTurnCleanup = () => {
+        //
+    }
+
+    const createTextBox = (text, callbackFunction) => {
+        //something like <BattleTextBox text={text}/>
+        //while that text box's currentText != text, do nothing
+        //basically, we want to stop JS from doing anything else for the time being
+        //then after, call the callbackFunction
     }
 
     const renderController = () => {
