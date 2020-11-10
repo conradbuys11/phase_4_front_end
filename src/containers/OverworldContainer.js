@@ -276,6 +276,8 @@ export default class OverworldContainer extends Component {
                 // save overworld state? post request to store player location, which trainers have been fought etc?
                     // all overworld state will be cleared after battle with current configuration
 
+                // clear overworld state
+                
                 // swap to battle screen
                 this.props.enterBattle(this.state.currentlyAggrodTrainer)
             }

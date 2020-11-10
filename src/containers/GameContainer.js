@@ -16,10 +16,17 @@ export default class GameContainer extends Component {
         })
     }
 
+    exitBattle = () => {
+        this.setState({
+            gameState: "overworld",
+            battlingTrainer: null
+        })
+    }
+
     render() {
         return (
             <>
-                {this.state.gameState === "overworld" ? <OverworldContainer enterBattle={this.enterBattle}/> : <BattleContainer enemyTrainer={this.state.battlingTrainer}/>}
+                {this.state.gameState === "overworld" ? <OverworldContainer enterBattle={this.enterBattle}/> : <BattleContainer enemyTrainer={this.state.battlingTrainer} exitBattle={this.exitBattle}/>}
             </>
         )
     }

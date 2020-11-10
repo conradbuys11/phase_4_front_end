@@ -316,7 +316,8 @@ function BattleContainer(props){
                 setBattleState(battleStates[0])
             }
             else{
-                setBattleState(battleStates[3])
+                props.exitBattle()
+                // setBattleState(battleStates[3])
                 return
             }
         }
@@ -394,6 +395,8 @@ function BattleContainer(props){
             return <div>****WIP: CHOOSE NEXT POKEMON****</div>
         }
         else if(battleState === battleStates[3]){
+            // props.exitBattle()
+            // return
             return <div>you beat the guy! well done!</div>
         }
         else if(battleState === battleStates[4]){
