@@ -458,7 +458,7 @@ export default class OverworldContainer extends Component {
                 }
             }
 
-            // only do OOB/collision checks while moving - lowers idle load
+            // only do collision checks while moving - lowers idle load
             if(newIsMoving) {
                 // aggro check
                 let lineOfSightCollisionDetected  = this.lineOfSightCollisionMap.filter(obstacle => {
@@ -506,9 +506,9 @@ export default class OverworldContainer extends Component {
                 }
 
                 // OOB check
-                if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.5)) }
+                if(newTop > (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.4))) { newTop = (MAPSIZE - BOUNDARYTHICCNESS - (SPRITESIZE * 1.4)) }
                 else if(newTop < -(MAPSIZE - BOUNDARYTHICCNESS)) { newTop = -(MAPSIZE - BOUNDARYTHICCNESS) }
-                if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
+                else if(newLeft > (MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = (MAPSIZE - BOUNDARYTHICCNESS) }
                 else if(newLeft < -(MAPSIZE - BOUNDARYTHICCNESS)) { newLeft = -(MAPSIZE - BOUNDARYTHICCNESS) }
 
                 // collision check
@@ -734,7 +734,8 @@ export default class OverworldContainer extends Component {
                         location="bottom" 
                         timer=""
                         width={MAPSIZE + "px"} 
-                        height={BOUNDARYTHICCNESS + "px"} 
+                        height={BOUNDARYTHICCNESS + "px"}
+                        bottom={BOUNDARYTHICCNESS + "px"}
                     />
 
                     {/* Obstacles */}

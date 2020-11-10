@@ -117,8 +117,6 @@
 
 #overworld-container {
   display: flex;
-  /* position: relative; */
-  /* flex-wrap: wrap; */
   flex-direction: column;
   align-items: center;
 }
@@ -199,9 +197,6 @@
 }
 
 .bottom-boundary {
-  /* background-color: red; */
-  position: absolute;
-  bottom: 0;
-  /* margin-left: -900px; */
+  position: relative;
   order: 4;
 }

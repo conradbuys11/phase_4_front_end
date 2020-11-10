@@ -6,7 +6,8 @@ const Boundary = (props) => {
                 className={className}
                 style={{
                     height: props.height,
-                    width: props.width
+                    width: props.width,
+                    bottom: props.bottom
                 }}
             >
                 {props.timer}
