@@ -14,7 +14,7 @@ function BattleContainer(props){
     const [battleState, setBattleState] = useState('')
     const [noStatusEffect, setNoStatusEffect] = useState(undefined)
 
-    const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon', 'victory']
+    const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon', 'victory', 'failure']
 
     //this is componentDidMount
     useEffect(() => {
@@ -235,7 +235,6 @@ function BattleContainer(props){
             else if(defendingMon.id === opponentPokemon.id){
                 setOpponentPokemon(defendingMon)
             }
-            //***TODO:*** LOGIC ON NEXT POKEMON OUT
         }
         else{
             console.log(`${attackingMon.species.name}'s attack missed!`)
@@ -252,6 +251,21 @@ function BattleContainer(props){
         if(nextMon){
             setOpponentPokemon(nextMon)
             console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
+            return true
+
+        }
+        else{
+            //this means all pokemon fainted
+            //set state to defeat!
+            return false
+        }
+    }
+
+    const playerNextMonTemp = () => {
+        let nextMon = player.pokemons.find(pokemon => pokemon.current_hp > 0)
+        if(nextMon){
+            setPlayerPokemon(nextMon)
+            console.log(`${player.name} sent out ${nextMon.species.name}!`)
             return true
 
         }
@@ -290,14 +304,20 @@ function BattleContainer(props){
             }
         }
         if(playerPokemon.current_hp <= 0){
-            //allow player to change pokemon
+            if(playerNextMonTemp()){
+                setBattleState(battleStates[0])
+            }
+            else{
+                setBattleState(battleStates[4])
+                return
+            }
         }
         if(opponentPokemon.current_hp <= 0){
             if(sendOutNextMon()){
                 setBattleState(battleStates[0])
             }
             else{
-                setBattleState(battleStates[2])
+                setBattleState(battleStates[3])
                 return
             }
         }
@@ -372,7 +392,13 @@ function BattleContainer(props){
             return <div>damage in progress! stand by!</div>
         }
         else if(battleState === battleStates[2]){
+            return <div>****WIP: CHOOSE NEXT POKEMON****</div>
+        }
+        else if(battleState === battleStates[3]){
             return <div>you beat the guy! well done!</div>
+        }
+        else if(battleState === battleStates[4]){
+            return <div>YOU LOST, AMATEUR</div>
         }
         else{
             return <div>oop</div>
