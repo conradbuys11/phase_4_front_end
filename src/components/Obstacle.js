@@ -2,7 +2,7 @@ import React from 'react';
 
 const Obstacle = (props) => {
     let className = "obstacle "
-    return <div className={className} style={{
+    return <div className={className} id={"obstacle-"+props.id} style={{
         width: props.width,
         height: props.height,
         marginTop: props.y,

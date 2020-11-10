@@ -115,6 +115,11 @@
 
 /* ######## O V E R W O R L D ######## */
 
+#obstacle-7 {
+  background-size: 100% 100%;
+  background-image: url("./assets/bush1.png");
+}
+
 #overworld-container {
   display: flex;
   flex-direction: column;
@@ -123,7 +128,8 @@
 
 .playable-area {
   display: inline-flex;
-  background-color: rgb(160, 150, 150);
+  /* background-color: rgb(160, 150, 150); */
+  background-image: url("./assets/grass1.png");
   /* position: relative; */
   flex-wrap: wrap;
   flex-direction: row;
@@ -152,10 +158,11 @@
 
 .obstacle {
   /* display: inline-block; */
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0);
   position: absolute;
   align-self: center;
   order: 5;
+  background-image: url("./assets/tile1.png");
 }
 
 .trainer-sprite {

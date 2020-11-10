@@ -23,7 +23,7 @@ import rocketGruntMaleLeft1 from "../assets/rocket-grunt-male/left1.png"
 import rocketGruntMaleRight1 from "../assets/rocket-grunt-male/right1.png"
 import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
 
-const MAPSIZE = 1000
+const MAPSIZE = 900
 const TICKTIMER = 10
 const PLAYERSPRITE = "pokeGirl"
 const NANITIME = 800
@@ -105,6 +105,13 @@ export default class OverworldContainer extends Component {
             height: MAPSIZE / 45,
             x: -MAPSIZE / 5,
             y: -MAPSIZE / 5
+        },
+        {
+            id: 8,
+            width: MAPSIZE * 0.9,
+            height: MAPSIZE / 45,
+            x: -MAPSIZE * 0,
+            y: -MAPSIZE * 0.9
         },
     ]
 
@@ -751,6 +758,7 @@ export default class OverworldContainer extends Component {
                     {this.obstacles.map(obstacle => 
                         <Obstacle
                             key={obstacle.id}
+                            id={obstacle.id}
                             width={obstacle.width + "px"}
                             height={obstacle.height + "px"}
                             x={obstacle.x + "px"}
