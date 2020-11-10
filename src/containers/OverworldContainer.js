@@ -108,7 +108,7 @@ export default class OverworldContainer extends Component {
         },
     ]
 
-    // these should load from database
+    // ideally these should load from database
     trainers = [
         {
             id: 1,
@@ -162,7 +162,6 @@ export default class OverworldContainer extends Component {
         }
     })
 
-    // will need to account for "top" and "left" when trainers move
     trainerCollisionMap = this.trainers.map(trainer => {
         return {
             minLeft: trainer.x - trainer.size - SPRITESIZE / 3,
@@ -229,7 +228,7 @@ export default class OverworldContainer extends Component {
             currentSprite: pokeGirlDown1,
             isMoving: false,
             facing: "Down",
-            timeOfLastDirectionChange: new Date(),
+            timeOfLastDirectionChange: new Date(), // may be more efficient for this to follow tick() instead
             currentlyAggrodTrainer: null,
             nani: 0,
             battleCutsceneActive: false,

@@ -133,6 +133,7 @@ function BattleContainer(props){
 
     const calculateDamage = (attackingMon, defendingMon, move) => {
        
+        console.log(attackingMon.species.name + " used " + move.name + "!")
 
         //check to see if move hits first. 101 accuracy is our way of programming a move w 100% chance to hit
         //Math.random is from 0.00 to 0.99 & our move accuracy is currently an int from 0 to 100
@@ -198,7 +199,7 @@ function BattleContainer(props){
                 }
 
                 damage = Math.floor(damage * modifier)
-                console.log(`${attackingMon.species.name} did ${damage} damage to ${defendingMon.species.name}`)
+                console.log(`${attackingMon.species.name} did ${damage} damage to ${defendingMon.species.name}.`)
 
                 //if this attack doesn't kill
                 if(defendingMon.current_hp - damage > 0){
@@ -214,14 +215,13 @@ function BattleContainer(props){
             //if they are, we can apply any potential effects (status conditions)
             //obv if they're dead, they don't need a status condition
             if(defendingMon.current_hp > 0 && defendingMon.status_effect.name === 'none' && move.move_status_effects.length > 0){
-                move.move_status_effects.forEach(mse => {
-                    if(defendingMon.status_effect.name === 'none' && Math.random() * 100 < mse.accuracy){
-                        console.log(`${defendingMon.species.name} got ${mse.status_effect.name}`)
-                        defendingMon.status_effect = mse.status_effect
+                move.status_effects.forEach(se => {
+                    if(defendingMon.status_effect.name === 'none' && Math.random() * 100 < se.accuracy){
+                        console.log(`${defendingMon.species.name} got ${se.name}`)
+                        defendingMon.status_effect = se
                     }
                 })
             }
-            console.log(``)
             if(defendingMon.id === playerPokemon.id){
                 setPlayerPokemon(defendingMon)
             }
@@ -231,7 +231,7 @@ function BattleContainer(props){
             //***TODO:*** LOGIC ON NEXT POKEMON OUT
         }
         else{
-            console.log(`${attackingMon.species.name} missed with ${move.name}!`)
+            console.log(`${attackingMon.species.name}'s attack missed!`)
         }
     }
 
