@@ -92,43 +92,47 @@ function BattleContainer(props){
     }
 
     const checkBeforeDamage = (attackingMon, defendingMon, move) => {
-         //don't run the function if we don't have
-         if(!attackingMon || !defendingMon || !move) return 
+        //don't run the function if we don't have
+        if(!attackingMon || !defendingMon || !move) return 
 
 
-         //confusion, paralysis, and sleep check (and freeze later)
-         if(attackingMon.status_effect.name === 'confusion' || attackingMon.status_effect.name === 'sleep' || attackingMon.status_effect.name === 'paralysis'){
-             if(attackingMon.status_effect.name === 'confusion'){
-                 console.log(`${attackingMon.species.name} is confused!`)
-                 if(Math.random() * 100 < attackingMon.status_effect.accuracy){
-                     console.log(`It hurt itself in its confusion!`)
-                     if(attackingMon.current_hp - attackingMon.current_hp * (1 / attackingMon.status_effect.power) > 0){
-                         attackingMon.current_hp -= attackingMon.current_hp * (1 / attackingMon.status_effect.power)
-                     }
-                     else{
-                         attackingMon.current_hp = 0
-                     }
-                 }
-                 else{
+        //confusion, paralysis, sleep, and freeze check
+        switch(attackingMon.status_effect.name) {
+            case "confusion":
+                console.log(`${attackingMon.species.name} is confused!`)
+                if(Math.random() * 100 < attackingMon.status_effect.accuracy){
+                    console.log(`It hurt itself in its confusion!`)
+                    if(attackingMon.current_hp - attackingMon.current_hp * (1 / attackingMon.status_effect.power) > 0){
+                        attackingMon.current_hp -= attackingMon.current_hp * (1 / attackingMon.status_effect.power)
+                    }
+                    else{
+                        attackingMon.current_hp = 0
+                    }
+                }
+                else{
                     calculateDamage(attackingMon, defendingMon, move)
-                 }
-             }
-             else if(attackingMon.status_effect.name === 'paralysis'){
-                 if(Math.random() * 100 < attackingMon.status_effect.accuracy){
-                     console.log(`${attackingMon.species.name} is fully paralyzed! It can't move!`)
-                 }
-                 else{
-                    calculateDamage(attackingMon, defendingMon, move)
-                 }
-             }
-             else{
-                 //implement sleep logic here
-                 //consider switching to an accuracy system for waking up
-             }
-         }
-         else{
-             calculateDamage(attackingMon, defendingMon, move)
-         }
+                }
+                break;
+            case "paralysis":
+                if(Math.random() * 100 < attackingMon.status_effect.accuracy){
+                    console.log(`${attackingMon.species.name} is fully paralyzed! It can't move!`)
+                }
+                else{
+                calculateDamage(attackingMon, defendingMon, move)
+                }
+                break;
+            case "sleep":
+                //implement sleep logic here
+                //consider switching to an accuracy system for waking up
+                break;
+            case "freeze":
+                //implement freeze logic here
+                //consider switching to an accuracy system for unfreezing
+                break;
+            default:
+                calculateDamage(attackingMon, defendingMon, move)
+                break;
+         } 
     }
 
     const calculateDamage = (attackingMon, defendingMon, move) => {
