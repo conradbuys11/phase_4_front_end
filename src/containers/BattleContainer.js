@@ -13,6 +13,7 @@ function BattleContainer(props){
     const [opponentPokemon, setOpponentPokemon] = useState(undefined)
     const [battleState, setBattleState] = useState('')
     const [noStatusEffect, setNoStatusEffect] = useState(undefined)
+    const [currentTextBox, setTextBox] = useState(undefined)
 
     const battleStates = ['chooseMove', 'moveBeingUsed', 'choosePokemon', 'victory', 'failure']
 
@@ -289,8 +290,8 @@ function BattleContainer(props){
         battleLogicHolder(playerPokemon, opponentPokemon, move) //go to damage calculation
     }
 
-    const sendOutNextMon = () => {
-        let nextMon = opponent.pokemons.find(pokemon => pokemon.current_hp > 0)
+    const sendOutNextMon = faintedPokemon => {
+        let nextMon = opponent.pokemons.find(pokemon => pokemon.id !== faintedPokemon.id && pokemon.current_hp > 0)
         if(nextMon){
             setOpponentPokemon(nextMon)
             console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
@@ -303,8 +304,8 @@ function BattleContainer(props){
         }
     }
 
-    const playerNextMonTemp = () => {
-        let nextMon = player.pokemons.find(pokemon => pokemon.current_hp > 0)
+    const playerNextMonTemp = faintedPokemon => {
+        let nextMon = player.pokemons.find(pokemon => pokemon.id !== faintedPokemon.id && pokemon.current_hp > 0)
         if(nextMon){
             setPlayerPokemon(nextMon)
             console.log(`${player.name} sent out ${nextMon.species.name}!`)
@@ -334,6 +335,8 @@ function BattleContainer(props){
                 console.log(`${playerPokemonCopy.species.name} fainted!`)
             }
         }
+        let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === playerPokemonCopy.id ? playerPokemonCopy : pokemon)
+        setPlayer({...player, pokemons: newPlayerPokemons})
         setPlayerPokemon(playerPokemonCopy)
         //debugger
         if(opponentPokemonCopy.current_hp > 0 && (opponentPokemonCopy.status_effect.name == 'poison' || opponentPokemonCopy.status_effect.name == 'burn')){
@@ -347,9 +350,12 @@ function BattleContainer(props){
                 console.log(`${opponentPokemonCopy.species.name} fainted!`)
             }
         }
+        let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === opponentPokemonCopy.id ? opponentPokemonCopy : pokemon)
+        setOpponent({...opponent, pokemons: newOpponentPokemons})
         setOpponentPokemon(opponentPokemonCopy)
+
         if(playerPokemonCopy.current_hp <= 0){
-            if(playerNextMonTemp()){
+            if(playerNextMonTemp(playerPokemonCopy)){
                 setBattleState(battleStates[0])
             }
             else{
@@ -358,7 +364,7 @@ function BattleContainer(props){
             }
         }
         if(opponentPokemonCopy.current_hp <= 0){
-            if(sendOutNextMon()){
+            if(sendOutNextMon(opponentPokemonCopy)){
                 setBattleState(battleStates[0])
             }
             else{
@@ -376,6 +382,7 @@ function BattleContainer(props){
         //while that text box's currentText != text, do nothing
         //basically, we want to stop JS from doing anything else for the time being
         //then after, call the callbackFunction
+        // setTextBox(<BattleTextBox text={text} callbackFunction={callbackFunction} />)
     }
 
     const renderController = () => {
@@ -435,7 +442,8 @@ function BattleContainer(props){
             )
         }
         else if(battleState === battleStates[1]){
-            return <div>damage in progress! stand by!</div>
+            return <div>damage in progress! stand by!    
+            </div>
         }
         else if(battleState === battleStates[2]){
             return <div>****WIP: CHOOSE NEXT POKEMON****</div>
