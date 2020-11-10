@@ -24,7 +24,7 @@ function BattleContainer(props){
         .then(rsp => rsp.json())
         .then(trainers => {
             setPlayer(trainers[1])
-            setOpponent(trainers[1])
+            setOpponent(trainers[props.enemyTrainer - 1])
         })
         if(props.player != null){
             //setPlayer(props.player)

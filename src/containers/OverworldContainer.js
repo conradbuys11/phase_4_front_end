@@ -278,7 +278,7 @@ export default class OverworldContainer extends Component {
                     // all overworld state will be cleared after battle with current configuration
 
                 // swap to battle screen
-                this.props.swap("battle")
+                this.props.enterBattle(this.state.currentlyAggrodTrainer)
             }
         }
         // battle cutscene
@@ -295,18 +295,18 @@ export default class OverworldContainer extends Component {
                     newNani = 0
                     newBattleCutsceneActive = true
                     // change player to correct standing sprite -- 1 time
-                    switch(this.state.facing) {
-                        case "Up":
-                            newSprite = pokeGirlUp1
-                            break;
-                        case "Down":
+                    switch(this.state.cutsceneDirection) {
+                        case "up":
                             newSprite = pokeGirlDown1
                             break;
-                        case "Right":
-                            newSprite = pokeGirlRight1
+                        case "down":
+                            newSprite = pokeGirlUp1
                             break;
-                        case "Left":
+                        case "right":
                             newSprite = pokeGirlLeft1
+                            break;
+                        case "left":
+                            newSprite = pokeGirlRight1
                             break;
                         default:
                             break;
@@ -315,121 +315,41 @@ export default class OverworldContainer extends Component {
             }
             else if (this.state.battleCutsceneActive) {
                 // move currentlyAggrodTrainer toward player
-                switch(this.state.facing) {
-                    case "Up":
-                        if(this.state.cutsceneDirection === "right") {
-                            newTrainerLeft += MOVESPEED / 2
-                            newCutsceneDistanceX -= MOVESPEED / 2
-                            if(newCutsceneDistanceX <= 0) {
-                                newCutsceneDistanceX = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "left") {
-                            newTrainerLeft -= MOVESPEED / 2
-                            newCutsceneDistanceX += MOVESPEED / 2
-                            if(newCutsceneDistanceX >= 0) {
-                                newCutsceneDistanceX = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "down") {
-                            newTrainerTop += MOVESPEED / 2
-                            newCutsceneDistanceY -= MOVESPEED / 2
-                            if(newCutsceneDistanceY <= 0) {
-                                newCutsceneDistanceY = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
+                switch(this.state.cutsceneDirection) {
+                    case "right":
+                        newTrainerLeft += MOVESPEED / 2
+                        newCutsceneDistanceX -= MOVESPEED / 2
+                        if(newCutsceneDistanceX <= 0) {
+                            newCutsceneDistanceX = 0
+                            newBattleCutsceneActive = false
+                            newEnterBattleAnimation = BATTLEANIMATIONDURATION
                         }
                         break;
-                    case "Down":
-                        if(this.state.cutsceneDirection === "right") {
-                            newTrainerLeft += MOVESPEED / 2
-                            newCutsceneDistanceX -= MOVESPEED / 2
-                            if(newCutsceneDistanceX <= 0) {
-                                newCutsceneDistanceX = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "left") {
-                            newTrainerLeft -= MOVESPEED / 2
-                            newCutsceneDistanceX += MOVESPEED / 2
-                            if(newCutsceneDistanceX >= 0) {
-                                newCutsceneDistanceX = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "up") {
-                            newTrainerTop -= MOVESPEED / 2
-                            newCutsceneDistanceY += MOVESPEED / 2
-                            if(newCutsceneDistanceY >= 0) {
-                                newCutsceneDistanceY = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
+                    case "left":
+                        newTrainerLeft -= MOVESPEED / 2
+                        newCutsceneDistanceX += MOVESPEED / 2
+                        if(newCutsceneDistanceX >= 0) {
+                            newCutsceneDistanceX = 0
+                            newBattleCutsceneActive = false
+                            newEnterBattleAnimation = BATTLEANIMATIONDURATION
                         }
                         break;
-                    case "Right":
-                        if(this.state.cutsceneDirection === "up") {
-                            newTrainerTop -= MOVESPEED / 2
-                            newCutsceneDistanceY += MOVESPEED / 2
-                            if(newCutsceneDistanceY >= 0) {
-                                newCutsceneDistanceY = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "down") {
-                            newTrainerTop += MOVESPEED / 2
-                            newCutsceneDistanceY -= MOVESPEED / 2
-                            if(newCutsceneDistanceY <= 0) {
-                                newCutsceneDistanceY = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "left") {
-                            newTrainerLeft -= MOVESPEED / 2
-                            newCutsceneDistanceX += MOVESPEED / 2
-                            if(newCutsceneDistanceX >= 0) {
-                                newCutsceneDistanceX = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
+                    case "up":
+                        newTrainerTop -= MOVESPEED / 2
+                        newCutsceneDistanceY += MOVESPEED / 2
+                        if(newCutsceneDistanceY >= 0) {
+                            newCutsceneDistanceY = 0
+                            newBattleCutsceneActive = false
+                            newEnterBattleAnimation = BATTLEANIMATIONDURATION
                         }
                         break;
-                    case "Left":
-                        if(this.state.cutsceneDirection === "up") {
-                            newTrainerTop -= MOVESPEED / 2
-                            newCutsceneDistanceY += MOVESPEED / 2
-                            if(newCutsceneDistanceY >= 0) {
-                                newCutsceneDistanceY = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if(this.state.cutsceneDirection === "down") {
-                            newTrainerTop += MOVESPEED / 2
-                            newCutsceneDistanceY -= MOVESPEED / 2
-                            if(newCutsceneDistanceY <= 0) {
-                                newCutsceneDistanceY = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
-                        }
-                        else if (this.state.cutsceneDirection === "right") {
-                            newTrainerLeft += MOVESPEED / 2
-                            newCutsceneDistanceX -= MOVESPEED / 2
-                            if(newCutsceneDistanceX <= 0) {
-                                newCutsceneDistanceX = 0
-                                newBattleCutsceneActive = false
-                                newEnterBattleAnimation = BATTLEANIMATIONDURATION
-                            }
+                    case "down":
+                        newTrainerTop += MOVESPEED / 2
+                        newCutsceneDistanceY -= MOVESPEED / 2
+                        if(newCutsceneDistanceY <= 0) {
+                            newCutsceneDistanceY = 0
+                            newBattleCutsceneActive = false
+                            newEnterBattleAnimation = BATTLEANIMATIONDURATION
                         }
                         break;
                     default:

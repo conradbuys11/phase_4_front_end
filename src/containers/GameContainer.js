@@ -5,19 +5,21 @@ import BattleContainer from './BattleContainer'
 export default class GameContainer extends Component {
 
     state = {
-        gameState: "overworld"
+        gameState: "overworld",
+        battlingTrainer: null
     }
 
-    swap = (newGameState) => {
+    enterBattle = (trainer) => {
         this.setState({
-            gameState: newGameState
+            gameState: "battle",
+            battlingTrainer: trainer
         })
     }
 
     render() {
         return (
             <>
-                {this.state.gameState === "overworld" ? <OverworldContainer swap={this.swap}/> : <BattleContainer swap={this.swap}/>}
+                {this.state.gameState === "overworld" ? <OverworldContainer enterBattle={this.enterBattle}/> : <BattleContainer enemyTrainer={this.state.battlingTrainer}/>}
             </>
         )
     }
