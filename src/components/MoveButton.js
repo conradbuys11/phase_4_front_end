@@ -55,7 +55,7 @@ const MoveButton = props => {
             move={props.move}
             onClick={() => props.useMove(props.move)}
             key={props.move.id}
-            basic
+            // basic
             color={colors[props.move.type.name.toLowerCase()]}
             size="huge"
         >
