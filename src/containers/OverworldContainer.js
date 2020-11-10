@@ -635,7 +635,7 @@ export default class OverworldContainer extends Component {
 
     animate = (direction) => {
         // use a timer to keep track of time elapsed since last step without changing direction
-        // change image and reset timer if past certain threshold
+        // change image and reset timer if past certain threshold 
         if(this.state.isMoving && Date.now() - this.state.timeOfLastDirectionChange > STEPTIME){
             this.setState({
                 timeOfLastDirectionChange: new Date()
