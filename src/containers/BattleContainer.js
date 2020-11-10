@@ -118,7 +118,7 @@ function BattleContainer(props){
                     console.log(`${attackingMon.species.name} is fully paralyzed! It can't move!`)
                 }
                 else{
-                calculateDamage(attackingMon, defendingMon, move)
+                    calculateDamage(attackingMon, defendingMon, move)
                 }
                 break;
             case "sleep":
@@ -249,7 +249,7 @@ function BattleContainer(props){
         if(nextMon){
             setOpponentPokemon(nextMon)
             console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
-            setBattleState(battleStates[1])
+            setBattleState(battleStates[0])
         }
         else{
             //this means all pokemon fainted
