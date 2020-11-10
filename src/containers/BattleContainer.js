@@ -88,7 +88,7 @@ function BattleContainer(props){
         }
         setPlayerPokemon(playerPokemon)
         setOpponentPokemon(opponentPokemon)
-        setBattleState(battleStates[0])
+        endOfTurnCleanup()
     }
 
     const checkBeforeDamage = (attackingMon, defendingMon, move) => {
@@ -249,28 +249,52 @@ function BattleContainer(props){
         if(nextMon){
             setOpponentPokemon(nextMon)
             console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
-            setBattleState(battleStates[1])
+            return true
+
         }
         else{
             //this means all pokemon fainted
             //set state to defeat!
-            setBattleState(battleStates[2])
+            return false
         }
     }
 
     const endOfTurnCleanup = () => {
         //first, we do burn/poison dmg
         if(playerPokemon.status_effect.name == 'poison' || playerPokemon.status_effect.name == 'burn'){
-            if(playerPokemon.current_hp - (playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100) <= 0){
-                
+            console.log(`${playerPokemon.species.name} is hurt by ${playerPokemon.status_effect.name}!`)
+            if(playerPokemon.current_hp - (playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100) > 0){
+                playerPokemon.current_hp -= (playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100)
+            }
+            else{
+                playerPokemon.current_hp = 0
+                setPlayerPokemon(playerPokemon)
+                console.log(`${playerPokemon.species.name} fainted!`)
+            }
+        }
+        if(opponentPokemon.status_effect.name == 'poison' || opponentPokemon.status_effect.name == 'burn'){
+            console.log(`${opponentPokemon.species.name} is hurt by ${opponentPokemon.status_effect.name}!`)
+            if(opponentPokemon.current_hp - (opponentPokemon.status_effect.power * opponentPokemon.species.hp_base / 100) > 0){
+                opponentPokemon.current_hp -= (opponentPokemon.status_effect.power * opponentPokemon.species.hp_base / 100)
+            }
+            else{
+                opponentPokemon.current_hp = 0
+                setOpponentPokemon(opponentPokemon)
+                console.log(`${opponentPokemon.species.name} fainted!`)
             }
         }
         if(playerPokemon.current_hp <= 0){
             //allow player to change pokemon
         }
         if(opponentPokemon.current_hp <= 0){
-            sendOutNextMon()
+            if(sendOutNextMon()){
+                setBattleState(battleStates[0])
+            }
+            else{
+                setBattleState(battleStates[2])
+            }
         }
+
     }
 
     const createTextBox = (text, callbackFunction) => {
