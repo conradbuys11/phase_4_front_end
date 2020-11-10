@@ -240,7 +240,7 @@ function BattleContainer(props){
         battleLogicHolder(playerPokemon, opponentPokemon, move) //go to damage calculation
     }
 
-    const sendOutNextMon = opponent => {
+    const sendOutNextMon = () => {
         let nextMon = opponent.pokemons.find(pokemon => pokemon.current_hp > 0)
         if(nextMon){
             setOpponentPokemon(nextMon)
@@ -255,7 +255,18 @@ function BattleContainer(props){
     }
 
     const endOfTurnCleanup = () => {
-        //
+        //first, we do burn/poison dmg
+        if(playerPokemon.status_effect.name == 'poison' || playerPokemon.status_effect.name == 'burn'){
+            if(playerPokemon.current_hp - (playerPokemon.status_effect.power * playerPokemon.species.hp_base / 100) <= 0){
+                
+            }
+        }
+        if(playerPokemon.current_hp <= 0){
+            //allow player to change pokemon
+        }
+        if(opponentPokemon.current_hp <= 0){
+            sendOutNextMon()
+        }
     }
 
     const createTextBox = (text, callbackFunction) => {
