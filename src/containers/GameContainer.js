@@ -6,13 +6,21 @@ export default class GameContainer extends Component {
 
     state = {
         gameState: "overworld",
-        battlingTrainer: null
+        battlingTrainer: null,
+        top: 0,
+        left: 0,
+        facing: "Down",
+        defeatedTrainers: []
     }
 
-    enterBattle = (trainer) => {
+    enterBattle = (trainer, top, left, facing, defeatedTrainers) => {
         this.setState({
             gameState: "battle",
-            battlingTrainer: trainer
+            battlingTrainer: trainer,
+            top: top,
+            left: left,
+            facing: facing,
+            defeatedTrainers: defeatedTrainers
         })
     }
 
@@ -26,7 +34,21 @@ export default class GameContainer extends Component {
     render() {
         return (
             <>
-                {this.state.gameState === "overworld" ? <OverworldContainer enterBattle={this.enterBattle}/> : <BattleContainer enemyTrainer={this.state.battlingTrainer} exitBattle={this.exitBattle}/>}
+                {this.state.gameState === "overworld"
+                    ?
+                        <OverworldContainer
+                            enterBattle={this.enterBattle}
+                            top={this.state.top}
+                            left={this.state.left}
+                            facing={this.state.facing}
+                            defeatedTrainers={this.state.defeatedTrainers}
+                        />
+                    :
+                        <BattleContainer 
+                            enemyTrainer={this.state.battlingTrainer} 
+                            exitBattle={this.exitBattle}
+                        />
+                }
             </>
         )
     }

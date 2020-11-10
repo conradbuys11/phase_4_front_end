@@ -237,7 +237,8 @@ export default class OverworldContainer extends Component {
             cutsceneDistanceX: 0,
             cutsceneDistanceY: 0,
             cutsceneDirection: null,
-            enterBattleAnimation: 0
+            enterBattleAnimation: 0,
+            defeatedTrainers: []
         }
         this.loadedAt = new Date()
     }
@@ -247,6 +248,15 @@ export default class OverworldContainer extends Component {
             () => this.tick(),
             TICKTIMER   
         );
+        // delete line of sight collision maps of defeated trainers
+        this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
+        // load state from game container if returning from battle
+        this.setState({
+            top: this.props.top,
+            left: this.props.left,
+            facing: this.props.facing,
+            defeatedTrainers: this.props.defeatedTrainers
+        })
     }
 
     componentWillUnmount() {
@@ -280,21 +290,8 @@ export default class OverworldContainer extends Component {
                 // save overworld state? post request to store player location, which trainers have been fought etc?
                     // all overworld state will be cleared after battle with current configuration
 
-                // // clear overworld state
-                // this.setState({
-                //     currentlyAggrodTrainer: null,
-                //     nani: 0,
-                //     battleCutsceneActive: false,
-                //     trainerTop: 0,
-                //     trainerLeft: 0,
-                //     cutsceneDistanceX: 0,
-                //     cutsceneDistanceY: 0,
-                //     cutsceneDirection: null,
-                //     enterBattleAnimation: 0
-                // })
-
                 // swap to battle screen
-                this.props.enterBattle(newCurrentlyAggrodTrainer)
+                this.props.enterBattle(this.state.currentlyAggrodTrainer, this.state.top, this.state.left, this.state.facing, [...this.state.defeatedTrainers, this.state.currentlyAggrodTrainer])
             }
         }
         // battle cutscene
@@ -515,10 +512,6 @@ export default class OverworldContainer extends Component {
                     else if(newCutsceneDirection === "left") {
                         newCutsceneDistanceX = this.state.left - trainerDiv.style.marginLeft.slice(0, -2) + SPRITESIZE * 1.5
                     }
-                }
-                // no aggro
-                else {
-                    newCurrentlyAggrodTrainer = null
                 }
 
                 // OOB check
