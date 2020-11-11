@@ -199,8 +199,8 @@
 .line-of-sight {
   border: 2px;
   border-color: black;
-  border-style: dotted;
   position: absolute;
+  /* border-style: dotted; */
 }
 
 .aggro {
