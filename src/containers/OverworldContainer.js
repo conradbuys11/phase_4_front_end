@@ -67,9 +67,9 @@ export default class OverworldContainer extends Component {
         {
             id: 2,
             width: MAPSIZE / 4.5,
-            height: MAPSIZE / 45,
+            height: MAPSIZE / 15,
             x: 0,
-            y: MAPSIZE / 3,
+            y: MAPSIZE / 2.5,
         },
         {
             id: 3,
@@ -81,9 +81,9 @@ export default class OverworldContainer extends Component {
         {
             id: 4,
             width: MAPSIZE / 4.5,
-            height: MAPSIZE / 45,
+            height: MAPSIZE / 15,
             x: 0,
-            y: -MAPSIZE / 3,
+            y: -MAPSIZE / 2.5,
         },
         {
             id: 5,
@@ -112,6 +112,13 @@ export default class OverworldContainer extends Component {
             height: MAPSIZE / 45,
             x: -MAPSIZE * 0,
             y: -MAPSIZE * 0.9
+        },
+        {
+            id: 9,
+            width: MAPSIZE / 8,
+            height: MAPSIZE / 5,
+            x: -MAPSIZE * 0.5,
+            y: -MAPSIZE * 0.6
         },
     ]
 
@@ -222,8 +229,8 @@ export default class OverworldContainer extends Component {
     constructor() {
         super()
         this.state = {
-            top: 0,
-            left: 0,
+            top: MAPSIZE * 0.773,
+            left: MAPSIZE * 0.784,
             vertInertia: 0,
             horizInertia: 0,
             w: false,
@@ -232,9 +239,9 @@ export default class OverworldContainer extends Component {
             d: false,
             lastInput: "",
             lastInputHeld: false,
-            currentSprite: pokeGirlDown1,
+            currentSprite: pokeGirlUp1,
             isMoving: false,
-            facing: "Down",
+            facing: "Up",
             timeOfLastDirectionChange: new Date(), // may be more efficient for this to follow tick() instead
             currentlyAggrodTrainer: null,
             nani: 0,
@@ -255,15 +262,18 @@ export default class OverworldContainer extends Component {
             () => this.tick(),
             TICKTIMER   
         );
-        // delete line of sight collision maps of defeated trainers
-        this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
-        // load state from game container if returning from battle
-        this.setState({
-            top: this.props.top,
-            left: this.props.left,
-            facing: this.props.facing,
-            defeatedTrainers: this.props.defeatedTrainers
-        })
+        // skip this if we are not coming from battle
+        if(this.props.defeatedTrainers.length > 0) {
+            // delete line of sight collision maps of defeated trainers
+            this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
+            // load state from game container if returning from battle
+            this.setState({
+                top: this.props.top,
+                left: this.props.left,
+                facing: this.props.facing,
+                defeatedTrainers: this.props.defeatedTrainers
+            })
+        }
     }
 
     componentWillUnmount() {

@@ -9,7 +9,7 @@ export default class GameContainer extends Component {
         battlingTrainer: null,
         top: 0,
         left: 0,
-        facing: "Down",
+        facing: "Up",
         defeatedTrainers: []
     }
 
