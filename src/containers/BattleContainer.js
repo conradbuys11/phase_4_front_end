@@ -86,9 +86,10 @@ function BattleContainer(props){
         }
 
         //DELETE BELOW, THIS IS JUST FOR DEBUG PURPOSES
-        firstMon = playerPokemon
-        secondMon = opponentPokemon
-        firstMove = playerMove
+        // firstMon = playerPokemon
+        // secondMon = opponentPokemon
+        // firstMove = playerMove
+        // secondMove = opponentMove
         //DELETE ABOVE, THIS IS JUST FOR DEBUG PURPOSES
 
         checkStatus({attackingMon: firstMon, defendingMon: secondMon, move: firstMove, defendingMove: secondMove, isFirstAttacker: true})
@@ -145,7 +146,6 @@ function BattleContainer(props){
 
     const calculateConfusionDamage = (params) => {
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
-        let returnHP
         if(params.attackingMon.current_hp - Math.floor(params.attackingMon.current_hp * (1 / params.attackingMon.status_effect.power)) > 0){
             params.attackingMon.current_hp -= Math.floor(params.attackingMon.current_hp * (1 / params.attackingMon.status_effect.power))
         }
@@ -242,7 +242,7 @@ function BattleContainer(props){
                 }
 
                 damage = Math.floor(damage * modifier)
-                let newParams = {...params, damage, effectiveness}
+                let newParams = {effectiveness, ...params, damage, effectiveness}
                 dealDamage(newParams)
                 // createTextBox(effectiveness, calculateDamage, newParams)
                 //console.log(`${attackingMon.species.name} did ${damage} damage to ${defendingMon.species.name}.`)
@@ -275,7 +275,7 @@ function BattleContainer(props){
         else{
             defendingMonCopy.current_hp = 0
             defendingMonCopy.status_effect = noStatusEffect
-            //createTextBox(`${defendingMonCopy.species.name} fainted!`, cleanup function)
+            //return
         }
         if(defendingMonCopy.id === playerPokemon.id){
             setPlayerPokemon(defendingMonCopy)
@@ -297,22 +297,43 @@ function BattleContainer(props){
         //after we've done damage, we check to see if defender is still alive, & doesn't have a status condition.
         //if they are, we can apply any potential effects (status conditions)
         //obv if they're dead, they don't need a status condition
-        debugger
         let defendingMonCopy = copyOf(params.defendingMon)
         if(defendingMonCopy.current_hp > 0 && defendingMonCopy.status_effect.name === 'none' && params.move.move_status_effects.length > 0){
             params.move.move_status_effects.forEach(mse => {
                 if(defendingMonCopy.status_effect.name === 'none' && Math.random() * 100 < mse.accuracy){
                     defendingMonCopy.status_effect = mse.status_effect
+                    console.log(defendingMonCopy.status_effect)
+                    //debugger
                     if(params.isFirstAttacker){
                         createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
                     }
                     else{
-                        let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy}
+                        let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
                         createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, endOfTurnCleanup, newParams)
                     }
-                    return
                 }
             })
+            if(params.isFirstAttacker){
+                checkStatus({attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
+            }
+            else{
+                let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
+                endOfTurnCleanup(newParams)
+            }
+        }
+        else if(defendingMonCopy.current_hp <= 0){
+            if(defendingMonCopy.id === playerPokemon.id){
+                let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === defendingMonCopy.id ? defendingMonCopy : pokemon)
+                setPlayer({...player, pokemons: newPlayerPokemons})
+                setPlayerPokemon(defendingMonCopy)
+                endOfTurnCleanup({playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true})
+            }
+            else{
+                let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === defendingMonCopy.id ? defendingMonCopy : pokemon)
+                setOpponent({...opponent, pokemons: newOpponentPokemons})
+                setOpponentPokemon(defendingMonCopy)
+                endOfTurnCleanup({playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true})   
+            }
         }
         else{
             if(params.isFirstAttacker){
@@ -331,7 +352,7 @@ function BattleContainer(props){
         console.log('we got here!')
         if(params.isFirst){
             if(params.playerMon.current_hp > 0 && (params.playerMon.status_effect.name == 'poison' || params.playerMon.status_effect.name == 'burn')){
-                createTextBox(`${params.playerMon.species.name} is hurt by ${params.playerMon.status_effect.name}!`, dealBurnPoisonDmg, {firstMon: params.playerMon, secondMon: params.opponentMon, isFirst: params.isFirst})
+                createTextBox(`${params.playerMon.species.name} is hurt by ${params.playerMon.status_effect.name}!`, dealBurnPoisonDmg, {...params})
             }
             else{
                 endOfTurnCleanup({...params, isFirst: false})
@@ -339,64 +360,65 @@ function BattleContainer(props){
         }
         else{
             if(params.opponentMon.current_hp > 0 && (params.opponentMon.status_effect.name == 'poison' || params.opponentMon.status_effect.name == 'burn')){
-                createTextBox(`${params.opponentMon.species.name} is hurt by ${params.opponentMon.status_effect.name}!`, dealBurnPoisonDmg, {firstMon: params.opponentMon, secondMon: params.playerMon, isFirst: params.isFirst})
+                createTextBox(`${params.opponentMon.species.name} is hurt by ${params.opponentMon.status_effect.name}!`, dealBurnPoisonDmg, {...params})
             }
             else{
-                //next step
+                checkIfFainted({...params, isFirst: true})
             }
         }
     }
 
     const dealBurnPoisonDmg = params => {
-        //params: firstMon, secondMon, isFirst
-        let firstMonCopy = copyOf(params.firstMon)
-        if(firstMonCopy.current_hp - Math.floor((firstMonCopy.status_effect.power * firstMonCopy.species.hp_base / 100)) > 0){
-            firstMonCopy.current_hp -= Math.floor((firstMonCopy.status_effect.power * firstMonCopy.species.hp_base / 100))
+        //params: playerMon, secondMon, isFirst
+        //debugger
+        let pokeCopy = params.isFirst ? copyOf(params.playerMon) : copyOf(params.opponentMon)
+        if(pokeCopy.current_hp - Math.floor((pokeCopy.status_effect.power * pokeCopy.species.hp_base / 100)) > 0){
+            pokeCopy.current_hp -= Math.floor((pokeCopy.status_effect.power * pokeCopy.species.hp_base / 100))
             if(params.isFirst){
-                let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === firstMonCopy.id ? firstMonCopy : pokemon)
+                let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setPlayer({...player, pokemons: newPlayerPokemons})
-                setPlayerPokemon(firstMonCopy)
-                endOfTurnCleanup({playerMon: firstMonCopy, opponentMon: params.secondMon, isFirst: false})
+                setPlayerPokemon(pokeCopy)
+                endOfTurnCleanup({playerMon: pokeCopy, opponentMon: params.secondMon, isFirst: false})
             }
             else{
-                let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === firstMonCopy.id ? firstMonCopy : pokemon)
+                let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setOpponent({...opponent, pokemons: newOpponentPokemons})
-                setOpponentPokemon(firstMonCopy)
-                checkIfFainted({firstMon: params.secondMon, secondMon: firstMonCopy, isFirst: true})
+                setOpponentPokemon(pokeCopy)
+                checkIfFainted({playerMon: params.secondMon, opponentMon: pokeCopy, isFirst: true})
             }
         }
         else{
-            firstMonCopy.current_hp = 0
-            firstMonCopy.status_effect = noStatusEffect
+            pokeCopy.current_hp = 0
+            pokeCopy.status_effect = noStatusEffect
 
             if(params.isFirst){
-                let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === firstMonCopy.id ? firstMonCopy : pokemon)
+                let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setPlayer({...player, pokemons: newPlayerPokemons})
-                setPlayerPokemon(firstMonCopy)
-                createTextBox(`${firstMonCopy.species.name} fainted!`, endOfTurnCleanup, {playerMon: firstMonCopy, opponentMon: params.secondMon, isFirst: false})
+                setPlayerPokemon(pokeCopy)
+                createTextBox(`${pokeCopy.species.name} fainted!`, endOfTurnCleanup, {playerMon: pokeCopy, opponentMon: params.secondMon, isFirst: false})
             }
             else{
-                let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === firstMonCopy.id ? firstMonCopy : pokemon)
+                let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setOpponent({...opponent, pokemons: newOpponentPokemons})
-                setOpponentPokemon(firstMonCopy)
-                createTextBox(`${firstMonCopy.species.name} fainted!`, checkIfFainted, {firstMon: params.secondMon, secondMon: firstMonCopy, isFirst: true})
+                setOpponentPokemon(pokeCopy)
+                createTextBox(`${pokeCopy.species.name} fainted!`, checkIfFainted, {playerMon: params.secondMon, opponentMon: pokeCopy, isFirst: true})
             }
         }
     }
     
     const checkIfFainted = params => {
-        //params: firstMon, secondMon, isFirst
+        //params: playerMon, opponentMon, isFirst
         if(params.isFirst){
-            if(params.firstMon.current_hp <= 0){
-                createTextBox(`${params.firstMon.species.name} fainted!`, checkNextMon, params)
+            if(params.playerMon.current_hp <= 0){
+                createTextBox(`${params.playerMon.species.name} fainted!`, checkNextMon, params)
             }
             else{
                 checkIfFainted({...params, isFirst: false})
             }
         }
         else{
-            if(params.firstMon.current_hp <= 0){
-                createTextBox(`${params.secondMon.species.name} fainted!`, checkNextMon, params)
+            if(params.opponentMon.current_hp <= 0){
+                createTextBox(`${params.opponentMon.species.name} fainted!`, checkNextMon, params)
             }
             else{
                 setBattleState(battleStates[0])
@@ -405,13 +427,14 @@ function BattleContainer(props){
     }
 
     const checkNextMon = params => {
-        //params: firstMon, secondMon, isFirst
+        //params: playerMon, opponentMon, isFirst
         //isFirst = player pokemon fainted, otherwise opponent pokemon fainted
+        //debugger
         if(params.isFirst){
-            let nextMon = player.pokemons.find(pokemon => pokemon.id !== params.firstMon.id && pokemon.current_hp > 0)
+            let nextMon = player.pokemons.find(pokemon => pokemon.id !== params.playerMon.id && pokemon.current_hp > 0)
             if(nextMon){
                 setPlayerPokemon(nextMon)
-                createTextBox(`${player.trainer_category.name} ${player.name} sent out ${nextMon.species.name}!`, checkIfFainted, {...params, firstMon: nextMon, isFirst: false})
+                createTextBox(`${player.trainer_category.name} ${player.name} sent out ${nextMon.species.name}!`, checkIfFainted, {...params, playerMon: nextMon, isFirst: false})
             }
             else{
                 //this means all pokemon fainted
@@ -420,10 +443,10 @@ function BattleContainer(props){
             }
         }
         else{
-            let nextMon = opponent.pokemons.find(pokemon => pokemon.id !== params.secondMon.id && pokemon.current_hp > 0)
+            let nextMon = opponent.pokemons.find(pokemon => pokemon.id !== params.opponentMon.id && pokemon.current_hp > 0)
             if(nextMon){
                 setOpponentPokemon(nextMon)
-                createTextBox(`${opponent.trainer_category.name} ${opponent.name} sent out ${nextMon.species.name}!`, setBattleState, battleStates[0])
+                createTextBox(`${opponent.trainer_category.name} ${opponent.name} sent out ${nextMon.species.name}!`, setBattleStateByIndex, 0)
             }
             else{
                 //this means all pokemon fainted
@@ -433,212 +456,18 @@ function BattleContainer(props){
         }
     }
 
+    const setBattleStateByIndex = index => {
+        setBattleState(battleStates[index])
+    }
+
     const copyOf = pokemon => {
         return JSON.parse(JSON.stringify(pokemon))
     }
-
-    // const calculateDamage = (attackingMon, defendingMon, move) => {
-    //     //let attackingMonCopy = copyOf(attackingMon)
-    //     let defendingMonCopy = copyOf(defendingMon)
-    //     console.log(attackingMon.species.name + " used " + move.name + "!")
-
-    //     //check to see if move hits first. 101 accuracy is our way of programming a move w 100% chance to hit
-    //     //Math.random is from 0.00 to 0.99 & our move accuracy is currently an int from 0 to 100
-    //     if(move.accuracy === null || Math.random() * 100 < move.accuracy){
-    //         //now check to see if we're using a damaging move
-    //         if(move.category === 'physical' || move.category === 'special'){
-    //             let damage;
-    //             if(move.category === 'physical'){
-    //                 //source on this calculation: https://bulbapedia.bulbagarden.net/wiki/Damage
-    //                 //usually the first 22 would be (2 * level / 5) + 2, but since we're assuming level 50 rn, the math is already done for us.
-    //                 //***TODO:*** figure out when we have to floor/round the decimals 
-    //                 //AFTER EVERY MULTIPLICATION -- TODO, PUT THE FLOORS IN
-    //                 damage = Math.floor(((22) * move.power *  attackingMon.species.atk_base / defendingMon.species.def_base / 50) + 2)
-    //             }
-    //             else{
-    //                 damage = Math.floor(((22) * move.power *  attackingMon.species.spa_base / defendingMon.species.spd_base / 50) + 2)
-    //             }
-
-    //             let modifier = 1
-    //             //debugger
-
-    //             //bitwise operations on type advantage
-    //             if((move.type.double_against & defendingMon.species.types[0].value) > 0){
-    //                 modifier *= 2
-    //             }
-    //             else if((move.type.half_against & defendingMon.species.types[0].value) > 0){
-    //                 modifier *= 0.5
-    //             }
-    //             else if((move.type.immune_against & defendingMon.species.types[0].value) > 0){
-    //                 modifier *= 0
-    //             }
-
-    //             if(defendingMon.species.types.length > 1){
-    //                 if((move.type.double_against & defendingMon.species.types[1].value) > 0){
-    //                     modifier *= 2
-    //                 }
-    //                 else if((move.type.half_against & defendingMon.species.types[1].value) > 0){
-    //                     modifier *= 0.5
-    //                 }
-    //                 else if((move.type.immune_against & defendingMon.species.types[1].value) > 0){
-    //                     modifier *= 0
-    //                 }
-    //             }
-
-    //             let effectiveness = ''
-    //             if(modifier >= 2){
-    //                 effectiveness = "It's super effective!"
-    //             }
-    //             else if(modifier <= 0.5){
-    //                 effectiveness = "It's not very effective..."
-    //             }
-    //             else if(modifier === 0){
-    //                 createTextBox('It had no effect...', checkStatus, )
-    //                 return
-    //             }
-
-    //             //STAB
-    //             if(move.type.id === attackingMon.species.types[0].id){
-    //                 modifier *= 1.5
-    //             }
-    //             else if(attackingMon.species.types.length > 1 && move.type.id === attackingMon.species.types[1].id){
-    //                 modifier *= 1.5
-    //             }
-
-    //             //burn on physical attack
-    //             if(move.category === 'physical' && attackingMon.status_effect.name === 'burn'){
-    //                 modifier *= 0.5
-    //             }
-
-    //             damage = Math.floor(damage * modifier)
-    //             console.log(`${attackingMon.species.name} did ${damage} damage to ${defendingMon.species.name}.`)
-
-    //             //if this attack doesn't kill
-    //             if(defendingMonCopy.current_hp - damage > 0){
-    //                 defendingMonCopy.current_hp -= damage
-    //             }
-    //             //0 is the lowest we want hp to go, no negatives
-    //             else{
-    //                 defendingMonCopy.current_hp = 0
-    //                 defendingMonCopy.status_effect = noStatusEffect
-    //                 console.log(`${defendingMonCopy.species.name} fainted!`)
-    //             }
-    //         }
-    //         //after we've done damage, we check to see if defender is still alive, & doesn't have a status condition.
-    //         //if they are, we can apply any potential effects (status conditions)
-    //         //obv if they're dead, they don't need a status condition
-    //         if(defendingMonCopy.current_hp > 0 && defendingMonCopy.status_effect.name === 'none' && move.move_status_effects.length > 0){
-    //             move.move_status_effects.forEach(mse => {
-    //                 if(defendingMonCopy.status_effect.name === 'none' && Math.random() * 100 < mse.accuracy){
-    //                     console.log(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`)
-    //                     defendingMonCopy.status_effect = mse.status_effect
-    //                 }
-    //             })
-    //         }
-    //     }
-    //     else{
-    //         console.log(`${attackingMon.species.name}'s attack missed!`)
-    //     }
-    //     // if(defendingMonCopy.id === playerPokemon.id){
-    //     //     setPlayerPokemon(defendingMonCopy)
-    //     // }
-    //     // else if(defendingMonCopy.id === opponentPokemon.id){
-    //     //     setOpponentPokemon(defendingMonCopy)
-    //     // }
-    //     return defendingMonCopy
-    // }
 
     const useMove = move => {
         setBattleState(battleStates[1]) //moveBeingUsed state
         battleLogicStart(playerPokemon, opponentPokemon, move) //go to damage calculation
     }
-
-    // const sendOutNextMon = faintedPokemon => {
-    //     let nextMon = opponent.pokemons.find(pokemon => pokemon.id !== faintedPokemon.id && pokemon.current_hp > 0)
-    //     if(nextMon){
-    //         setOpponentPokemon(nextMon)
-    //         console.log(`${opponent.name} sent out ${nextMon.species.name}!`)
-    //         return true
-    //     }
-    //     else{
-    //         //this means all pokemon fainted
-    //         //set state to defeat!
-    //         return false
-    //     }
-    // }
-
-    // const playerNextMonTemp = faintedPokemon => {
-    //     let nextMon = player.pokemons.find(pokemon => pokemon.id !== faintedPokemon.id && pokemon.current_hp > 0)
-    //     if(nextMon){
-    //         setPlayerPokemon(nextMon)
-    //         console.log(`${player.name} sent out ${nextMon.species.name}!`)
-    //         return true
-
-    //     }
-    //     else{
-    //         //this means all pokemon fainted
-    //         //set state to defeat!
-    //         return false
-    //     }
-    // }
-
-    // const endOfTurnCleanup = (playerCopy, opponentCopy) => {
-    //     //first, we do burn/poison dmg
-    //     //console.log(playerPokemon.current_hp)
-    //     let playerPokemonCopy = playerCopy
-    //     let opponentPokemonCopy = opponentCopy
-    //     if(playerPokemonCopy.current_hp > 0 && (playerPokemonCopy.status_effect.name == 'poison' || playerPokemonCopy.status_effect.name == 'burn')){
-    //         console.log(`${playerPokemonCopy.species.name} is hurt by ${playerPokemonCopy.status_effect.name}!`)
-    //         if(playerPokemonCopy.current_hp - Math.floor((playerPokemonCopy.status_effect.power * playerPokemonCopy.species.hp_base / 100)) > 0){
-    //             playerPokemonCopy.current_hp -= Math.floor((playerPokemonCopy.status_effect.power * playerPokemonCopy.species.hp_base / 100))
-    //         }
-    //         else{
-    //             playerPokemonCopy.current_hp = 0
-    //             playerPokemonCopy.status_effect = noStatusEffect
-    //             console.log(`${playerPokemonCopy.species.name} fainted!`)
-    //         }
-    //     }
-    //     let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === playerPokemonCopy.id ? playerPokemonCopy : pokemon)
-    //     setPlayer({...player, pokemons: newPlayerPokemons})
-    //     setPlayerPokemon(playerPokemonCopy)
-    //     //debugger
-    //     if(opponentPokemonCopy.current_hp > 0 && (opponentPokemonCopy.status_effect.name == 'poison' || opponentPokemonCopy.status_effect.name == 'burn')){
-    //         console.log(`${opponentPokemonCopy.species.name} is hurt by ${opponentPokemonCopy.status_effect.name}!`)
-    //         if(opponentPokemonCopy.current_hp - Math.floor((opponentPokemonCopy.status_effect.power * opponentPokemonCopy.species.hp_base / 100)) > 0){
-    //             opponentPokemonCopy.current_hp -= Math.floor((opponentPokemonCopy.status_effect.power * opponentPokemonCopy.species.hp_base / 100))
-    //         }
-    //         else{
-    //             opponentPokemonCopy.current_hp = 0
-    //             opponentPokemonCopy.status_effect = noStatusEffect
-    //             console.log(`${opponentPokemonCopy.species.name} fainted!`)
-    //         }
-    //     }
-    //     let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === opponentPokemonCopy.id ? opponentPokemonCopy : pokemon)
-    //     setOpponent({...opponent, pokemons: newOpponentPokemons})
-    //     setOpponentPokemon(opponentPokemonCopy)
-
-    //     if(playerPokemonCopy.current_hp <= 0){
-    //         if(playerNextMonTemp(playerPokemonCopy)){
-    //             setBattleState(battleStates[0])
-    //         }
-    //         else{
-    //             setBattleState(battleStates[4])
-    //             return
-    //         }
-    //     }
-    //     if(opponentPokemonCopy.current_hp <= 0){
-    //         if(sendOutNextMon(opponentPokemonCopy)){
-    //             setBattleState(battleStates[0])
-    //         }
-    //         else{
-    //             props.exitBattle()
-    //             // setBattleState(battleStates[3])
-    //             return
-    //         }
-    //     }
-        
-    //     setBattleState(battleStates[0])
-    // }
 
     const createTextBox = (text, callbackFunction, params) => {
         //something like <BattleTextBox text={text}/>
@@ -652,7 +481,8 @@ function BattleContainer(props){
     const renderController = () => {
         if(battleState === ''){
             if(playerPokemon !== undefined && opponentPokemon !== undefined){
-                setBattleState(battleStates[0])
+                setBattleState('intro')
+                createTextBox(`${opponent.trainer_category.name} ${opponent.name} wants to battle!`, setBattleStateByIndex, 0)
             }
             else if(player !== undefined && opponent !== undefined){
                 setPlayerPokemon(player.pokemons[0])
@@ -660,6 +490,42 @@ function BattleContainer(props){
             }
             return <div>loLOADING...ading...</div>
         }
+        // only uncomment if we're gonna add player sprites before sending out pokemon
+        // otherwise, taken care of by battleState[1] render
+        // else if(battleState === 'intro'){
+        //     return(
+        //         <div id="battle-screen">
+        //             <div id="battle-contents">
+        //                 <div id="battle-area">
+        //                     <div className={'player-pokemon-text'}>
+        //                         <PokemonText
+        //                             pokemon={playerPokemon} 
+        //                             sprite={playerPokemon.species.sprite_back}
+        //                             imgHeight="400px"
+        //                         />
+        //                     </div>
+        //                     <div className={'opponent-pokemon-text'}>
+        //                         <PokemonText 
+        //                             pokemon={opponentPokemon} 
+        //                             sprite={opponentPokemon.species.sprite_front}
+        //                             imgHeight="250px"
+        //                         />
+        //                     </div>
+        //                 </div>
+        //                 <Divider horizontal>
+        //                     <img
+        //                         src={pokeballIcon}
+        //                         height="15px" 
+        //                         width="15px"
+        //                         style={{
+        //                             marginBottom: "-3px"
+        //                         }}
+        //                     />
+        //                 </Divider>
+        //             </div>
+        //         </div>
+        //     )
+        // }
         else if(battleState === battleStates[0]){
             // if(opponentPokemon.current_hp <= 0){
             //     sendOutNextMon(opponent)
@@ -705,7 +571,7 @@ function BattleContainer(props){
                 </div>
             )
         }
-        else if(battleState === battleStates[1]){
+        else if(battleState === battleStates[1] || battleState === 'intro'){
             return(
                 <div id="battle-screen">
                     <div id="battle-contents">
