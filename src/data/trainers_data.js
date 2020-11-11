@@ -44,7 +44,7 @@ const trainers = [
         sightHeight: AGGROWIDTH,
     },
     {
-        id: 3,
+        id: 4,
         orientation: "down",
         sprite: rocketGruntMaleDown1,
         size: SPRITESIZE,
@@ -54,7 +54,7 @@ const trainers = [
         sightHeight: AGGRODISTANCE,
     },
     {
-        id: 3,
+        id: 5,
         orientation: "right",
         sprite: rocketGruntMaleRight1,
         size: SPRITESIZE,
@@ -64,7 +64,7 @@ const trainers = [
         sightHeight: AGGROWIDTH,
     },
     {
-        id: 3,
+        id: 6,
         orientation: "right",
         sprite: rocketGruntMaleRight1,
         size: SPRITESIZE,
@@ -74,7 +74,7 @@ const trainers = [
         sightHeight: AGGROWIDTH,
     },
     {
-        id: 3,
+        id: 7,
         orientation: "down",
         sprite: rocketGruntMaleDown1,
         size: SPRITESIZE,
@@ -84,7 +84,7 @@ const trainers = [
         sightHeight: AGGRODISTANCE / 5,
     },
     {
-        id: 3,
+        id: 8,
         orientation: "left",
         sprite: rocketGruntMaleLeft1,
         size: SPRITESIZE,
@@ -94,7 +94,7 @@ const trainers = [
         sightHeight: AGGROWIDTH,
     },
     {
-        id: 3,
+        id: 9,
         orientation: "left",
         sprite: rocketGruntMaleLeft1,
         size: SPRITESIZE,
@@ -104,7 +104,7 @@ const trainers = [
         sightHeight: AGGROWIDTH,
     },
     {
-        id: 3,
+        id: 10,
         orientation: "up",
         sprite: rocketGruntMaleUp1,
         size: SPRITESIZE,

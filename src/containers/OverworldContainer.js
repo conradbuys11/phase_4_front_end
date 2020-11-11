@@ -5,8 +5,9 @@ import PlayerSprite from '../components/PlayerSprite'
 import Obstacle from '../components/Obstacle';
 import Trainer from '../components/Trainer'
 
-import trainers from "../data/trainers_data"
 import obstacles from "../data/obstacles_data"
+import doodads from "../data/obstacles_data"
+import trainers from "../data/trainers_data"
 
 import pokeGirlDown1 from "../assets/poke-girl-1/down1.png"
 import pokeGirlDown2 from "../assets/poke-girl-1/down2.png"
@@ -652,6 +653,7 @@ export default class OverworldContainer extends Component {
                         <Obstacle
                             key={obstacle.id}
                             id={obstacle.id}
+                            orientation={obstacle.orientation}
                             width={obstacle.width + "px"}
                             height={obstacle.height + "px"}
                             x={obstacle.x + "px"}

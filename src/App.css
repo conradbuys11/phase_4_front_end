@@ -178,15 +178,6 @@
   /* background-repeat: round; */
 }
 
-.obstacle {
-  /* display: inline-block; */
-  background-color: rgba(0, 0, 0, 0);
-  position: absolute;
-  align-self: center;
-  order: 5;
-  background-image: url("./assets/tile1.png");
-}
-
 .trainer-sprite {
   display: flex;
   position: absolute;
@@ -197,9 +188,9 @@
 }
 
 .line-of-sight {
+  position: absolute;
   border: 2px;
   border-color: black;
-  position: absolute;
   /* border-style: dotted; */
 }
 
@@ -232,6 +223,31 @@
   background-size: auto 100%;
 }
 
+/* ######## O B S T A C L E S ######## */
+
+.obstacle {
+  background-color: rgba(0, 0, 0, 0);
+  position: absolute;
+  align-self: center;
+  order: 5;
+  background-repeat: round;
+  /* background-image: url("./assets/tile1.png"); */
+}
+
+.horizontal-obstacle {
+  /* background-image: url("./assets/smoltree1.png"); */
+  border: 2px;
+  border-color: black;
+  border-style: dotted;
+}
+
+.vertical-obstacle {
+  /* background-image: url("./assets/bush1.png"); */
+  border: 2px;
+  border-color: black;
+  border-style: dotted;
+}
+
 /* giovanni's bushes */
 #obstacle-7 {
   background-size: 100% 100%;
@@ -241,7 +257,6 @@
   background-size: 100% 100%;
   background-image: url("./assets/bush1.png");
 }
-
 /* giovanni's tree */
 #obstacle-9 {
   background-size: 100% 100%;
