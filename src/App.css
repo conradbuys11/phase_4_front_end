@@ -200,7 +200,7 @@
   border: 2px;
   border-color: black;
   position: absolute;
-  /* border-style: dotted; */
+  border-style: dotted;
 }
 
 .aggro {

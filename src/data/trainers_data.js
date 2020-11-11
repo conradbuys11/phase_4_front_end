@@ -3,6 +3,8 @@ import rocketGruntMaleLeft1 from "../assets/rocket-grunt-male/left1.png"
 import rocketGruntMaleRight1 from "../assets/rocket-grunt-male/right1.png"
 import rocketGruntMaleUp1 from "../assets/rocket-grunt-male/up1.png"
 
+import giovanniDown1 from "../assets/giovanni/down1.png"
+
 const MAPSIZE = 900
 
 const SPRITESIZE = MAPSIZE / 20
@@ -14,12 +16,12 @@ const trainers = [
     {
         id: 1,
         orientation: "down",
-        sprite: rocketGruntMaleDown1,
+        sprite: giovanniDown1,
         size: SPRITESIZE,
         x: MAPSIZE * -0.9,
         y: MAPSIZE * -0.57,
         sightWidth: AGGROWIDTH,
-        sightHeight: MAPSIZE / 9,
+        sightHeight: MAPSIZE * 0,
     },
     {
         id: 2,
