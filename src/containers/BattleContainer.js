@@ -273,7 +273,19 @@ function BattleContainer(props){
             }
             else{
                 //we get here if this is a status move
-                checkMoveStatusEffect(params)
+                if((params.move.type.immune_against & params.defendingMon.species.types[0].value) > 0){
+                    if(params.isFirstAttacker){
+                        //let second attacker go by reversing everything
+                        createTextBox(`It doesn't effect ${params.defendingMon.species.name}...`, checkStatus, {attackingMon: params.defendingMon, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, "immune")
+                    }
+                    else{
+                        let newParams = params.attackingMon.id === playerPokemon.id ? {playerMon: params.attackingMon, opponentMon: params.defendingMon, isFirst: true} : {playerMon: params.defendingMon, opponentMon: params.defendingMon, isFirst: true}
+                        createTextBox(`It doesn't effect ${params.defendingMon.species.name}...`, endOfTurnCleanup, newParams, 'immune')
+                    }
+                }
+                else{
+                    checkMoveStatusEffect(params)
+                }
             }
         }
         else{
