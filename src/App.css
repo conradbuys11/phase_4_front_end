@@ -114,7 +114,6 @@
 }
 
 .battle-text-box {
-  /* display: flex; */
   margin-top: -20px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 2rem;
@@ -122,13 +121,22 @@
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-.click-text {
+.click-img {
   /* display: inline; */
   /* float: right; */
   height: 25px;
   margin-left: 20px;
   margin-bottom: -5px;
 }
+
+/* #battle-text-box {
+  margin-top: -20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 2rem;
+  color: rgb(143, 143, 143);
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+} */
+
 
 /* ######## O V E R W O R L D ######## */
 

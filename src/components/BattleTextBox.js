@@ -41,14 +41,18 @@ const BattleTextBox = props => {
 
     return(
         <div 
-            className={"battle-text-box " + props.msgType + "-text-box"} 
+            // className={"ui grid animated list battle-text-box " + props.msgType + "-text-box"}
+            // id="battle-text-box"
+            className={"battle-text-box " + props.msgType + "-text-box"}
         >
             {currentText}
-            <img
-                src={pokeballIcon}
-                className="click-text"
-                onClick={handleClick}
-            />
+            {/* <div className="item click-text"> */}
+                <img
+                    src={pokeballIcon}
+                    className="click-img"
+                    onClick={handleClick}
+                />
+            {/* </div> */}
         </div>
     )
 }
