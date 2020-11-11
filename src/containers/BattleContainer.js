@@ -27,14 +27,10 @@ function BattleContainer(props){
         fetch('http://localhost:3000/trainers/')
         .then(rsp => rsp.json())
         .then(trainers => {
-            setPlayer(trainers[11])
             setOpponent(trainers[props.enemyTrainer])
         })
         if(props.player != null){
-            //setPlayer(props.player)
-            //for each pokemon the player has,
-            //check if pokemon is fainted. if it is, keep going
-            //else setPlayerPokemon(that pokemon)
+            setPlayer(copyOf(props.player))
         }
         if(props.opponent != null){
             //setOpponent(props.opponent)
@@ -122,6 +118,7 @@ function BattleContainer(props){
                 //     return [true, null]
                 // }
                 checkParalysis(params)
+                return
             case "sleep":
                 //implement sleep logic here
                 //consider switching to an accuracy system for waking up
@@ -197,8 +194,8 @@ function BattleContainer(props){
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
         let attackingMonCopy = copyOf(params.attackingMon)
         let isPlayer = (attackingMonCopy.id === playerPokemon.id) //boolean
-        if(params.attackingMon.current_hp - Math.floor(params.attackingMon.current_hp * (1 / params.attackingMon.status_effect.power)) > 0){
-            attackingMonCopy.current_hp = params.attackingMon.current_hp - Math.floor(params.attackingMon.current_hp * (1 / params.attackingMon.status_effect.power))
+        if(params.attackingMon.current_hp - Math.floor(params.attackingMon.species.hp_base * (1 / params.attackingMon.status_effect.power)) > 0){
+            attackingMonCopy.current_hp = params.attackingMon.species.hp_base - Math.floor(params.attackingMon.current_hp * (1 / params.attackingMon.status_effect.power))
         }
         else{
             attackingMonCopy.current_hp = 0
@@ -268,7 +265,7 @@ function BattleContainer(props){
                 if(modifier >= 2){
                     effectiveness = "It's super effective!"
                 }
-                else if(modifier <= 0.5){
+                else if(modifier <= 0.5 && modifier > 0){
                     effectiveness = "It's not very effective..."
                 }
                 else if(modifier === 0){
@@ -418,6 +415,15 @@ function BattleContainer(props){
                 endOfTurnCleanup({playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true})   
             }
         }
+        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects[0].accuracy === 100){
+            if(params.isFirstAttacker){
+                createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, 'idk')
+            }
+            else{
+                let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
+                createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, endOfTurnCleanup, newParams, 'w/e')
+            }
+        }
         else{
             if(params.isFirstAttacker){
                 checkStatus({attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
@@ -514,6 +520,8 @@ function BattleContainer(props){
         //isFirst = player pokemon fainted, otherwise opponent pokemon fainted
         //debugger
         if(params.isFirst){
+            let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === params.playerMon.id ? params.playerMon : pokemon)
+            setPlayer({...player, pokemons: newPlayerPokemons})
             let nextMon = player.pokemons.find(pokemon => pokemon.id !== params.playerMon.id && pokemon.current_hp > 0)
             if(nextMon){
                 setPlayerPokemon(nextMon)
@@ -534,7 +542,13 @@ function BattleContainer(props){
             else{
                 //this means all pokemon fainted
                 //set state to defeat!
-                createTextBox(`You beat ${opponent.trainer_category.name} ${opponent.name}!`, props.exitBattle, null, "victory")
+                let pCopy = copyOf(playerPokemon)
+                if(playerPokemon.status_effect.name === 'confusion'){
+                    pCopy.statusCounter = undefined
+                    pCopy.status_effect = noStatusEffect
+                }
+                let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === pCopy.id ? pCopy : pokemon)
+                createTextBox(`You beat ${opponent.trainer_category.name} ${opponent.name}!`, props.exitBattle, {...player, pokemons: newPlayerPokemons}, "victory")
             }
         }
     }
@@ -561,6 +575,10 @@ function BattleContainer(props){
         return
     }
 
+    const playerFirstPokemon = () => {
+        return player.pokemons.find(pokemon => pokemon.current_hp > 0)
+    }
+
     const renderController = () => {
         if(battleState === ''){
             if(playerPokemon !== undefined && opponentPokemon !== undefined){
@@ -568,7 +586,7 @@ function BattleContainer(props){
                 createTextBox(`${opponent.trainer_category.name} ${opponent.name} wants to battle!`, setBattleStateByIndex, 0, "wants-to-battle")
             }
             else if(player !== undefined && opponent !== undefined){
-                setPlayerPokemon(player.pokemons[0])
+                setPlayerPokemon(playerFirstPokemon())
                 setOpponentPokemon(opponent.pokemons[0])
             }
             return <div>loLOADING...ading...</div>

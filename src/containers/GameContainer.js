@@ -4,7 +4,19 @@ import BattleContainer from './BattleContainer'
 
 export default class GameContainer extends Component {
 
+    componentDidMount(){
+        fetch('http://localhost:3000/trainers/')
+        .then(rsp => rsp.json())
+        .then(trainers => {
+            this.setState({
+                player: trainers[trainers.length - 1]
+            })
+        })
+        console.log('nice')
+    }
+
     state = {
+        player: undefined,
         gameState: "overworld",
         battlingTrainer: null,
         top: 0,
@@ -24,9 +36,10 @@ export default class GameContainer extends Component {
         })
     }
 
-    exitBattle = () => {
+    exitBattle = player => {
         this.setState({
             gameState: "overworld",
+            player: player,
             battlingTrainer: null
         })
     }
@@ -44,7 +57,8 @@ export default class GameContainer extends Component {
                             defeatedTrainers={this.state.defeatedTrainers}
                         />
                     :
-                        <BattleContainer 
+                        <BattleContainer
+                            player={this.state.player} 
                             enemyTrainer={this.state.battlingTrainer} 
                             exitBattle={this.exitBattle}
                         />
