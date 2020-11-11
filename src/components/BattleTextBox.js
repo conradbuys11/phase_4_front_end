@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import BattleContainer from '../containers/BattleContainer'
 
+import pokeballIcon from "../assets/pokeball.png"
+
 const BattleTextBox = props => {
     const [currentText, setCurrentText] = useState('')
     const [indication, setIndication] = useState('')
@@ -38,7 +40,16 @@ const BattleTextBox = props => {
     },[props.text])
 
     return(
-    <div className={"battle-text-box " + props.msgType + "-text-box"} onClick={handleClick}>{currentText}           {indication}</div>
+        <div 
+            className={"battle-text-box " + props.msgType + "-text-box"} 
+        >
+            {currentText}
+            <img
+                src={pokeballIcon}
+                className="click-text"
+                onClick={handleClick}
+            />
+        </div>
     )
 }
 
