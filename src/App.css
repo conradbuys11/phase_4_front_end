@@ -197,12 +197,10 @@
 }
 
 .line-of-sight {
-  /* background-color: white; */
   border: 2px;
   border-color: black;
-  /* border-style: dotted; */
+  border-style: dotted;
   position: absolute;
-  /* align-self: center; */
 }
 
 .aggro {

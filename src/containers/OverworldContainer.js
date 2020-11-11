@@ -205,10 +205,9 @@ export default class OverworldContainer extends Component {
             x: MAPSIZE * 0.16,
             y: MAPSIZE * 0.51
         },
-        // spoopy
         {
             id: 22,
-            width: MAPSIZE / 7.5,
+            width: MAPSIZE / 7.4, // change to 7.5 for spoopy
             height: MAPSIZE / 40,
             x: MAPSIZE * 0.05,
             y: MAPSIZE * 0.78
@@ -257,9 +256,9 @@ export default class OverworldContainer extends Component {
         },
         {
             id: 29,
-            width: MAPSIZE / 6.5,
+            width: MAPSIZE / 6.76,
             height: MAPSIZE / 40,
-            x: MAPSIZE * -0.601,
+            x: MAPSIZE * -0.6075,
             y: MAPSIZE * -0.04
         },
         {
@@ -276,30 +275,128 @@ export default class OverworldContainer extends Component {
             x: MAPSIZE * -0.75,
             y: MAPSIZE * -0.64
         },
+        {
+            id: 32,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 4.25,
+            x: MAPSIZE * -0.485,
+            y: MAPSIZE * -0.3
+        },
+        {
+            id: 33,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 12.25,
+            x: MAPSIZE * -0.485,
+            y: MAPSIZE * -0.715
+        },
+        {
+            id: 34,
+            width: MAPSIZE / 7.4,
+            height: MAPSIZE / 40,
+            x: MAPSIZE * -0.325,
+            y: MAPSIZE * -0.7715
+        },
+        {
+            id: 35,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 9,
+            x: MAPSIZE * -0.165,
+            y: MAPSIZE * -0.685
+        },
+        {
+            id: 36,
+            width: MAPSIZE / 3,
+            height: MAPSIZE / 40,
+            x: MAPSIZE * 0.144,
+            y: MAPSIZE * -0.55
+        },
+        {
+            id: 37,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 4.5,
+            x: MAPSIZE * 0.5,
+            y: MAPSIZE * -0.55
+        },
+        {
+            id: 38,
+            width: MAPSIZE / 6.76,
+            height: MAPSIZE / 40,
+            x: MAPSIZE * 0.33,
+            y: MAPSIZE * -0.353
+        },
+        {
+            id: 39,
+            width: MAPSIZE / 6.76,
+            height: MAPSIZE / 40,
+            x: MAPSIZE * 0.33,
+            y: MAPSIZE * -0.747
+        },
+        {
+            id: 40,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 12,
+            x: MAPSIZE * 0.01,
+            y: MAPSIZE * -0.8
+        },
+        {
+            id: 41,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 12,
+            x: MAPSIZE * 0.68,
+            y: MAPSIZE * -0.8
+        },
+        {
+            id: 42,
+            width: MAPSIZE / 5.7,
+            height: MAPSIZE / 40,
+            x: MAPSIZE * 0.7,
+            y: MAPSIZE * -0.55
+        },
+        {
+            id: 43,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 12,
+            x: MAPSIZE * 0.85,
+            y: MAPSIZE * -0.66
+        },
+        {
+            id: 45,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 5.6,
+            x: MAPSIZE * 0,
+            y: MAPSIZE * -0.2
+        },
+        {
+            id: 46,
+            width: MAPSIZE / 40,
+            height: MAPSIZE / 5.6,
+            x: MAPSIZE * -0.25,
+            y: MAPSIZE * -0.2
+        },
     ]
 
     // ideally these should load from database
     trainers = [
-        // {
-        //     id: 1,
-        //     orientation: "up",
-        //     sprite: rocketGruntMaleUp1,
-        //     size: SPRITESIZE,
-        //     x: MAPSIZE / 2.5,
-        //     y: -MAPSIZE / 12.5,
-        //     sightWidth: AGGROWIDTH,
-        //     sightHeight: AGGRODISTANCE,
-        // },
-        // {
-        //     id: 2,
-        //     orientation: "right",
-        //     sprite: rocketGruntMaleRight1,
-        //     size: SPRITESIZE,
-        //     x: MAPSIZE / 2.5,
-        //     y: -MAPSIZE / -12.5,
-        //     sightWidth: AGGRODISTANCE,
-        //     sightHeight: AGGROWIDTH,
-        // },
+        {
+            id: 1,
+            orientation: "down",
+            sprite: rocketGruntMaleDown1,
+            size: SPRITESIZE,
+            x: MAPSIZE * -0.9,
+            y: MAPSIZE * -0.57,
+            sightWidth: AGGROWIDTH,
+            sightHeight: MAPSIZE / 9,
+        },
+        {
+            id: 2,
+            orientation: "down",
+            sprite: rocketGruntMaleDown1,
+            size: SPRITESIZE,
+            x: MAPSIZE * 0.93,
+            y: MAPSIZE * -0.15,
+            sightWidth: AGGROWIDTH,
+            sightHeight: AGGRODISTANCE,
+        },
         // {
         //     id: 3,
         //     orientation: "left",
