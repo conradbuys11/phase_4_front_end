@@ -10,7 +10,6 @@ const Boundary = (props) => {
                     bottom: props.bottom
                 }}
             >
-                {props.timer}
             </div>
 }
 

@@ -624,28 +624,24 @@ export default class OverworldContainer extends Component {
                     <Boundary
                         orientation="horizontal" 
                         location="top" 
-                        timer={Date.now() - this.state.timeOfLastDirectionChange}
                         width={MAPSIZE + "px"}
                         height={BOUNDARYTHICCNESS + "px"}
                     />
                     <Boundary 
                         orientation="vertical" 
                         location="left" 
-                        timer=""
                         width={BOUNDARYTHICCNESS + "px"} 
                         height={MAPSIZE + "px"} 
                     />
                     <Boundary 
                         orientation="vertical" 
                         location="right" 
-                        timer=""
                         width={BOUNDARYTHICCNESS + "px"} 
                         height={MAPSIZE + "px"} 
                     />
                     <Boundary 
                         orientation="horizontal" 
                         location="bottom" 
-                        timer=""
                         width={MAPSIZE + "px"} 
                         height={BOUNDARYTHICCNESS + "px"}
                         bottom={BOUNDARYTHICCNESS + "px"}
