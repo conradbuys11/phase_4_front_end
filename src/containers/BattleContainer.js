@@ -369,7 +369,7 @@ function BattleContainer(props){
     }
 
     const dealBurnPoisonDmg = params => {
-        //params: playerMon, secondMon, isFirst
+        //params: playerMon, opponentMon, isFirst
         //debugger
         let pokeCopy = params.isFirst ? copyOf(params.playerMon) : copyOf(params.opponentMon)
         if(pokeCopy.current_hp - Math.floor((pokeCopy.status_effect.power * pokeCopy.species.hp_base / 100)) > 0){
@@ -378,13 +378,13 @@ function BattleContainer(props){
                 let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setPlayer({...player, pokemons: newPlayerPokemons})
                 setPlayerPokemon(pokeCopy)
-                endOfTurnCleanup({playerMon: pokeCopy, opponentMon: params.secondMon, isFirst: false})
+                endOfTurnCleanup({playerMon: pokeCopy, opponentMon: params.opponentMon, isFirst: false})
             }
             else{
                 let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setOpponent({...opponent, pokemons: newOpponentPokemons})
                 setOpponentPokemon(pokeCopy)
-                checkIfFainted({playerMon: params.secondMon, opponentMon: pokeCopy, isFirst: true})
+                checkIfFainted({playerMon: params.playerMon, opponentMon: pokeCopy, isFirst: true})
             }
         }
         else{
@@ -395,13 +395,13 @@ function BattleContainer(props){
                 let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setPlayer({...player, pokemons: newPlayerPokemons})
                 setPlayerPokemon(pokeCopy)
-                createTextBox(`${pokeCopy.species.name} fainted!`, endOfTurnCleanup, {playerMon: pokeCopy, opponentMon: params.secondMon, isFirst: false})
+                createTextBox(`${pokeCopy.species.name} fainted!`, endOfTurnCleanup, {playerMon: pokeCopy, opponentMon: params.opponentMon, isFirst: false})
             }
             else{
                 let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setOpponent({...opponent, pokemons: newOpponentPokemons})
                 setOpponentPokemon(pokeCopy)
-                createTextBox(`${pokeCopy.species.name} fainted!`, checkIfFainted, {playerMon: params.secondMon, opponentMon: pokeCopy, isFirst: true})
+                createTextBox(`${pokeCopy.species.name} fainted!`, checkIfFainted, {playerMon: params.playerMon, opponentMon: pokeCopy, isFirst: true})
             }
         }
     }
@@ -439,7 +439,7 @@ function BattleContainer(props){
             else{
                 //this means all pokemon fainted
                 //set state to defeat!
-                createTextBox(`${player.trainer_category} ${player.name} whited out!`, doNothing, null)
+                createTextBox(`${player.trainer_category.name} ${player.name} whited out!`, setBattleStateByIndex, 4)
             }
         }
         else{
