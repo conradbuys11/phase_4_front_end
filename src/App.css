@@ -231,21 +231,20 @@
   align-self: center;
   order: 5;
   background-repeat: round;
-  /* background-image: url("./assets/tile1.png"); */
 }
 
 .horizontal-obstacle {
   /* background-image: url("./assets/smoltree1.png"); */
-  border: 2px;
+  /* border: 2px;
   border-color: black;
-  border-style: dotted;
+  border-style: dotted; */
 }
 
 .vertical-obstacle {
   /* background-image: url("./assets/bush1.png"); */
-  border: 2px;
+  /* border: 2px;
   border-color: black;
-  border-style: dotted;
+  border-style: dotted; */
 }
 
 /* giovanni's bushes */
@@ -302,6 +301,14 @@
   background-size: 100% auto;
 }
 
+.bush1-horizontal-doodad {
+  background-image: url("./assets/bush1.png");
+  align-self: center;
+  background-color: rgba(0, 0, 0, 0);
+  background-repeat: round;
+  background-size: auto 100%;
+}
+
 .shrubbery1-vertical-doodad {
   background-image: url("./assets/shrubbery1.png");
   align-self: center;
@@ -326,4 +333,18 @@
 .pedestal1-doodad {
   background-image: url("./assets/pedestal1.png");
   background-color: rgba(0, 0, 0, 0);
+}
+
+.tree1-doodad {
+  background-image: url("./assets/tree1.png");
+  background-color: rgba(0, 0, 0, 0);
+  /* align-self: flex-start; */
+  z-index: 1;
+}
+
+.tile1-doodad {
+  background-image: url("./assets/tile1.png");
+  background-color: rgba(0, 0, 0, 0);
+  background-size: auto auto;
+  background-repeat: round;
 }

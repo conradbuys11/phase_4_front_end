@@ -650,19 +650,6 @@ export default class OverworldContainer extends Component {
                         bottom={BOUNDARYTHICCNESS + "px"}
                     />
 
-                    {/* Obstacles */}
-                    {obstacles.map(obstacle => 
-                        <Obstacle
-                            key={obstacle.id}
-                            id={obstacle.id}
-                            orientation={obstacle.orientation}
-                            width={obstacle.width + "px"}
-                            height={obstacle.height + "px"}
-                            x={obstacle.x + "px"}
-                            y={obstacle.y + "px"}
-                        />
-                    )}
-
                     {/* Doodads */}
                     {doodads.map(doodad => 
                         <Doodad
@@ -673,6 +660,19 @@ export default class OverworldContainer extends Component {
                             height={doodad.height + "px"}
                             x={doodad.x + "px"}
                             y={doodad.y + "px"}
+                        />
+                    )}
+
+                    {/* Obstacles */}
+                    {obstacles.map(obstacle => 
+                        <Obstacle
+                            key={obstacle.id}
+                            id={obstacle.id}
+                            orientation={obstacle.orientation}
+                            width={obstacle.width + "px"}
+                            height={obstacle.height + "px"}
+                            x={obstacle.x + "px"}
+                            y={obstacle.y + "px"}
                         />
                     )}
 
