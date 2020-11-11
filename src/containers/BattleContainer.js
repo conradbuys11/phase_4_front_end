@@ -27,7 +27,7 @@ function BattleContainer(props){
         fetch('http://localhost:3000/trainers/')
         .then(rsp => rsp.json())
         .then(trainers => {
-            setPlayer(trainers[0])
+            setPlayer(trainers[11])
             setOpponent(trainers[props.enemyTrainer])
         })
         if(props.player != null){
@@ -99,9 +99,18 @@ function BattleContainer(props){
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
         //don't run the function if we don't have
         if(!params.attackingMon || !params.defendingMon || !params.move) return
+        let attackingMonCopy = copyOf(params.attackingMon)
         switch(params.attackingMon.status_effect.name) {
             case "confusion":
-                createTextBox(`${params.attackingMon.species.name} is confused!`, checkConfusion, params, "is-confused")
+                if(attackingMonCopy.statusCounter === undefined || params.attackingMon.statusCounter - 1 <= 0){
+                    attackingMonCopy.statusCounter = undefined
+                    createTextBox(`${attackingMonCopy.species.name} snapped out of confusion!`, usingAttack, {...params, attackingMon: attackingMonCopy}, 'snapped-out')
+                }
+                else{
+                    attackingMonCopy.statusCounter -= 1
+                    createTextBox(`${attackingMonCopy.species.name} is confused!`, checkConfusion, {...params, attackingMon: attackingMonCopy}, "is-confused")
+                }
+                attackingMonCopy.id === playerPokemon.id ? setPlayerPokemon(attackingMonCopy) : setOpponentPokemon(attackingMonCopy)
                 return
             case "paralysis":
                 // if(Math.random() * 100 < attackingMon.status_effect.accuracy){
@@ -115,7 +124,16 @@ function BattleContainer(props){
             case "sleep":
                 //implement sleep logic here
                 //consider switching to an accuracy system for waking up
-                break;
+                if(attackingMonCopy.statusCounter === undefined || params.attackingMon.statusCounter - 1 <= 0){
+                    attackingMonCopy.statusCounter = undefined
+                    createTextBox(`${attackingMonCopy.species.name} woke up!`, usingAttack, {...params, attackingMon: attackingMonCopy}, 'woke-up')
+                }
+                else{
+                    attackingMonCopy.statusCounter -= 1
+                    createTextBox(`${attackingMonCopy.species.name} is fast asleep.`, napTime, {...params, attackingMon: attackingMonCopy}, "is-asleep")
+                }
+                attackingMonCopy.id === playerPokemon.id ? setPlayerPokemon(attackingMonCopy) : setOpponentPokemon(attackingMonCopy)
+                return
             case "freeze":
                 //implement freeze logic here
                 //consider switching to an accuracy system for unfreezing
@@ -124,6 +142,18 @@ function BattleContainer(props){
                 usingAttack(params)
                 break;
          } 
+    }
+
+    const napTime = params => {
+        if(params.isFirstAttacker){
+            //let second attacker go by reversing everything
+            checkStatus({attackingMon: params.defendingMon, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
+        }
+        else{
+            //go to cleanup
+            let newParams = params.attackingMon.id === playerPokemon.id ? {playerMon: params.attackingMon, opponentMon: params.defendingMon, isFirst: true} : {playerMon: params.defendingMon, opponentMon: params.attackingMon, isFirst: true}
+            endOfTurnCleanup(newParams)
+        }
     }
 
     const usingAttack = params => {
@@ -273,6 +303,8 @@ function BattleContainer(props){
             }
             else{
                 //we get here if this is a status move
+
+                //if they're immune
                 if((params.move.type.immune_against & params.defendingMon.species.types[0].value) > 0){
                     if(params.isFirstAttacker){
                         //let second attacker go by reversing everything
@@ -338,8 +370,20 @@ function BattleContainer(props){
             params.move.move_status_effects.forEach(mse => {
                 if(defendingMonCopy.status_effect.name === 'none' && Math.random() * 100 < mse.accuracy){
                     defendingMonCopy.status_effect = mse.status_effect
+                    if(mse.status_effect.name === 'confusion'){
+                        // function getRandomInt(min, max) {
+                        //     min = Math.ceil(min);
+                        //     max = Math.floor(max);
+                        //     return Math.floor(Math.random() * (max - min + 1)) + min;
+                        // }
+                        defendingMonCopy.statusCounter = Math.round((Math.random() * 4) + 2)
+                    }
+                    else if(mse.status_effect.name === 'sleep'){
+                        defendingMonCopy.statusCounter = Math.round((Math.random() * 3) + 2)
+                    }
                     console.log(defendingMonCopy.status_effect)
                     //debugger
+                    defendingMonCopy.id === playerPokemon.id ? setPlayerPokemon(defendingMonCopy) : setOpponentPokemon(defendingMonCopy)
                     if(params.isFirstAttacker){
                         createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, "status-effect-applied")
                     }
