@@ -262,24 +262,68 @@
   background-size: 100% 100%;
   background-image: url("./assets/bigtree1.png");
 }
-
-#obstacle-4 {
-  /* background-size: 100% 100%; */
-  /* background-size: auto 100%; */
-  background-repeat: round;
-  background-image: url("./assets/firtree2.png");
-}
-
-#obstacle-2 {
-  /* background-size: 100% 100%; */
-  /* background-size: auto 100%; */
-  background-repeat: space;
-  background-image: url("./assets/firtree2.png");
-}
-
+/* top hedge */
 #obstacle-8 {
   background-repeat: round;
   background-size: auto 100%;
   background-image: url("./assets/bush1.png");
 }
 
+/* ######## D O O D A D S ######## */
+
+.doodad {
+  position: absolute;
+  align-self: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.smoltree1-doodad {
+  background-image: url("./assets/smoltree1.png");
+  align-self: center;
+  background-color: rgba(0, 0, 0, 0);
+  /* z-index: 1; */
+}
+
+.smoltree1-hedge-doodad {
+  background-image: url("./assets/smoltree1.png");
+  align-self: flex-start;
+  background-color: rgba(0, 0, 0, 0);
+  background-repeat: round;
+  background-size: auto 100%;
+  z-index: 1;
+}
+
+.bush1-vertical-doodad {
+  background-image: url("./assets/bush1.png");
+  align-self: center;
+  background-color: rgba(0, 0, 0, 0);
+  background-repeat: round;
+  background-size: 100% auto;
+}
+
+.shrubbery1-vertical-doodad {
+  background-image: url("./assets/shrubbery1.png");
+  align-self: center;
+  background-color: rgba(0, 0, 0, 0);
+  background-repeat: round;
+  background-size: 100% auto;
+}
+
+.flowers1-horizontal-doodad {
+  background-image: url("./assets/flowers1.png");
+  align-self: center;
+  background-color: rgba(0, 0, 0, 0);
+  background-repeat: round;
+  background-size: auto 100%;
+}
+
+.log1-doodad {
+  background-image: url("./assets/log1.png");
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.pedestal1-doodad {
+  background-image: url("./assets/pedestal1.png");
+  background-color: rgba(0, 0, 0, 0);
+}

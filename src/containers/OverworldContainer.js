@@ -6,7 +6,7 @@ import Obstacle from '../components/Obstacle';
 import Trainer from '../components/Trainer'
 
 import obstacles from "../data/obstacles_data"
-import doodads from "../data/obstacles_data"
+import doodads from "../data/doodads_data"
 import trainers from "../data/trainers_data"
 
 import pokeGirlDown1 from "../assets/poke-girl-1/down1.png"
@@ -21,6 +21,7 @@ import pokeGirlRight3 from "../assets/poke-girl-1/right3.png"
 import pokeGirlUp1 from "../assets/poke-girl-1/up1.png"
 import pokeGirlUp2 from "../assets/poke-girl-1/up2.png"
 import pokeGirlUp3 from "../assets/poke-girl-1/up3.png"
+import Doodad from '../components/Doodad';
 
 const MAPSIZE = 900
 const TICKTIMER = 10
@@ -34,6 +35,7 @@ const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
 const AGGROWIDTH = SPRITESIZE / 4
 const AGGRODISTANCE = MAPSIZE / 5
+const MAZEWIDTH = MAPSIZE / 40
 
 export default class OverworldContainer extends Component {
 
@@ -658,6 +660,19 @@ export default class OverworldContainer extends Component {
                             height={obstacle.height + "px"}
                             x={obstacle.x + "px"}
                             y={obstacle.y + "px"}
+                        />
+                    )}
+
+                    {/* Doodads */}
+                    {doodads.map(doodad => 
+                        <Doodad
+                            key={doodad.id}
+                            id={doodad.id}
+                            image={doodad.image}
+                            width={doodad.width + "px"}
+                            height={doodad.height + "px"}
+                            x={doodad.x + "px"}
+                            y={doodad.y + "px"}
                         />
                     )}
 
