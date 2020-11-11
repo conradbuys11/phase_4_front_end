@@ -14,7 +14,7 @@ const AGGRODISTANCE = MAPSIZE / 5
 // ideally these should load from database
 const trainers = [
     {
-        id: 8,
+        id: 9,
         orientation: "down",
         sprite: giovanniDown1,
         size: SPRITESIZE,
@@ -94,7 +94,7 @@ const trainers = [
         sightHeight: AGGROWIDTH,
     },
     {
-        id: 9,
+        id: 8,
         orientation: "left",
         sprite: rocketGruntMaleLeft1,
         size: SPRITESIZE,

@@ -32,7 +32,7 @@
 .opponent-pokemon-text {
   order: 1;
   align-self: flex-end;
-  margin-bottom: -100px;
+  margin-bottom: -150px;
 }
 
 .player-pokemon-text {
