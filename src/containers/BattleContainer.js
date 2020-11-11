@@ -104,6 +104,7 @@ function BattleContainer(props){
             case "confusion":
                 if(attackingMonCopy.statusCounter === undefined || params.attackingMon.statusCounter - 1 <= 0){
                     attackingMonCopy.statusCounter = undefined
+                    attackingMonCopy.status_effect = noStatusEffect
                     createTextBox(`${attackingMonCopy.species.name} snapped out of confusion!`, usingAttack, {...params, attackingMon: attackingMonCopy}, 'snapped-out')
                 }
                 else{
@@ -126,6 +127,7 @@ function BattleContainer(props){
                 //consider switching to an accuracy system for waking up
                 if(attackingMonCopy.statusCounter === undefined || params.attackingMon.statusCounter - 1 <= 0){
                     attackingMonCopy.statusCounter = undefined
+                    attackingMonCopy.status_effect = noStatusEffect
                     createTextBox(`${attackingMonCopy.species.name} woke up!`, usingAttack, {...params, attackingMon: attackingMonCopy}, 'woke-up')
                 }
                 else{
