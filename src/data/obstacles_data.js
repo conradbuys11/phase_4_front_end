@@ -38,20 +38,29 @@ const obstacles = [
     //     x: -MAPSIZE / 3,
     //     y: 0
     // },
-    // {
-    //     id: 6,
-    //     width: MAPSIZE / 4.5,
-    //     height: MAPSIZE / 45,
-    //     x: -MAPSIZE / 3,
-    //     y: 0
-    // },
-    // {
-    //     id: 7,
-    //     width: MAPSIZE / 45,
-    //     height: MAPSIZE / 45,
-    //     x: -MAPSIZE / 5,
-    //     y: -MAPSIZE / 5
-    // },
+    {
+        id: 31,
+        width: MAPSIZE / 40,
+        height: MAPSIZE / 3.7,
+        x: MAPSIZE * -0.75,
+        y: MAPSIZE * -0.64
+    },
+    // giovanni's bushes
+    {
+        id: 6,
+        width: MAPSIZE * 0.04,
+        height: MAPSIZE * 0.04,
+        x: MAPSIZE * -0.97,
+        y: MAPSIZE * -0.5
+    },
+    {
+        id: 7,
+        width: MAPSIZE * 0.04,
+        height: MAPSIZE * 0.04,
+        x: MAPSIZE * -0.82,
+        y: MAPSIZE * -0.5
+    },
+    // top hedge row
     {
         id: 8,
         width: MAPSIZE * 0.82,
@@ -59,11 +68,12 @@ const obstacles = [
         x: MAPSIZE * 0.1,
         y: -MAPSIZE * 0.9
     },
+    // giovanni's tree
     {
         id: 9,
         width: MAPSIZE / 8,
         height: MAPSIZE / 5,
-        x: -MAPSIZE * 0.9,
+        x: -MAPSIZE * 0.895,
         y: -MAPSIZE * 0.7
     },
     // maze start
@@ -213,13 +223,6 @@ const obstacles = [
         height: MAPSIZE / 40,
         x: MAPSIZE * -0.86,
         y: MAPSIZE * -0.22
-    },
-    {
-        id: 31,
-        width: MAPSIZE / 40,
-        height: MAPSIZE / 3.7,
-        x: MAPSIZE * -0.75,
-        y: MAPSIZE * -0.64
     },
     {
         id: 32,

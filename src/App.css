@@ -200,7 +200,7 @@
   border: 2px;
   border-color: black;
   position: absolute;
-  border-style: dotted;
+  /* border-style: dotted; */
 }
 
 .aggro {
@@ -232,11 +232,17 @@
   background-size: auto 100%;
 }
 
+/* giovanni's bushes */
 #obstacle-7 {
   background-size: 100% 100%;
   background-image: url("./assets/bush1.png");
 }
+#obstacle-6 {
+  background-size: 100% 100%;
+  background-image: url("./assets/bush1.png");
+}
 
+/* giovanni's tree */
 #obstacle-9 {
   background-size: 100% 100%;
   background-image: url("./assets/bigtree1.png");

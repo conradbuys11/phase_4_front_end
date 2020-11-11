@@ -18,7 +18,7 @@ const trainers = [
         orientation: "down",
         sprite: giovanniDown1,
         size: SPRITESIZE,
-        x: MAPSIZE * -0.9,
+        x: MAPSIZE * -0.895,
         y: MAPSIZE * -0.57,
         sightWidth: AGGROWIDTH,
         sightHeight: MAPSIZE * 0,
