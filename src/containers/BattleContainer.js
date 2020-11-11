@@ -101,7 +101,7 @@ function BattleContainer(props){
         if(!params.attackingMon || !params.defendingMon || !params.move) return
         switch(params.attackingMon.status_effect.name) {
             case "confusion":
-                createTextBox(`${params.attackingMon.species.name} is confused!`, checkConfusion, params)
+                createTextBox(`${params.attackingMon.species.name} is confused!`, checkConfusion, params, "is-confused")
                 return
             case "paralysis":
                 // if(Math.random() * 100 < attackingMon.status_effect.accuracy){
@@ -127,13 +127,13 @@ function BattleContainer(props){
 
     const usingAttack = params => {
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
-        createTextBox(`${params.attackingMon.species.name} used ${params.move.name}!`, calculateDamage, params)
+        createTextBox(`${params.attackingMon.species.name} used ${params.move.name}!`, calculateDamage, params, "using-move")
     }
 
     const checkConfusion = params => {
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
         if(Math.random() * 100 < 50){
-            createTextBox(`It hurt itself in its confusion!`, calculateConfusionDamage, params)
+            createTextBox(`It hurt itself in its confusion!`, calculateConfusionDamage, params, "confusion-dmg")
         }
         else{
             usingAttack(params)
@@ -218,7 +218,7 @@ function BattleContainer(props){
                 else if(modifier === 0){
                     if(params.isFirstAttacker){
                         //let second attacker go by reversing everything
-                        createTextBox(`It doesn't effect ${params.defendingMon.species.name}...`, checkStatus, {attackingMon: params.defendingMon, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
+                        createTextBox(`It doesn't effect ${params.defendingMon.species.name}...`, checkStatus, {attackingMon: params.defendingMon, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, "immune")
                         return
                     }
                     else{
@@ -255,7 +255,7 @@ function BattleContainer(props){
         else{
             //attack missed. reverse roles
             if(params.isFirstAttacker){
-                createTextBox(`${params.attackingMon.species.name}'s attack missed!`, checkStatus, {attackingMon: params.defendingMon, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
+                createTextBox(`${params.attackingMon.species.name}'s attack missed!`, checkStatus, {attackingMon: params.defendingMon, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, "miss")
             }
             else{
                 //createTextBox(`${params.attackingMon.species.name}'s attack missed!`, cleanup function)
@@ -285,7 +285,7 @@ function BattleContainer(props){
         }
         let newParams = {...params, defendingMon: defendingMonCopy}
         if(params.effectiveness != ''){
-            createTextBox(params.effectiveness, checkMoveStatusEffect, newParams)
+            createTextBox(params.effectiveness, checkMoveStatusEffect, newParams, "effectiveness")
         }
         else{
             checkMoveStatusEffect(newParams)
@@ -305,11 +305,11 @@ function BattleContainer(props){
                     console.log(defendingMonCopy.status_effect)
                     //debugger
                     if(params.isFirstAttacker){
-                        createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
+                        createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, "status-effect-applied")
                     }
                     else{
                         let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
-                        createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, endOfTurnCleanup, newParams)
+                        createTextBox(`${defendingMonCopy.species.name} got ${mse.status_effect.name}.`, endOfTurnCleanup, newParams, "status-effect-applied")
                     }
                 }
             })
@@ -352,7 +352,7 @@ function BattleContainer(props){
         console.log('we got here!')
         if(params.isFirst){
             if(params.playerMon.current_hp > 0 && (params.playerMon.status_effect.name == 'poison' || params.playerMon.status_effect.name == 'burn')){
-                createTextBox(`${params.playerMon.species.name} is hurt by ${params.playerMon.status_effect.name}!`, dealBurnPoisonDmg, {...params})
+                createTextBox(`${params.playerMon.species.name} is hurt by ${params.playerMon.status_effect.name}!`, dealBurnPoisonDmg, {...params}, "status-effect-dmg")
             }
             else{
                 endOfTurnCleanup({...params, isFirst: false})
@@ -360,7 +360,7 @@ function BattleContainer(props){
         }
         else{
             if(params.opponentMon.current_hp > 0 && (params.opponentMon.status_effect.name == 'poison' || params.opponentMon.status_effect.name == 'burn')){
-                createTextBox(`${params.opponentMon.species.name} is hurt by ${params.opponentMon.status_effect.name}!`, dealBurnPoisonDmg, {...params})
+                createTextBox(`${params.opponentMon.species.name} is hurt by ${params.opponentMon.status_effect.name}!`, dealBurnPoisonDmg, {...params}, "status-effect-dmg")
             }
             else{
                 checkIfFainted({...params, isFirst: true})
@@ -395,13 +395,13 @@ function BattleContainer(props){
                 let newPlayerPokemons = player.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setPlayer({...player, pokemons: newPlayerPokemons})
                 setPlayerPokemon(pokeCopy)
-                createTextBox(`${pokeCopy.species.name} fainted!`, endOfTurnCleanup, {playerMon: pokeCopy, opponentMon: params.opponentMon, isFirst: false})
+                createTextBox(`${pokeCopy.species.name} fainted!`, endOfTurnCleanup, {playerMon: pokeCopy, opponentMon: params.opponentMon, isFirst: false}, "fainted")
             }
             else{
                 let newOpponentPokemons = opponent.pokemons.map(pokemon => pokemon.id === pokeCopy.id ? pokeCopy : pokemon)
                 setOpponent({...opponent, pokemons: newOpponentPokemons})
                 setOpponentPokemon(pokeCopy)
-                createTextBox(`${pokeCopy.species.name} fainted!`, checkIfFainted, {playerMon: params.playerMon, opponentMon: pokeCopy, isFirst: true})
+                createTextBox(`${pokeCopy.species.name} fainted!`, checkIfFainted, {playerMon: params.playerMon, opponentMon: pokeCopy, isFirst: true}, "fainted")
             }
         }
     }
@@ -410,7 +410,7 @@ function BattleContainer(props){
         //params: playerMon, opponentMon, isFirst
         if(params.isFirst){
             if(params.playerMon.current_hp <= 0){
-                createTextBox(`${params.playerMon.species.name} fainted!`, checkNextMon, params)
+                createTextBox(`${params.playerMon.species.name} fainted!`, checkNextMon, params, "fainted")
             }
             else{
                 checkIfFainted({...params, isFirst: false})
@@ -418,7 +418,7 @@ function BattleContainer(props){
         }
         else{
             if(params.opponentMon.current_hp <= 0){
-                createTextBox(`${params.opponentMon.species.name} fainted!`, checkNextMon, params)
+                createTextBox(`${params.opponentMon.species.name} fainted!`, checkNextMon, params, "fainted")
             }
             else{
                 setBattleState(battleStates[0])
@@ -434,24 +434,24 @@ function BattleContainer(props){
             let nextMon = player.pokemons.find(pokemon => pokemon.id !== params.playerMon.id && pokemon.current_hp > 0)
             if(nextMon){
                 setPlayerPokemon(nextMon)
-                createTextBox(`${player.trainer_category.name} ${player.name} sent out ${nextMon.species.name}!`, checkIfFainted, {...params, playerMon: nextMon, isFirst: false})
+                createTextBox(`${player.trainer_category.name} ${player.name} sent out ${nextMon.species.name}!`, checkIfFainted, {...params, playerMon: nextMon, isFirst: false}, "sent-out")
             }
             else{
                 //this means all pokemon fainted
                 //set state to defeat!
-                createTextBox(`${player.trainer_category.name} ${player.name} whited out!`, setBattleStateByIndex, 4)
+                createTextBox(`${player.trainer_category.name} ${player.name} whited out!`, setBattleStateByIndex, 4, "defeat")
             }
         }
         else{
             let nextMon = opponent.pokemons.find(pokemon => pokemon.id !== params.opponentMon.id && pokemon.current_hp > 0)
             if(nextMon){
                 setOpponentPokemon(nextMon)
-                createTextBox(`${opponent.trainer_category.name} ${opponent.name} sent out ${nextMon.species.name}!`, setBattleStateByIndex, 0)
+                createTextBox(`${opponent.trainer_category.name} ${opponent.name} sent out ${nextMon.species.name}!`, setBattleStateByIndex, 0, "sent-out")
             }
             else{
                 //this means all pokemon fainted
                 //set state to defeat!
-                createTextBox(`You beat ${opponent.trainer_category.name} ${opponent.name}!`, props.exitBattle, null)
+                createTextBox(`You beat ${opponent.trainer_category.name} ${opponent.name}!`, props.exitBattle, null, "victory")
             }
         }
     }
@@ -469,12 +469,12 @@ function BattleContainer(props){
         battleLogicStart(playerPokemon, opponentPokemon, move) //go to damage calculation
     }
 
-    const createTextBox = (text, callbackFunction, params) => {
+    const createTextBox = (text, callbackFunction, params, msgType) => {
         //something like <BattleTextBox text={text}/>
         //while that text box's currentText != text, do nothing
         //basically, we want to stop JS from doing anything else for the time being
         //then after, call the callbackFunction
-        setTextBox(<BattleTextBox text={text} callbackFunction={() => callbackFunction(params)} params={params} />)
+        setTextBox(<BattleTextBox text={text} callbackFunction={() => callbackFunction(params)} params={params} msgType={msgType}/>)
         return
     }
 
@@ -482,7 +482,7 @@ function BattleContainer(props){
         if(battleState === ''){
             if(playerPokemon !== undefined && opponentPokemon !== undefined){
                 setBattleState('intro')
-                createTextBox(`${opponent.trainer_category.name} ${opponent.name} wants to battle!`, setBattleStateByIndex, 0)
+                createTextBox(`${opponent.trainer_category.name} ${opponent.name} wants to battle!`, setBattleStateByIndex, 0, "wants-to-battle")
             }
             else if(player !== undefined && opponent !== undefined){
                 setPlayerPokemon(player.pokemons[0])

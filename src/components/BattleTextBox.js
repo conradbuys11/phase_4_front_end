@@ -38,7 +38,7 @@ const BattleTextBox = props => {
     },[props.text])
 
     return(
-    <div onClick={handleClick}>{currentText}           {indication}</div>
+    <div className={"battle-text-box " + props.msgType + "-text-box"} onClick={handleClick}>{currentText}           {indication}</div>
     )
 }
 
