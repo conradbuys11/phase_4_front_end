@@ -195,8 +195,10 @@ function BattleContainer(props){
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
         let attackingMonCopy = copyOf(params.attackingMon)
         let isPlayer = (attackingMonCopy.id === playerPokemon.id) //boolean
+        console.log(`current hp: ${params.attackingMon.current_hp}, max hp: ${params.attackingMon.species.hp_base}, confusion power: ${params.attackingMon.status_effect.power}`)
+        debugger
         if(params.attackingMon.current_hp - Math.floor(params.attackingMon.species.hp_base * (1 / params.attackingMon.status_effect.power)) > 0){
-            attackingMonCopy.current_hp = params.attackingMon.species.current_hp - Math.floor(params.attackingMon.species.hp_base * (1 / params.attackingMon.status_effect.power))
+            attackingMonCopy.current_hp = params.attackingMon.current_hp - Math.floor(params.attackingMon.species.hp_base * (1 / params.attackingMon.status_effect.power))
         }
         else{
             attackingMonCopy.current_hp = 0
