@@ -23,14 +23,15 @@ const BattleTextBox = props => {
         }
     }
 
-    const handleClick = () => {
-        console.log('click')
+    const handleClick = e => {
         // console.log(currentText)
         // console.log(props.text)
         // console.log(currentText === props.text)
         console.log(props)
-        if(props.text === currentText){
-            props.callbackFunction(props.params)
+        if(e === 'nice' || e.key === 'Space'){
+            if(props.text === currentText){
+                props.callbackFunction(props.params)
+            }
         }
     }
 
@@ -50,7 +51,7 @@ const BattleTextBox = props => {
                 <img
                     src={pokeballIcon}
                     className="click-img"
-                    onClick={handleClick}
+                    onClick={() => handleClick('nice')}
                 />
             {/* </div> */}
         </div>

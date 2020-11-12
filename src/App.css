@@ -129,6 +129,10 @@
   margin-bottom: -5px;
 }
 
+.unclickable-sprite{
+  filter: grayscale(100%)
+}
+
 /* #battle-text-box {
   margin-top: -20px;
   font-family: 'Courier New', Courier, monospace;

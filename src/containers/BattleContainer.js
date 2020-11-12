@@ -6,6 +6,7 @@ import BattleTextBox from '../components/BattleTextBox'
 import { Divider } from 'semantic-ui-react'
 
 import pokeballIcon from "../assets/pokeball.png"
+import PokemonSprite from '../components/PokemonSprite'
 
 function BattleContainer(props){
     const [player, setPlayer] = useState(undefined)
@@ -107,7 +108,7 @@ function BattleContainer(props){
                     attackingMonCopy.statusCounter -= 1
                     createTextBox(`${attackingMonCopy.species.name} is confused!`, checkConfusion, {...params, attackingMon: attackingMonCopy}, "is-confused")
                 }
-                attackingMonCopy.id === playerPokemon.id ? setPlayerPokemon(attackingMonCopy) : setOpponentPokemon(attackingMonCopy)
+                attackingMonCopy.id === playerPokemon.id ? setPlayerPokemon(attackingMonCopy) : attackingMonCopy.id === opponentPokemon.id ? setOpponentPokemon(attackingMonCopy) : console.log('YA DUN GOOFED')
                 return
             case "paralysis":
                 // if(Math.random() * 100 < attackingMon.status_effect.accuracy){
@@ -195,7 +196,7 @@ function BattleContainer(props){
         let attackingMonCopy = copyOf(params.attackingMon)
         let isPlayer = (attackingMonCopy.id === playerPokemon.id) //boolean
         if(params.attackingMon.current_hp - Math.floor(params.attackingMon.species.hp_base * (1 / params.attackingMon.status_effect.power)) > 0){
-            attackingMonCopy.current_hp = params.attackingMon.species.hp_base - Math.floor(params.attackingMon.current_hp * (1 / params.attackingMon.status_effect.power))
+            attackingMonCopy.current_hp = params.attackingMon.species.current_hp - Math.floor(params.attackingMon.species.hp_base * (1 / params.attackingMon.status_effect.power))
         }
         else{
             attackingMonCopy.current_hp = 0
@@ -220,7 +221,7 @@ function BattleContainer(props){
     
     const calculateDamage = params => {
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker
-        let defendingMonCopy = copyOf(params.defendingMon)
+        // let defendingMonCopy = copyOf(params.defendingMon)
         if(params.move.accuracy === null || Math.random() * 100 < params.move.accuracy){
             //now check to see if we're using a damaging move
             if(params.move.category === 'physical' || params.move.category === 'special'){
@@ -332,7 +333,9 @@ function BattleContainer(props){
 
     const dealDamage = params => {
         //params: attackingMon, defendingMon, move, defendingMove, isFirstAttacker, damage, effectiveness
+        //debugger
         let defendingMonCopy = copyOf(params.defendingMon)
+        console.log("Attack hits " + defendingMonCopy.species.name)
 
         //if the attack doesn't kill
         if(defendingMonCopy.current_hp - params.damage > 0){
@@ -345,10 +348,15 @@ function BattleContainer(props){
             //return
         }
         if(defendingMonCopy.id === playerPokemon.id){
+            console.log('looking for this?')
             setPlayerPokemon(defendingMonCopy)
         }
         else if (defendingMonCopy.id === opponentPokemon.id){
             setOpponentPokemon(defendingMonCopy)
+        }
+        else{
+            console.log('you fucked up')
+            return
         }
         let newParams = {...params, defendingMon: defendingMonCopy}
         if(params.effectiveness != ''){
@@ -415,7 +423,7 @@ function BattleContainer(props){
                 endOfTurnCleanup({playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true})   
             }
         }
-        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects[0].accuracy === 100){
+        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects !== undefined && params.move.move_status_effects[0].accuracy === 100){
             if(params.isFirstAttacker){
                 createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, 'idk')
             }
@@ -510,10 +518,18 @@ function BattleContainer(props){
                 createTextBox(`${params.opponentMon.species.name} fainted!`, checkNextMon, params, "fainted")
             }
             else{
+                debugger
                 setBattleState(battleStates[0])
             }
         }
     }
+
+    // const setPlayerAndMon = pokemon => {
+    //     let pokeCopy = copyOf(pokemon)
+    //     let newPlayerMons = player.pokemons.map(pmon => pmon.id === pokeCopy.id ? pokeCopy : pmon)
+    //     setPlayer({...player, pokemons: newPlayerMons})
+    //     setPlayerPokemon(pokeCopy)
+    // }
 
     const checkNextMon = params => {
         //params: playerMon, opponentMon, isFirst
@@ -578,6 +594,37 @@ function BattleContainer(props){
     const playerFirstPokemon = () => {
         return player.pokemons.find(pokemon => pokemon.current_hp > 0)
     }
+
+    // const showPlayerPokemons = () => {
+    //     let playerPokemons = player.pokemons.map(pmon => pmon)
+    //     return(
+    //         <div className={'switch-pokemon-buttons'}>
+    //             {playerPokemons.map(mon => <PokemonSprite pokemon={mon} key={mon.id} switchPokemon={switchPokemon} canBeClicked={mon.current_hp > 0 && mon.id !== playerPokemon.id} />)}
+    //         </div>
+    //     )
+    // }
+
+    // const switchPokemon = pokemon => {
+    //     console.log(playerPokemon.species.name)
+    //     console.log(playerPokemon.current_hp)
+    //     let sentOutPokemon = player.pokemons.find(pmon => pmon.id === pokemon.id)
+    //     if(sentOutPokemon && sentOutPokemon.current_hp > 0){
+    //         //console.log('SWITCH POKEMON WOO')
+    //         setBattleState(battleStates[1])
+    //         setPlayerPokemon(sentOutPokemon)
+    //         createTextBox(`${player.name} sent out ${sentOutPokemon.species.name}!`, switchTurnStart, sentOutPokemon, 'switch-mon')
+    //     }
+    // }
+
+    // const switchTurnStart = pokemon => {
+    //     let opponentMove = opponentPokemon.moves[Math.floor(Math.random() * opponentPokemon.moves.length)]
+    //     checkStatus({attackingMon: opponentPokemon, defendingMon: pokemon, move: opponentMove, defendingMove: null, isFirstAttacker: false})
+    // }
+
+    // const beingPedantic = pokemon => {
+    //     let opponentMove = opponentPokemon.moves[Math.floor(Math.random() * opponentPokemon.moves.length)]
+    //     checkStatus({attackingMon: opponentPokemon, defendingMon: pokemon, move: opponentMove, defendingMove: null, isFirstAttacker: false})
+    // }
 
     const renderController = () => {
         if(battleState === ''){
@@ -661,6 +708,7 @@ function BattleContainer(props){
                             />
                         </Divider>
                         <div id="ui-area">
+                            {/* {showPlayerPokemons()} */}
                             <div className={'move-buttons'}>
                                 {playerPokemon.moves[0] != null ? <MoveButton move={playerPokemon.moves[0]} useMove={useMove}/> : null}
                                 {playerPokemon.moves[1] != null ? <MoveButton move={playerPokemon.moves[1]} useMove={useMove}/> : null}
