@@ -12,7 +12,7 @@ export default class GameContainer extends Component {
         .then(rsp => rsp.json())
         .then(trainers => {
             this.setState({
-                player: trainers[0]
+                player: trainers[trainers.length - 1]
             })
         })
         console.log('nice')
