@@ -27,22 +27,24 @@ const BattleTextBox = props => {
         // console.log(currentText)
         // console.log(props.text)
         // console.log(currentText === props.text)
-        console.log(props.params)
-        if(e === 'nice' || e.code == 'Space'){
-            if(props.text === currentText){
+        if( e === 'nice' || e.code == 'Space'){
+            // console.log(`${typeof(props.text)}`)
+            // console.log(`${typeof(currentText)}`)
+            // console.log(`${props.text.length}`)
+            // console.log(`${typeof(currentText) + " " + currentText.length}`)
+            // if(props.text === currentText){
+                console.log("we need to go deeper")
                 props.callbackFunction(props.params)
-            }
+            // }
         }
     }
 
     // this almost works
-    // useEffect(() => {
-    //     document.body.addEventListener('keydown', handleClick)
-    // },[document.body.removeEventListener('keydown', handleClick, true)])
-
     useEffect(() => {
         setIndication('')
         addNextLetter(props.text)
+        document.body.addEventListener('keydown', handleClick)
+        return () => document.body.removeEventListener('keydown', handleClick)
     },[props.text])
 
     return(

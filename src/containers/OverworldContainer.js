@@ -148,10 +148,7 @@ export default class OverworldContainer extends Component {
     }
 
     componentDidMount() {
-        if(this.props.victorious) {
-
-        }
-        else {
+        if(!this.props.victorious) {
             this.timerID = setInterval(      
                 () => this.tick(),
                 TICKTIMER   
