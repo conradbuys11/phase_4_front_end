@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+
 import OverworldContainer from './OverworldContainer'
 import BattleContainer from './BattleContainer'
+import Start from '../components/Start'
 
 export default class GameContainer extends Component {
 
@@ -46,8 +49,14 @@ export default class GameContainer extends Component {
 
     render() {
         return (
-            <>
-                {this.state.gameState === "overworld"
+            <BrowserRouter>
+                <Switch>
+                    <Route exact path="/" render={() => {
+                        return <Link to="/game">
+                            <Start />
+                        </Link>
+                    }}/>
+                    <Route exact path="/game" render={() => this.state.gameState === "overworld"
                     ?
                         <OverworldContainer
                             enterBattle={this.enterBattle}
@@ -62,8 +71,10 @@ export default class GameContainer extends Component {
                             enemyTrainer={this.state.battlingTrainer} 
                             exitBattle={this.exitBattle}
                         />
-                }
-            </>
+                    }
+                    />
+                </Switch>
+            </BrowserRouter>
         )
     }
 

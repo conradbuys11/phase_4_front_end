@@ -1,3 +1,31 @@
+/* ############# L O G O ############# */
+
+#logo {
+  position: absolute;
+  bottom: 18%;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: url('./assets/pokemonlogo4.gif') center no-repeat; 
+  background-size: auto 100%;
+  z-index: -1;
+}
+
+#start-button {
+  border: thick double blue;
+  border-radius: 25px;
+  bottom: 10%;
+  height: 175px;
+  position: absolute;
+  background: #6aa5f194;
+}
+
+#logo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* ########### B A T T L E ########### */
 
 .ui.lightbrown.button {

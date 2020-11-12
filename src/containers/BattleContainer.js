@@ -518,7 +518,6 @@ function BattleContainer(props){
                 createTextBox(`${params.opponentMon.species.name} fainted!`, checkNextMon, params, "fainted")
             }
             else{
-                debugger
                 setBattleState(battleStates[0])
             }
         }

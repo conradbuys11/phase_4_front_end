@@ -27,13 +27,18 @@ const BattleTextBox = props => {
         // console.log(currentText)
         // console.log(props.text)
         // console.log(currentText === props.text)
-        console.log(props)
-        if(e === 'nice' || e.key === 'Space'){
+        console.log(props.params)
+        if(e === 'nice' || e.code == 'Space'){
             if(props.text === currentText){
                 props.callbackFunction(props.params)
             }
         }
     }
+
+    // this almost works
+    // useEffect(() => {
+    //     document.body.addEventListener('keydown', handleClick)
+    // },[document.body.removeEventListener('keydown', handleClick, true)])
 
     useEffect(() => {
         setIndication('')
@@ -45,13 +50,13 @@ const BattleTextBox = props => {
             // className={"ui grid animated list battle-text-box " + props.msgType + "-text-box"}
             // id="battle-text-box"
             className={"battle-text-box " + props.msgType + "-text-box"}
+            onClick={() => handleClick('nice')}
         >
             {currentText}
             {/* <div className="item click-text"> */}
                 <img
                     src={pokeballIcon}
                     className="click-img"
-                    onClick={() => handleClick('nice')}
                 />
             {/* </div> */}
         </div>
