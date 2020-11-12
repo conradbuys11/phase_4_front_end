@@ -302,9 +302,41 @@ const doodads = [
         id: 46,
         image: "bush1-vertical",
         width: MAZEWIDTH,
-        height: MAPSIZE / 5.6,
+        height: MAPSIZE / 8.7,
         x: MAPSIZE * -0.25,
-        y: MAPSIZE * -0.2
+        y: MAPSIZE * -0.26
+    },
+    {
+        id: 461,
+        image: "statue1",
+        width: MAZEWIDTH,
+        height: MAPSIZE / 18,
+        x: MAPSIZE * -0.25,
+        y: MAPSIZE * -0.08
+    },
+    {
+        id: 47,
+        image: "flowergrass1",
+        width: MAPSIZE / 40,
+        height: MAPSIZE / 40,
+        x: MAPSIZE * -0.3,
+        y: MAPSIZE * 0.1
+    },
+    {
+        id: 48,
+        image: "flowergrass2",
+        width: MAPSIZE / 15,
+        height: MAPSIZE / 15,
+        x: MAPSIZE * -0.15,
+        y: MAPSIZE * 0.2
+    },
+    {
+        id: 49,
+        image: "mushroom1",
+        width: MAPSIZE / 50,
+        height: MAPSIZE / 50,
+        x: MAPSIZE * -0.4,
+        y: MAPSIZE * 0.3
     },
    
 ]

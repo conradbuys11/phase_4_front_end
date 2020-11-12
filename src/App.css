@@ -172,6 +172,20 @@
 
 /* ######## O V E R W O R L D ######## */
 
+#victory {
+  border: thick double blue;
+  border-radius: 25px;
+  /* bottom: 10%; */
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+  /* height: 175px; */
+  padding: 100px;
+  font-size: 8rem;
+  position: absolute;
+  background: #6aa5f194;
+}
+
 #overworld-container {
   display: flex;
   flex-direction: column;
@@ -263,20 +277,17 @@
   align-self: center;
   order: 5;
   background-repeat: round;
+  /* border: 2px;
+  border-color: black;
+  border-style: dotted; */
 }
 
 .horizontal-obstacle {
   /* background-image: url("./assets/smoltree1.png"); */
-  /* border: 2px;
-  border-color: black;
-  border-style: dotted; */
 }
 
 .vertical-obstacle {
   /* background-image: url("./assets/bush1.png"); */
-  /* border: 2px;
-  border-color: black;
-  border-style: dotted; */
 }
 
 /* giovanni's bushes */
@@ -307,6 +318,7 @@
   align-self: center;
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .smoltree1-doodad {
@@ -379,4 +391,25 @@
   background-color: rgba(0, 0, 0, 0);
   background-size: auto auto;
   background-repeat: round;
+}
+
+.flowergrass1-doodad {
+  background-image: url("./assets/flowergrass1.png");
+}
+
+.flowergrass2-doodad {
+  background-image: url("./assets/flowergrass2.png");
+}
+
+.mushroom1-doodad {
+  background-image: url("./assets/mushroom1.png");
+}
+
+.statue1-doodad {
+  background-image: url("./assets/statue1.png");
+}
+
+.flowertree1-doodad {
+  background-image: url("./assets/flowertree1.png");
+  z-index: 1;
 }

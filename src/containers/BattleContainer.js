@@ -423,13 +423,24 @@ function BattleContainer(props){
                 endOfTurnCleanup({playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true})   
             }
         }
-        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects !== [] && params.move.move_status_effects[0].accuracy === 100){
-            if(params.isFirstAttacker){
-                createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, 'idk')
+        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects.length > 0){
+            if(params.move.move_status_effects[0].accuracy === 100) {
+                if(params.isFirstAttacker){
+                    createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, 'idk')
+                }
+                else{
+                    let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
+                    createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, endOfTurnCleanup, newParams, 'w/e')
+                }
             }
             else{
-                let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
-                createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, endOfTurnCleanup, newParams, 'w/e')
+                if(params.isFirstAttacker){
+                    checkStatus({attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false})
+                }
+                else{
+                    let newParams = defendingMonCopy.id === playerPokemon.id ? {playerMon: defendingMonCopy, opponentMon: params.attackingMon, isFirst: true} : {playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true}
+                    endOfTurnCleanup(newParams)
+                }
             }
         }
         else{

@@ -25,7 +25,8 @@ export default class GameContainer extends Component {
         top: 0,
         left: 0,
         facing: "Up",
-        defeatedTrainers: []
+        defeatedTrainers: [],
+        victorious: false
     }
 
     enterBattle = (trainer, top, left, facing, defeatedTrainers) => {
@@ -40,11 +41,22 @@ export default class GameContainer extends Component {
     }
 
     exitBattle = player => {
-        this.setState({
-            gameState: "overworld",
-            player: player,
-            battlingTrainer: null
-        })
+        if(this.state.defeatedTrainers.includes(9)) {
+            console.log("You win")
+            this.setState({
+                gameState: "overworld",
+                player: player,
+                battlingTrainer: null,
+                victorious: true
+            })
+        }
+        else {
+            this.setState({
+                gameState: "overworld",
+                player: player,
+                battlingTrainer: null
+            })
+        }
     }
 
     render() {
@@ -64,6 +76,7 @@ export default class GameContainer extends Component {
                             left={this.state.left}
                             facing={this.state.facing}
                             defeatedTrainers={this.state.defeatedTrainers}
+                            victorious={this.state.victorious}
                         />
                     :
                         <BattleContainer

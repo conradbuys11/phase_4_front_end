@@ -30,7 +30,7 @@ const NANITIME = 800
 const BATTLEANIMATIONDURATION = 100
 
 const BOUNDARYTHICCNESS = 20 /* MAPSIZE / 45 */
-const MOVESPEED = 3 * MAPSIZE / 300
+const MOVESPEED = 2 * MAPSIZE / 300
 const STEPTIME = 200
 const SPRITESIZE = MAPSIZE / 20
 const AGGROWIDTH = SPRITESIZE / 4
@@ -148,21 +148,26 @@ export default class OverworldContainer extends Component {
     }
 
     componentDidMount() {
-        this.timerID = setInterval(      
-            () => this.tick(),
-            TICKTIMER   
-        );
-        // skip this if we are not coming from battle
-        if(this.props.defeatedTrainers.length > 0) {
-            // delete line of sight collision maps of defeated trainers
-            this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
-            // load state from game container if returning from battle
-            this.setState({
-                top: this.props.top,
-                left: this.props.left,
-                facing: this.props.facing,
-                defeatedTrainers: this.props.defeatedTrainers
-            })
+        if(this.props.victorious) {
+
+        }
+        else {
+            this.timerID = setInterval(      
+                () => this.tick(),
+                TICKTIMER   
+            );
+            // skip this if we are not coming from battle
+            if(this.props.defeatedTrainers.length > 0) {
+                // delete line of sight collision maps of defeated trainers
+                this.lineOfSightCollisionMap = this.lineOfSightCollisionMap.filter(trainerAggro => !this.props.defeatedTrainers.includes(trainerAggro.trainerId))
+                // load state from game container if returning from battle
+                this.setState({
+                    top: this.props.top,
+                    left: this.props.left,
+                    facing: this.props.facing,
+                    defeatedTrainers: this.props.defeatedTrainers
+                })
+            }
         }
     }
 
@@ -706,6 +711,8 @@ export default class OverworldContainer extends Component {
                         sprite={this.state.currentSprite}
                         size={SPRITESIZE}
                     />
+
+                    {this.props.victorious ? <div id="victory">YOU WIN</div> : null}
                 </div>
             </div>
         )
