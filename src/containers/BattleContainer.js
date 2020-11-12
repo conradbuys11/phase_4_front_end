@@ -423,7 +423,7 @@ function BattleContainer(props){
                 endOfTurnCleanup({playerMon: params.attackingMon, opponentMon: defendingMonCopy, isFirst: true})   
             }
         }
-        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects !== undefined && params.move.move_status_effects[0].accuracy === 100){
+        else if(defendingMonCopy.status_effect.name !== 'none' && params.move.move_status_effects !== [] && params.move.move_status_effects[0].accuracy === 100){
             if(params.isFirstAttacker){
                 createTextBox(`${defendingMonCopy.species.name} is already ${defendingMonCopy.status_effect.name}'d!`, checkStatus, {attackingMon: defendingMonCopy, defendingMon: params.attackingMon, move: params.defendingMove, defendingMove: params.move, isFirstAttacker: false}, 'idk')
             }
@@ -578,6 +578,7 @@ function BattleContainer(props){
     }
 
     const useMove = move => {
+        console.log(move.move_status_effects)
         setBattleState(battleStates[1]) //moveBeingUsed state
         battleLogicStart(playerPokemon, opponentPokemon, move) //go to damage calculation
     }
@@ -778,6 +779,10 @@ function BattleContainer(props){
     return(  
         renderController()
     )
+}
+
+Array.prototype.sample = function(){
+    return this[Math.floor(Math.random() * this.length)]
 }
 
 export default BattleContainer
