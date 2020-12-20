@@ -21,5 +21,5 @@ Git 'Em All is a Pokemon battle game where the player navigates a puzzle overwor
 
 This web clone of classic Pokemon games was made in 1 week by Mark Foley and Conrad Buys using a React front end and Ruby on Rails back end. The front end is hosted on Github and the back end API is hosted on Heroku.
 
-Mark's GitHub: https://github.com/NavPoint1
+Mark's GitHub: https://github.com/NavPoint1  
 Conrad's GitHub: https://github.com/conradbuys11
